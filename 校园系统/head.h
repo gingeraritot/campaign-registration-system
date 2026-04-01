@@ -23,6 +23,19 @@
 #define MAX_SUGGESTION   500
 #define MAX_FILENAME     100
 
+// 数据文件路径
+#define STUDENTS_FILE     "students.dat"
+#define ADMINS_FILE       "admins.dat"
+#define ACTIVITIES_FILE   "activities.dat"
+#define CATEGORIES_FILE   "categories.dat"
+#define ENROLLMENTS_FILE  "enrollments.dat"
+#define ATTENDANCES_FILE  "attendances.dat"
+#define MEDALS_FILE       "medals.dat"
+#define USERMEDALS_FILE   "usermedals.dat"
+#define SUGGESTIONS_FILE  "suggestions.dat"
+#define REMINDERS_FILE    "reminders.dat"
+
+
 /* 枚举定义 */
 typedef enum { ROLE_ADMIN, ROLE_STUDENT } Role;           // 角色
 typedef enum { DRAFT = 0, PUBLISHED, TAKEN_DOWN } ActivityStatus; // 活动状态
