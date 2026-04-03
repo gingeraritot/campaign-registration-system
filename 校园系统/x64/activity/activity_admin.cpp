@@ -41,6 +41,55 @@ int add_activity(Activity* act) {
         return -1;
     }
 
-	return new_id;   //返回id就是为了告知调用者新活动的唯一标识符，以便后续操作（如修改、删除等）能够准确定位到该活动
-                    //就是说这里需要写一个交互
+    return new_id;
+}
+
+// 修改活动：根据 act->id 查找已有活动并更新其可修改字段。
+// 返回 1 表示成功，-1 表示失败（未找到/验证失败/保存失败）。
+int update_activity(Activity* act) {
+    if (!act) return -1;
+
+    // 在链表中查找已有活动
+    Activity* p = activity_head;
+    while (p) {
+        if (p->id == act->id) break;
+        p = p->next;
+    }
+    if (!p) return -1; // 未找到
+
+
+    // 基本校验
+	if (act->max_participants > 0 && act->max_participants < p->current_count) return -1;  
+    //这里的前半段判断是说：在交互页面，我们询问用户是否更改人数上限，如果不更改，将人数上限设置为0，这里就不会返回-1
+    //后半段：不让修改后的人数上限小于当前报名人数，用户不能改 当前报名人数，只能在学生层改
+
+
+
+    /*
+        安全地逐字段更新（保留系统字段 id / current_count / next，这些都是用户不能改的）
+    */ 
+
+    // 字符串字段使用 strncpy 并保证以 NUL 结束
+    strncpy(p->name, act->name, MAX_ACTIVITY_NAME - 1);
+    p->name[MAX_ACTIVITY_NAME - 1] = '\0';
+    strncpy(p->start_time, act->start_time, MAX_TIME - 1);
+    p->start_time[MAX_TIME - 1] = '\0';
+    p->duration = act->duration;
+    strncpy(p->location, act->location, MAX_LOCATION - 1);
+    p->location[MAX_LOCATION - 1] = '\0';
+    p->max_participants = act->max_participants;
+    strncpy(p->description, act->description, MAX_DESCRIPTION - 1);
+    p->description[MAX_DESCRIPTION - 1] = '\0';
+    strncpy(p->reward, act->reward, MAX_REWARD - 1); p->reward[MAX_REWARD - 1] = '\0';
+    p->category_id = act->category_id;
+
+    // 状态可以更新（例如草稿->发布），但不做额外验证 here
+    p->status = act->status;
+
+    // 持久化
+    if (save_activities(ACTIVITIES_FILE) != 1) {
+        return -1;
+    }
+
+    return 1;
 }
