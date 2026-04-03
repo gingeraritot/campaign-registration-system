@@ -127,6 +127,11 @@
     <ClInclude Include="标头.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="x64\activity\activity_admin.cpp" />
+    <ClCompile Include="data.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="student_ops.cpp" />
+    <ClCompile Include="system_service.cpp" />
     <ClCompile Include="源.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
