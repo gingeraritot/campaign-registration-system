@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #ifndef ACTIVITY_SYSTEM_H
 #define ACTIVITY_SYSTEM_H
 
@@ -35,6 +34,18 @@
 #define SUGGESTIONS_FILE  "suggestions.dat"
 #define REMINDERS_FILE    "reminders.dat"
 
+/* ---------- ID分配器 ---------- */
+int get_next_student_id(void);
+int get_next_admin_id(void);
+int get_next_activity_id(void);
+int get_next_category_id(void);
+int get_next_enrollment_id(void);
+int get_next_attendance_id(void);
+int get_next_medal_id(void);
+int get_next_usermedal_id(void);
+int get_next_suggestion_id(void);
+int get_next_reminder_id(void);
+
 
 /* 枚举定义 */
 typedef enum { ROLE_ADMIN, ROLE_STUDENT } Role;           // 角色
@@ -54,6 +65,7 @@ typedef struct Student {
     int age;                        // 年龄
     char class_name[20];            // 班级
     char location[100];             // 定位
+    int remind_ahead;               // 提前提醒秒数（默认 86400 = 24小时）
     Role role;                      // 角色标记（固定为 ROLE_STUDENT）
     struct Student* next;           // 链表指针
 } Student;
@@ -76,6 +88,7 @@ typedef struct Category {
     struct Category* next;          // 链表指针
 } Category;
 
+
 /* ---------- 活动结构体 ---------- */
 typedef struct Activity {
     int id;                         // 活动ID
@@ -88,6 +101,7 @@ typedef struct Activity {
     char description[MAX_DESCRIPTION]; // 描述（携带物品、专业要求等）
     char reward[MAX_REWARD];        // 奖励
     int category_id;                // 所属分类ID
+    char items_to_bring[200];       // 需要携带的物品清单
     ActivityStatus status;          // 状态（草稿/发布/下架）
     struct Activity* next;          // 链表指针
 } Activity;
@@ -149,6 +163,8 @@ typedef struct Attendance {
     struct Attendance* next;        // 链表指针
 } Attendance;
 
+
+
 /* ---------- 全局链表声明 ---------- */
 extern Student* student_head;
 extern Admin* admin_head;
@@ -160,6 +176,8 @@ extern UserMedal* usermedal_head;
 extern Suggestion* suggestion_head;
 extern Reminder* reminder_head;
 extern Attendance* attendance_head;
+
+
 
 /* ---------- 文件操作 ---------- */
 int load_all_data(void);
@@ -213,6 +231,7 @@ int add_category(const char* name);
 int delete_category(int id);
 void list_categories(void);
 Category* find_category_by_id(int id);
+Category* find_category_by_id(int id);
 
 /* ---------- 报名管理 ---------- */
 int enroll_student(int student_id, int activity_id);     // 报名（含时间冲突检查）
@@ -249,5 +268,10 @@ int is_reminded(int student_id, int activity_id);        // 检查是否已提醒过
 /* ---------- 系统初始化与清理 ---------- */
 void init_system(void);                                  // 加载所有数据
 void free_all(void);                                     // 释放所有链表内存
+
+/* ---------- 增强功能 ---------- */
+int set_remind_ahead(int student_id, int seconds);
+void open_map_navigation(const char* location);
+void remind_activity_update(int activity_id);
 
 #endif /* ACTIVITY_SYSTEM_H */
