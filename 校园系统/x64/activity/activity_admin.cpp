@@ -116,3 +116,38 @@ int take_down_activity(int activity_id) {
     p->status = TAKEN_DOWN;
     return (save_activities(ACTIVITIES_FILE) == 1) ? 1 : -1;
 }
+
+
+
+// 删除活动：在确保没有相关报名记录的情况下从链表中移除并持久化
+// 返回 1 成功，-1 失败（未找到 / 有报名 / 保存失败）
+int delete_activity(int activity_id) {
+    if (activity_id <= 0) return -1;
+
+	Activity* pre = NULL;    //用来记录要删除节点的前一个节点，方便修改next指针
+    Activity* cur = activity_head;
+    while (cur && cur->id != activity_id) {
+        pre = cur;
+        cur = cur->next;
+    }
+    if (!cur) return -1; // 未找到
+
+    // 如果已有报名记录，拒绝删除（避免数据不一致）
+    Enrollment* e = enrollment_head;
+    while (e) {
+        if (e->activity_id == activity_id) return -1;
+        e = e->next;
+    }
+
+    // 从链表中移除
+	if (pre) pre->next = cur->next;  //数据逻辑内键和链表的连接 区分开，虽然是删除节点的前一个，逻辑上是后添加的，但是链表逻辑里就应该由前一个指向后一个
+    else activity_head = cur->next;  //如果pre不为NULL，说明要删除的节点不是头节点，直接让前一个节点的next指向当前节点的下一个节点
+
+    free(cur);
+
+    // 持久化
+    return (save_activities(ACTIVITIES_FILE) == 1) ? 1 : -1;
+}
+
+
+
