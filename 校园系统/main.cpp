@@ -69,10 +69,6 @@ void drawInputBox(int x, int y, int w, int h, const wchar_t* label, const char* 
 }
 
 // ==================== 同学A/B/C函数预留接口 ====================
-void init_system() {
-    printf("系统初始化完成\n");
-}
-
 int login(const char* username, const char* password, Role role) {
     printf("尝试登录：角色=%d, 用户名=%s, 密码=%s\n", role, username, password);
     return 1;
