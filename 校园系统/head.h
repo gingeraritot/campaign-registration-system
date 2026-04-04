@@ -65,6 +65,7 @@ typedef struct Student {
     int age;                        // 年龄
     char class_name[20];            // 班级
     char location[100];             // 定位
+    int remind_ahead;               // 提前提醒秒数（默认 86400 = 24小时）
     Role role;                      // 角色标记（固定为 ROLE_STUDENT）
     struct Student* next;           // 链表指针
 } Student;
@@ -87,6 +88,7 @@ typedef struct Category {
     struct Category* next;          // 链表指针
 } Category;
 
+
 /* ---------- 活动结构体 ---------- */
 typedef struct Activity {
     int id;                         // 活动ID
@@ -99,6 +101,7 @@ typedef struct Activity {
     char description[MAX_DESCRIPTION]; // 描述（携带物品、专业要求等）
     char reward[MAX_REWARD];        // 奖励
     int category_id;                // 所属分类ID
+    char items_to_bring[200];       // 需要携带的物品清单
     ActivityStatus status;          // 状态（草稿/发布/下架）
     struct Activity* next;          // 链表指针
 } Activity;
@@ -173,6 +176,18 @@ extern UserMedal* usermedal_head;
 extern Suggestion* suggestion_head;
 extern Reminder* reminder_head;
 extern Attendance* attendance_head;
+
+/* ---------- ID 生成器（在 data.c/ data.cpp 中实现） ---------- */
+int get_next_student_id(void);
+int get_next_admin_id(void);
+int get_next_activity_id(void);
+int get_next_category_id(void);
+int get_next_enrollment_id(void);
+int get_next_attendance_id(void);
+int get_next_medal_id(void);
+int get_next_usermedal_id(void);
+int get_next_suggestion_id(void);
+int get_next_reminder_id(void);
 
 /* ---------- 文件操作 ---------- */
 int load_all_data(void);
@@ -262,5 +277,10 @@ int is_reminded(int student_id, int activity_id);        // 检查是否已提醒过
 /* ---------- 系统初始化与清理 ---------- */
 void init_system(void);                                  // 加载所有数据
 void free_all(void);                                     // 释放所有链表内存
+
+/* ---------- 增强功能 ---------- */
+int set_remind_ahead(int student_id, int seconds);
+void open_map_navigation(const char* location);
+void remind_activity_update(int activity_id);
 
 #endif /* ACTIVITY_SYSTEM_H */
