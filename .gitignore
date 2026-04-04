@@ -54,3 +54,6 @@ dkms.conf
 # debug information files
 *.dwo
 .vs/
+
+# 忽略VS个人用户配置文件
+*.vcxproj.user

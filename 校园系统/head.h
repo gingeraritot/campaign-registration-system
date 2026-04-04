@@ -149,6 +149,8 @@ typedef struct Attendance {
     struct Attendance* next;        // 链表指针
 } Attendance;
 
+
+
 /* ---------- 全局链表声明 ---------- */
 extern Student* student_head;
 extern Admin* admin_head;
