@@ -478,6 +478,7 @@ int register_student(const char* username, const char* password, const char* nam
     strcpy(new_s->class_name, class_name);
     strcpy(new_s->location, location);
     new_s->role = ROLE_STUDENT;
+    new_s->remind_ahead = 24 * 3600;   // 添加这一行，默认24小时
     new_s->next = NULL;
     if (!student_head) student_head = new_s;
     else {

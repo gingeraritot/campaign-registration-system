@@ -65,6 +65,7 @@ typedef struct Student {
     int age;                        // 年龄
     char class_name[20];            // 班级
     char location[100];             // 定位
+    int remind_ahead;               // 提前提醒秒数（默认 86400 = 24小时）
     Role role;                      // 角色标记（固定为 ROLE_STUDENT）
     struct Student* next;           // 链表指针
 } Student;
@@ -100,6 +101,7 @@ typedef struct Activity {
     char description[MAX_DESCRIPTION]; // 描述（携带物品、专业要求等）
     char reward[MAX_REWARD];        // 奖励
     int category_id;                // 所属分类ID
+    char items_to_bring[200];       // 需要携带的物品清单
     ActivityStatus status;          // 状态（草稿/发布/下架）
     struct Activity* next;          // 链表指针
 } Activity;
@@ -275,5 +277,10 @@ int is_reminded(int student_id, int activity_id);        // 检查是否已提醒过
 /* ---------- 系统初始化与清理 ---------- */
 void init_system(void);                                  // 加载所有数据
 void free_all(void);                                     // 释放所有链表内存
+
+/* ---------- 增强功能 ---------- */
+int set_remind_ahead(int student_id, int seconds);
+void open_map_navigation(const char* location);
+void remind_activity_update(int activity_id);
 
 #endif /* ACTIVITY_SYSTEM_H */
