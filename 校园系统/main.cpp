@@ -68,11 +68,7 @@ void drawInputBox(int x, int y, int w, int h, const wchar_t* label, const char* 
     }
 }
 
-// ==================== 同学A/B/C函数预留接口 ===================
-void init_system() {
-    printf("系统初始化完成\n");
-}
-
+// ==================== 同学A/B/C函数预留接口 ====================
 int login(const char* username, const char* password, Role role) {
     printf("尝试登录：角色=%d, 用户名=%s, 密码=%s\n", role, username, password);
     return 1;
@@ -86,7 +82,7 @@ int register_student(const char* username, const char* password, const char* stu
 void showStudentMainPage() {}
 void showAdminMainPage() {}
 
-// ==================== 页面1：欢迎页 ===================
+// ==================== 页面1：欢迎页 ====================
 PageType showWelcomePage() {
     cleardevice();//清空绘图区域，画欢迎页
     setbkcolor(RGB(240, 245, 250));//设置背景颜色，淡蓝色（只是设置没有改变）

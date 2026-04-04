@@ -5,6 +5,7 @@
 #include <shellapi.h>
 #endif
 
+#include <graphics.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -306,4 +307,16 @@ void remind_activity_update(int activity_id) {
     if (count == 0) {
         printf("活动 \"%s\" 没有学生报名，无需提醒。\n", act->name);
     }
+}
+
+// 在 system_service.cpp 中
+int mousex() {
+    // 获取鼠标x坐标
+    MOUSEMSG msg = GetMouseMsg();
+    return msg.x;
+}
+int mousey() {
+    // 获取鼠标y坐标
+    MOUSEMSG msg = GetMouseMsg();
+    return msg.y;
 }
