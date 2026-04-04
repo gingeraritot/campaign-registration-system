@@ -446,6 +446,12 @@ Activity* find_activity_by_id(int id) {
     return NULL;
 }
 
+Category* find_category_by_id(int id) {
+    Category* p = category_head;
+    while (p) { if (p->id == id) return p; p = p->next; }
+    return NULL;
+}
+
 // -------------------- 用户管理 --------------------
 void* login(const char* username, const char* password, Role* role) {
     Student* s = find_student_by_username(username);

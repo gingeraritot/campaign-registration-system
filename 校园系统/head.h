@@ -87,6 +87,7 @@ typedef struct Category {
     struct Category* next;          // 链表指针
 } Category;
 
+
 /* ---------- 活动结构体 ---------- */
 typedef struct Activity {
     int id;                         // 活动ID
@@ -173,6 +174,18 @@ extern UserMedal* usermedal_head;
 extern Suggestion* suggestion_head;
 extern Reminder* reminder_head;
 extern Attendance* attendance_head;
+
+/* ---------- ID 生成器（在 data.c/ data.cpp 中实现） ---------- */
+int get_next_student_id(void);
+int get_next_admin_id(void);
+int get_next_activity_id(void);
+int get_next_category_id(void);
+int get_next_enrollment_id(void);
+int get_next_attendance_id(void);
+int get_next_medal_id(void);
+int get_next_usermedal_id(void);
+int get_next_suggestion_id(void);
+int get_next_reminder_id(void);
 
 /* ---------- 文件操作 ---------- */
 int load_all_data(void);

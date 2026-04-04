@@ -1,4 +1,5 @@
 #include "../../head.h"
+#include <ctype.h>
 
 int add_activity(Activity* act) {
     /*
@@ -41,18 +42,6 @@ int add_activity(Activity* act) {
 
     return new_id;
 }
-
-// 在链表中按 id 查找活动并返回指针，找不到返回 NULL
-Activity* find_activity_by_id(int id) {
-    Activity* q = activity_head;
-    while (q) {
-        if (q->id == id) return q;
-        q = q->next;
-    }
-    return NULL;
-}
-
-
 
 
 // 修改活动：根据 act->id 查找已有活动并更新其可修改字段。
@@ -119,6 +108,35 @@ int take_down_activity(int activity_id) {
 
 
 
+// 发布草稿活动：将活动状态从 DRAFT 变为 PUBLISHED 并持久化
+// 返回 1 成功，-1 失败（未找到/验证失败/保存失败）
+int publish_activity(int activity_id) {
+    if (activity_id <= 0) return -1;
+    Activity* p = find_activity_by_id(activity_id);
+    if (!p) return -1;
+
+    // 只有草稿可以发布
+    if (p->status == PUBLISHED) return 1; // 已发布
+	if (p->status != DRAFT) return -1;    // 不在草稿箱内
+
+    // 基本校验：名称、人数上限、分类
+    if (p->name[0] == '\0') return -1;
+    if (p->max_participants <= 0) return -1;
+	if (p->category_id != 0 && !find_category_by_id(p->category_id)) return -1;  //填了分类但是找不到分类
+
+    p->status = PUBLISHED;
+    if (save_activities(ACTIVITIES_FILE) != 1) {
+        // 回滚状态
+        p->status = DRAFT;
+        return -1;
+    }
+    return 1;
+}
+
+
+
+
+
 // 删除活动：在确保没有相关报名记录的情况下从链表中移除并持久化
 // 返回 1 成功，-1 失败（未找到 / 有报名 / 保存失败）
 int delete_activity(int activity_id) {
@@ -148,6 +166,134 @@ int delete_activity(int activity_id) {
     // 持久化
     return (save_activities(ACTIVITIES_FILE) == 1) ? 1 : -1;
 }
+
+
+
+// 添加活动分类：若同名分类已存在则返回其 id，否则添加新分类并返回新 id
+int add_category(const char* name) {
+    if (!name || name[0] == '\0') return -1;   //名字不为空
+    // 检查是否已存在同名分类
+    Category* p = category_head;
+    while (p) {
+        if (strcmp(p->name, name) == 0) return p->id;   //如果找到了同名分类，直接返回它的id，不添加新分类
+        p = p->next;
+    }
+
+    //修改活动分类链表
+    Category* node = (Category*)malloc(sizeof(Category));
+    if (!node) return -1;
+    node->id = get_next_category_id();
+    strncpy(node->name, name, MAX_CATEGORY_NAME - 1);
+    node->name[MAX_CATEGORY_NAME - 1] = '\0';
+    node->next = NULL;
+
+    if (!category_head) category_head = node;
+    else {
+        Category* tail = category_head;
+        while (tail->next) tail = tail->next;
+        tail->next = node;
+    }
+
+    if (save_categories(CATEGORIES_FILE) != 1) {
+        // 回滚
+        if (category_head == node) category_head = node->next;
+        else {
+            Category* cur = category_head;
+            while (cur && cur->next != node) cur = cur->next;
+            if (cur) cur->next = node->next;
+        }
+        free(node);
+        return -1;
+    }
+
+    return node->id;
+}
+
+
+
+// 删除分类：如果有活动仍引用该分类，则拒绝删除以避免数据不一致。
+// 返回 1 成功，-1 失败（未找到 / 有活动引用 / 保存失败）。
+int delete_category(int id) {
+    if (id <= 0) return -1;
+
+    // 如果已有活动使用该分类，拒绝删除
+    Activity* a = activity_head;
+    while (a) {
+        if (a->category_id == id) return -1;
+        a = a->next;
+    }
+
+    Category* prev = NULL;
+    Category* cur = category_head;
+    while (cur && cur->id != id) {
+        prev = cur;
+        cur = cur->next;
+    }
+    if (!cur) return -1; // 未找到
+
+    if (prev) prev->next = cur->next;
+    else category_head = cur->next;
+
+    free(cur);
+
+    return (save_categories(CATEGORIES_FILE) == 1) ? 1 : -1;
+}
+
+
+
+
+
+// 按名称或描述搜索已发布的活动（不区分大小写），在控制台打印结果
+void search_activities(const char* keyword) {
+    if (!keyword || keyword[0] == '\0') {
+        printf("搜索关键字为空\n");
+        return;
+    }
+
+	//把搜索关键字转换为小写，准备进行不区分大小写的比较
+    char kw[MAX_DESCRIPTION];
+    size_t klen = strlen(keyword);
+    if (klen >= sizeof(kw)) klen = sizeof(kw) - 1;
+    for (size_t i = 0; i < klen; ++i) kw[i] = (char)tolower((unsigned char)keyword[i]);
+	//tolower函数将大写字母转换为小写字母，unsigned char是为了确保输入字符被正确处理，避免负值导致的问题
+    kw[klen] = '\0';
+
+    int found = 0;
+    Activity* p = activity_head;
+    while (p) {
+        if (p->status == PUBLISHED) {
+            // 准备小写的名称进行不区分大小写的比较
+            char name_lower[MAX_ACTIVITY_NAME];
+            size_t nlen = strlen(p->name);
+			if (nlen >= sizeof(name_lower)) nlen = sizeof(name_lower) - 1;  //留一个位置给'\0'
+            for (size_t i = 0; i < nlen; ++i) name_lower[i] = (char)tolower((unsigned char)p->name[i]);
+            name_lower[nlen] = '\0';
+			// 准备小写的描述进行不区分大小写的比较
+            char desc_lower[MAX_DESCRIPTION];
+            size_t dlen = strlen(p->description);
+            if (dlen >= sizeof(desc_lower)) dlen = sizeof(desc_lower) - 1;
+            for (size_t i = 0; i < dlen; ++i) desc_lower[i] = (char)tolower((unsigned char)p->description[i]);
+            desc_lower[dlen] = '\0';
+			//开始搜索，使用strstr函数检查关键字是否出现在名称或描述中
+            if (strstr(name_lower, kw) != NULL || strstr(desc_lower, kw) != NULL) {
+                if (!found) printf("搜索结果：\n");
+                found = 1;
+                printf("ID:%d | 名称:%s | 时间:%s | 地点:%s\n", p->id, p->name, p->start_time, p->location);
+                printf("    报名:%d/%d | 分类ID:%d\n", p->current_count, p->max_participants, p->category_id);
+                if (p->description[0]) printf("    描述: %s\n", p->description);
+            }
+        }
+        p = p->next;
+    }
+    if (!found) printf("未找到匹配的已发布活动\n");
+}
+
+
+
+
+
+
+
 
 
 
