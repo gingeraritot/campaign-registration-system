@@ -1,33 +1,180 @@
 ﻿  activity_admin.cpp
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(17,18): error C2065: “max_id”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(20,5): error C2059: 语法错误:“if”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(21,2): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(21,2): error C2365: “memcpy”: 重定义；以前的定义是“函数”
+      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\vcruntime_string.h(43,15):
+      参见“memcpy”的声明
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(21,15): error C2065: “act”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(22,2): error C3927: "->": 非函数声明符后不允许尾随返回类型
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(22,8): error C3613: “->”后缺少返回类型(假定为“int”)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(22,2): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(22,2): error C2040: “node”:“int”与“Activity *”的间接寻址级别不同
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(22,8): error C2146: 语法错误: 缺少“;”(在标识符“current_count”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(23,2): error C3927: "->": 非函数声明符后不允许尾随返回类型
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(23,8): error C3613: “->”后缺少返回类型(假定为“int”)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(23,2): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(23,2): error C2040: “node”:“int”与“Activity *”的间接寻址级别不同
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(23,8): error C2146: 语法错误: 缺少“;”(在标识符“status”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(24,2): error C3927: "->": 非函数声明符后不允许尾随返回类型
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(24,8): error C3613: “->”后缺少返回类型(假定为“int”)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(24,2): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(24,2): error C2040: “node”:“int”与“Activity *”的间接寻址级别不同
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(24,8): error C2146: 语法错误: 缺少“;”(在标识符“next”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(25,2): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(25,2): error C2040: “activity_head”:“int”与“Activity *”的间接寻址级别不同
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(29,9): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(29,9): error C2040: “activity_head”:“int”与“Activity *”的间接寻址级别不同
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(29,25): error C2065: “tmp”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(30,9): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(30,9): error C2365: “free”: 重定义；以前的定义是“函数”
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\ucrt\corecrt_malloc.h(89,14):
+      参见“free”的声明
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(30,14): error C2065: “tmp”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(31,9): error C2059: 语法错误:“return”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(32,5): error C2059: 语法错误:“}”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(32,5): error C2143: 语法错误: 缺少“;”(在“}”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(35,1): error C2059: 语法错误:“}”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(35,1): error C2143: 语法错误: 缺少“;”(在“}”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(38,39): error C2143: 语法错误: 缺少“;”(在“{”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(38,39): error C2447: “{”: 缺少函数标题(是否是老式的形式表?)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(51,5): error C2059: 语法错误:“if”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(54,39): error C2065: “act”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(55,5): error C2059: 语法错误:“if”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(58,2): error C2059: 语法错误:“if”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(69,5): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(69,5): error C2365: “strncpy”: 重定义；以前的定义是“函数”
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\ucrt\string.h(334,1):
+      参见“strncpy”的声明
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(69,22): error C2065: “act”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(70,5): error C3927: "->": 非函数声明符后不允许尾随返回类型
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(70,8): error C3613: “->”后缺少返回类型(假定为“int”)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(70,5): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(70,5): error C2040: “p”:“int”与“Activity *”的间接寻址级别不同
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(70,8): error C2146: 语法错误: 缺少“;”(在标识符“name”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(71,5): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(71,5): error C2365: “strncpy”: 重定义；以前的定义是“函数”
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\ucrt\string.h(334,1):
+      参见“strncpy”的声明
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(71,28): error C2065: “act”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(72,5): error C3927: "->": 非函数声明符后不允许尾随返回类型
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(72,8): error C3613: “->”后缺少返回类型(假定为“int”)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(72,5): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(72,5): error C2040: “p”:“int”与“Activity *”的间接寻址级别不同
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(72,8): error C2146: 语法错误: 缺少“;”(在标识符“start_time”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(73,5): error C3927: "->": 非函数声明符后不允许尾随返回类型
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(73,8): error C3613: “->”后缺少返回类型(假定为“int”)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(73,5): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(73,5): error C2040: “p”:“int”与“Activity *”的间接寻址级别不同
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(73,8): error C2146: 语法错误: 缺少“;”(在标识符“duration”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(74,5): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(74,5): error C2365: “strncpy”: 重定义；以前的定义是“函数”
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\ucrt\string.h(334,1):
+      参见“strncpy”的声明
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(74,26): error C2065: “act”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(75,5): error C3927: "->": 非函数声明符后不允许尾随返回类型
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(75,8): error C3613: “->”后缺少返回类型(假定为“int”)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(75,5): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(75,5): error C2040: “p”:“int”与“Activity *”的间接寻址级别不同
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(75,8): error C2146: 语法错误: 缺少“;”(在标识符“location”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(76,5): error C3927: "->": 非函数声明符后不允许尾随返回类型
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(76,8): error C3613: “->”后缺少返回类型(假定为“int”)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(76,5): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(76,5): error C2040: “p”:“int”与“Activity *”的间接寻址级别不同
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(76,8): error C2146: 语法错误: 缺少“;”(在标识符“max_participants”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(77,5): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(77,5): error C2365: “strncpy”: 重定义；以前的定义是“函数”
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\ucrt\string.h(334,1):
+      参见“strncpy”的声明
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(77,29): error C2065: “act”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(78,5): error C3927: "->": 非函数声明符后不允许尾随返回类型
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(78,8): error C3613: “->”后缺少返回类型(假定为“int”)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(78,5): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(78,5): error C2040: “p”:“int”与“Activity *”的间接寻址级别不同
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(78,8): error C2146: 语法错误: 缺少“;”(在标识符“description”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(79,5): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(79,5): error C2365: “strncpy”: 重定义；以前的定义是“函数”
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\ucrt\string.h(334,1):
+      参见“strncpy”的声明
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(79,24): error C2065: “act”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(79,54): error C3927: "->": 非函数声明符后不允许尾随返回类型
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(79,57): error C3613: “->”后缺少返回类型(假定为“int”)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(79,54): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(79,54): error C2040: “p”:“int”与“Activity *”的间接寻址级别不同
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(79,57): error C2146: 语法错误: 缺少“;”(在标识符“reward”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(80,5): error C3927: "->": 非函数声明符后不允许尾随返回类型
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(80,8): error C3613: “->”后缺少返回类型(假定为“int”)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(80,5): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(80,5): error C2040: “p”:“int”与“Activity *”的间接寻址级别不同
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(80,8): error C2146: 语法错误: 缺少“;”(在标识符“category_id”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(83,5): error C3927: "->": 非函数声明符后不允许尾随返回类型
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(83,8): error C3613: “->”后缺少返回类型(假定为“int”)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(83,5): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(83,5): error C2040: “p”:“int”与“Activity *”的间接寻址级别不同
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(83,8): error C2146: 语法错误: 缺少“;”(在标识符“status”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(86,9): error C2059: 语法错误:“return”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(87,5): error C2059: 语法错误:“}”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(87,5): error C2143: 语法错误: 缺少“;”(在“}”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(90,1): error C2059: 语法错误:“}”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(90,1): error C2143: 语法错误: 缺少“;”(在“}”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(98,41): error C2143: 语法错误: 缺少“;”(在“{”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\x64\activity\activity_admin.cpp(98,41): error C2447: “{”: 缺少函数标题(是否是老式的形式表?)
   data.cpp
-D:\Campaign_registration_system\校园系统\x64\activity\activity_admin.cpp(1,10): error C1083: 无法打开包括文件: “head.h”: No such file or directory
-D:\Campaign_registration_system\校园系统\data.cpp(64,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(115,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(132,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(167,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(180,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(215,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(228,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(263,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(276,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(311,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(324,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(359,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(372,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(407,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(420,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(455,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(468,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(503,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(516,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(551,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(44,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(69,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(82,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(107,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(120,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(145,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(158,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(183,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(196,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(221,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(234,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(259,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(272,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(297,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(310,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(335,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(348,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(373,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(386,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(411,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(465,5): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(466,5): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(467,5): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(468,5): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(469,5): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(470,5): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(472,5): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(473,5): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(555,9): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(556,9): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(557,9): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\data.cpp(558,9): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   main.cpp
-D:\Campaign_registration_system\校园系统\main.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-D:\Campaign_registration_system\校园系统\main.cpp(1,10): error C1083: 无法打开包括文件: “graphics.h”: No such file or directory
-  student_ops.cpp
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(182,57): warning C4244: “=”: 从“TCHAR”转换到“char”，可能丢失数据
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(190,57): warning C4244: “=”: 从“TCHAR”转换到“char”，可能丢失数据
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(292,53): warning C4244: “=”: 从“TCHAR”转换到“char”，可能丢失数据
   system_service.cpp
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\system_service.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\system_service.cpp(17,5): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\system_service.cpp(63,68): error C4996: 'ctime': This function or variable may be unsafe. Consider using ctime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\system_service.cpp(95,50): warning C4244: “+=”: 从“time_t”转换到“long”，可能丢失数据
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\system_service.cpp(117,5): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\system_service.cpp(138,13): error C4996: 'ctime': This function or variable may be unsafe. Consider using ctime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\system_service.cpp(165,9): error C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   源.cpp
 \源.cpp(1,1): error C1083: 无法打开源文件: “源.cpp”: No such file or directory
+  正在生成代码...
   (编译源文件“/源.cpp”)
   
-  正在生成代码...

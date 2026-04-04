@@ -27,11 +27,7 @@ typedef enum {
     PAGE_STUDENT_MAIN,  //学生界面（登录之后）
     PAGE_ADMIN_MAIN     //管理员界面（登录之后）
 } PageType;
-//用户角色
-typedef enum {
-    ROLE_STUDENT,  //学生身份
-    ROLE_ADMIN     //管理员身份
-} UserRole;
+
 
 // ==================== 工具函数：绘制通用按钮 ====================
 void drawButton(int x, int y, int w, int h, const wchar_t* text, bool isHover) {
@@ -77,7 +73,7 @@ void init_system() {
     printf("系统初始化完成\n");
 }
 
-int login(const char* username, const char* password, UserRole role) {
+int login(const char* username, const char* password, Role role) {
     printf("尝试登录：角色=%d, 用户名=%s, 密码=%s\n", role, username, password);
     return 1;
 }
@@ -116,8 +112,8 @@ PageType showWelcomePage() {
         bool studentHover = (mx >= studentBtnX && mx <= studentBtnX + BTN_WIDTH && my >= btnY && my <= btnY + BTN_HEIGHT);
         bool adminHover = (mx >= adminBtnX && mx <= adminBtnX + BTN_WIDTH && my >= btnY && my <= btnY + BTN_HEIGHT);
         //绘制两个按钮
-        drawButton(studentBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"学生登录/注册", studentHover);  
-        drawButton(adminBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"管理员登录", adminHover);  
+        drawButton(studentBtnX,btnY,BTN_WIDTH,BTN_HEIGHT,L"xueshengdenglu",studentHover);  
+        drawButton(adminBtnX,btnY,BTN_WIDTH,BTN_HEIGHT,L"guanliyuandenglu",adminHover);  
         //监听鼠标点击事件，如果点击了按钮就跳转到登录页面
         if (peekmessage(&msg, EM_MOUSE)) {
             if (msg.message == WM_LBUTTONDOWN) {
@@ -133,15 +129,15 @@ PageType showWelcomePage() {
     }
 }
 
-// ===================页面3：登录页 ==================
-PageType showLoginPage(UserRole& currentRole) {
+// ==================页面3：登录页 =================
+PageType showLoginPage(Role& Role) {
     cleardevice();
     setbkcolor(RGB(240, 245, 250));//淡蓝色
     cleardevice();
 
     settextcolor(RGB(30, 60, 120));//文字：深青色
-    settextstyle(30, 0, L"微软雅黑"); // 改为宽字符 L""
-    const wchar_t* title = (currentRole == ROLE_STUDENT) ? L"学生登录" : L"管理员登录"; // 动态生成标题
+    settextstyle(30, 0, L"微软雅黑");
+    const wchar_t* title = (Role == ROLE_STUDENT) ? L"xueshengdenglu" : L"guanliyuandenglu"; // 动态生成标题
     outtextxy((WINDOW_WIDTH - textwidth(title)) / 2, 60, title);//标题文本画到页面上方中间，与欢迎页一致
     //定义输入框的位置
     int inputX = WINDOW_WIDTH / 2 + 50;
@@ -168,10 +164,10 @@ PageType showLoginPage(UserRole& currentRole) {
         drawInputBox(inputX, pwdInputY, INPUT_WIDTH, INPUT_HEIGHT, L"密  码：", "********", focusIndex == 1); 
         //判断鼠标是否悬停在登录，注册，返回这三个按钮上，交互效果
         bool loginHover = (mx >= loginBtnX && mx <= loginBtnX + BTN_WIDTH && my >= btnY && my <= btnY + BTN_HEIGHT);
-        bool registerHover = (currentRole == ROLE_STUDENT) && (mx >= registerBtnX && mx <= registerBtnX + BTN_WIDTH && my >= btnY && my <= btnY + BTN_HEIGHT);
+        bool registerHover = (Role == ROLE_STUDENT) && (mx >= registerBtnX && mx <= registerBtnX + BTN_WIDTH && my >= btnY && my <= btnY + BTN_HEIGHT);
         bool backHover = (mx >= backBtnX && mx <= backBtnX + BTN_WIDTH && my >= backBtnY && my <= backBtnY + BTN_HEIGHT);
         drawButton(loginBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"登录", loginHover); //绘制登录按钮
-        if (currentRole == ROLE_STUDENT) {
+        if (Role == ROLE_STUDENT) {
             drawButton(registerBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"注册", registerHover); //判断如果是学生，就绘制注册按钮
         }
         drawButton(backBtnX, backBtnY, BTN_WIDTH, BTN_HEIGHT, L"返回", backHover); // 绘制返回按钮
@@ -204,19 +200,19 @@ PageType showLoginPage(UserRole& currentRole) {
                     focusIndex = 1;
                 }
                 else if (loginHover) {//处理登录按钮
-                    int loginResult = login(username, password, currentRole);//调用login函数验证账号密码，成功则跳转到对应角色的主页面，失败则弹窗提示
+                    int loginResult = login(username, password, Role);//调用login函数验证账号密码，成功则跳转到对应角色的主页面，失败则弹窗提示
                     if (loginResult == 1) {
-                        return (currentRole == ROLE_STUDENT) ? PAGE_STUDENT_MAIN : PAGE_ADMIN_MAIN;
+                        return (Role == ROLE_STUDENT) ? PAGE_STUDENT_MAIN : PAGE_ADMIN_MAIN;
                     }
                     else {
-                        MessageBoxW(GetHWnd(), L"用户名或密码错误！", L"登录失败", MB_OK | MB_ICONERROR);//使用 MessageBoxW 并传入宽字符
+                        MessageBoxW(GetHWnd(),L"wrong",L"failed", MB_OK | MB_ICONERROR);
                         memset(username, 0, sizeof(username));
                         memset(password, 0, sizeof(password));
                         focusIndex = 0;
                     }
                 }
                 //点击注册或返回的按钮，跳转到相应界面
-                else if (registerHover && currentRole == ROLE_STUDENT) {
+                else if (registerHover && Role == ROLE_STUDENT) {
                     return PAGE_REGISTER;
                 }
                 else if (backHover) {
@@ -241,7 +237,7 @@ PageType showRegisterPage() {
     cleardevice();
 
     settextcolor(RGB(30, 60, 120));
-    settextstyle(30, 0, L"微软雅黑"); // 改为宽字符 L""
+    settextstyle(30, 0, L"微软雅黑"); 
     const wchar_t* title = L"学生注册"; // 改为宽字符 L""
     outtextxy((WINDOW_WIDTH - textwidth(title)) / 2, 40, title);
 
@@ -340,7 +336,7 @@ int main() {
     init_system();
 
     PageType currentPage = PAGE_WELCOME;//首页是欢迎页
-    UserRole currentRole = ROLE_STUDENT;
+    Role currentRole = ROLE_STUDENT;
 
     while (true) {
         switch (currentPage) {

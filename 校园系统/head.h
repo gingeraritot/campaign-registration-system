@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #ifndef ACTIVITY_SYSTEM_H
 #define ACTIVITY_SYSTEM_H
 
@@ -34,6 +33,18 @@
 #define USERMEDALS_FILE   "usermedals.dat"
 #define SUGGESTIONS_FILE  "suggestions.dat"
 #define REMINDERS_FILE    "reminders.dat"
+
+/* ---------- ID分配器 ---------- */
+int get_next_student_id(void);
+int get_next_admin_id(void);
+int get_next_activity_id(void);
+int get_next_category_id(void);
+int get_next_enrollment_id(void);
+int get_next_attendance_id(void);
+int get_next_medal_id(void);
+int get_next_usermedal_id(void);
+int get_next_suggestion_id(void);
+int get_next_reminder_id(void);
 
 
 /* 枚举定义 */

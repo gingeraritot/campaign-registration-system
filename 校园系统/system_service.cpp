@@ -115,7 +115,7 @@ int add_suggestion(int student_id, const char* content) {
     s->id = get_next_suggestion_id();
     s->student_id = student_id;
     strcpy(s->content, content);
-    s->status = 0;
+    s->status = UNREAD;
     s->submit_time = time(NULL);
     s->next = NULL;
     if (!suggestion_head) suggestion_head = s;
@@ -134,7 +134,7 @@ void list_suggestions(void) {
     while (s) {
         printf("ID:%d | 学生ID:%d | 状态:%s | 提交时间:%s内容: %s\n",
             s->id, s->student_id,
-            s->status == 0 ? "未读" : "已读",
+            s->status == UNREAD ? "未读" : "已读",
             ctime(&s->submit_time), s->content);
         s = s->next;
     }
@@ -143,7 +143,7 @@ void list_suggestions(void) {
 int mark_suggestion_read(int suggestion_id) {
     Suggestion* s = suggestion_head;
     while (s) {
-        if (s->id == suggestion_id) { s->status = 1; return 1; }
+        if (s->id == suggestion_id) { s->status = READ; return 1; }
         s = s->next;
     }
     return -1;
