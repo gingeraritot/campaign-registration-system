@@ -7,8 +7,6 @@ int add_activity(Activity* act) {
 	if (!act) return -1;    //空指针检查
 	if (act->name[0] == '\0') return -1;   // 活动名称不能为空
 	if (act->max_participants <= 0) return -1;   // 人数上限不合理
-    
-
 
     /*
         添加操作
@@ -44,17 +42,26 @@ int add_activity(Activity* act) {
     return new_id;
 }
 
+// 在链表中按 id 查找活动并返回指针，找不到返回 NULL
+Activity* find_activity_by_id(int id) {
+    Activity* q = activity_head;
+    while (q) {
+        if (q->id == id) return q;
+        q = q->next;
+    }
+    return NULL;
+}
+
+
+
+
 // 修改活动：根据 act->id 查找已有活动并更新其可修改字段。
 // 返回 1 表示成功，-1 表示失败（未找到/验证失败/保存失败）。
 int update_activity(Activity* act) {
     if (!act) return -1;
 
     // 在链表中查找已有活动
-    Activity* p = activity_head;
-    while (p) {
-        if (p->id == act->id) break;
-        p = p->next;
-    }
+    Activity* p = find_activity_by_id(act->id);
     if (!p) return -1; // 未找到
 
 
@@ -92,4 +99,20 @@ int update_activity(Activity* act) {
     }
 
     return 1;
+}
+
+
+
+
+
+// 下架活动：根据 activity_id 将状态设置为 TAKEN_DOWN 并持久化
+// 返回 1 成功，-1 失败
+int take_down_activity(int activity_id) {
+    if (activity_id <= 0) return -1;
+    Activity* p = find_activity_by_id(activity_id);
+    if (!p) return -1;
+
+    if (p->status == TAKEN_DOWN) return 1; // 已下架
+    p->status = TAKEN_DOWN;
+    return (save_activities(ACTIVITIES_FILE) == 1) ? 1 : -1;
 }
