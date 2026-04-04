@@ -177,17 +177,7 @@ extern Suggestion* suggestion_head;
 extern Reminder* reminder_head;
 extern Attendance* attendance_head;
 
-/* ---------- ID 生成器（在 data.c/ data.cpp 中实现） ---------- */
-int get_next_student_id(void);
-int get_next_admin_id(void);
-int get_next_activity_id(void);
-int get_next_category_id(void);
-int get_next_enrollment_id(void);
-int get_next_attendance_id(void);
-int get_next_medal_id(void);
-int get_next_usermedal_id(void);
-int get_next_suggestion_id(void);
-int get_next_reminder_id(void);
+
 
 /* ---------- 文件操作 ---------- */
 int load_all_data(void);
@@ -240,6 +230,7 @@ void sort_activities_by_enrollment(void);        // 按报名人数排序
 int add_category(const char* name);
 int delete_category(int id);
 void list_categories(void);
+Category* find_category_by_id(int id);
 Category* find_category_by_id(int id);
 
 /* ---------- 报名管理 ---------- */
