@@ -196,7 +196,7 @@ Student* find_student_by_username(const char* username);
 Admin* find_admin_by_username(const char* username);
 
 /* ---------- 活动管理 ---------- */
-int add_activity(Activity* act);  //4.2杨若菲已写            // 添加活动（默认草稿）
+int add_activity(Activity* act);                 // 添加活动（默认草稿）
 int publish_activity(int activity_id);           // 发布草稿
 int take_down_activity(int activity_id);         // 下架活动
 int update_activity(Activity* act);              // 修改活动（支持草稿）
