@@ -446,6 +446,12 @@ Activity* find_activity_by_id(int id) {
     return NULL;
 }
 
+Category* find_category_by_id(int id) {
+    Category* p = category_head;
+    while (p) { if (p->id == id) return p; p = p->next; }
+    return NULL;
+}
+
 // -------------------- 用户管理 --------------------
 void* login(const char* username, const char* password, Role* role) {
     Student* s = find_student_by_username(username);
@@ -472,6 +478,7 @@ int register_student(const char* username, const char* password, const char* nam
     strcpy(new_s->class_name, class_name);
     strcpy(new_s->location, location);
     new_s->role = ROLE_STUDENT;
+    new_s->remind_ahead = 24 * 3600;   // 添加这一行，默认24小时
     new_s->next = NULL;
     if (!student_head) student_head = new_s;
     else {
