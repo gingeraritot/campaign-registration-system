@@ -1,71 +1,36 @@
-#include "../../head.h"
+ï»¿#include "../../head.h"
 #include <ctype.h>
 
 int add_activity(Activity* act) {
-    /*
-        ÊäÈë¼ì²é
-    */
-	if (!act) return -1;    //¿ÕÖ¸Õë¼ì²é
-	if (act->name[0] == '\0') return -1;   // »î¶¯Ãû³Æ²»ÄÜÎª¿Õ
-	if (act->max_participants <= 0) return -1;   // ÈËÊıÉÏÏŞ²»ºÏÀí
+    if (!act) return -1;
+    if (act->name[0] == '\0') return -1;
+    if (act->max_participants <= 0) return -1;
 
-    /*
-        Ìí¼Ó²Ù×÷
-    */
-    int max_id = 0;
-    Activity* p = activity_head;     //Óë´æ´¢Êı¾İµÄÁ´±í½øĞĞÁ¬½Ó£¨µ÷È¡Êı¾İ£©
-                                     //Á´±íÍ·ÔÚdata.cppÖĞÒÑ¾­ÉèÖÃÎª¿Õ
-	while (p) {              //Èç¹ûÁ´±íÎª¿Õ£¬Í·Ö¸ÕëÎªNULL£¬Ñ­»·Ìå²»Ö´ĞĞ£¬max_id±£³ÖÎª0
-		if (p->id > max_id) max_id = p->id;    //ÉèÖÃ×î´óid£¬È·±£ĞÂ»î¶¯µÄidÎ¨Ò»ÇÒµİÔö
-        p = p->next;
-    }
-    int new_id = max_id + 1;
+    int new_id = get_next_activity_id();
 
-	Activity* node = (Activity*)malloc(sizeof(Activity));  //ĞÂ½¨½Úµã
+    Activity* node = (Activity*)malloc(sizeof(Activity));
     if (!node) return -1;
-	memcpy(node, act, sizeof(Activity));  //ĞÂÖªÊ¶£ºÄÚ´æ¸´ÖÆº¯Êı£¬½«actµÄÄÚÈİ¸´ÖÆµ½nodeÖĞ
-    node->id = new_id;        //¸ü»»id
-	node->current_count = 0;   //µ±Ç°±¨ÃûÈËÊı³õÊ¼»¯Îª0
-	node->status = DRAFT;     //ÉèÖÃÄ¬ÈÏ×´Ì¬Îª²İ¸å11111111111111111111111111111111111111111111111111111111111111111111
-	node->next = activity_head;         //Í·²å·¨£¡ĞÂÀ´µÄÏÂÒ»¸öÒ»¶¨ÊÇµÚÒ»¸ö£¬ËùÒÔnextÖ¸Ïòµ±Ç°µÄÁ´±íÍ·
-	activity_head = node;            //Á´±íÍ·ÓÀÔ¶Ö¸Ïò×îĞÂÌí¼ÓµÄ½Úµã
+    memcpy(node, act, sizeof(Activity));
+    node->id = new_id;
+    node->current_count = 0;
+    node->status = DRAFT;
+    node->next = activity_head;
+    activity_head = node;
 
-	// ±£´æ³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø-1£¬0 ±íÊ¾ÎŞÊı¾İ»òÎ´ÕÒµ½ÎÄ¼ş
-	if (save_activities(ACTIVITIES_FILE) != 1) {
-        //Èç¹û±£´æÊ§°Ü£¬»ØÍËÁ´±íµ½Ö®Ç°µÄ×´Ì¬
-        // ÏÂÃæ¶¼ÊÇÔÚ£¨É¾³ıĞÂÌí¼ÓµÄ½Úµã£©
-		Activity* tmp = activity_head;   
-        activity_head = tmp->next;         
-        free(tmp);
+    if (save_activities(ACTIVITIES_FILE) != 1) {
+        activity_head = node->next;
+        free(node);
         return -1;
     }
-
     return new_id;
 }
 
-
-// ĞŞ¸Ä»î¶¯£º¸ù¾İ act->id ²éÕÒÒÑÓĞ»î¶¯²¢¸üĞÂÆä¿ÉĞŞ¸Ä×Ö¶Î¡£
-// ·µ»Ø 1 ±íÊ¾³É¹¦£¬-1 ±íÊ¾Ê§°Ü£¨Î´ÕÒµ½/ÑéÖ¤Ê§°Ü/±£´æÊ§°Ü£©¡£
 int update_activity(Activity* act) {
     if (!act) return -1;
-
-    // ÔÚÁ´±íÖĞ²éÕÒÒÑÓĞ»î¶¯
     Activity* p = find_activity_by_id(act->id);
-    if (!p) return -1; // Î´ÕÒµ½
+    if (!p) return -1;
+    if (act->max_participants > 0 && act->max_participants < p->current_count) return -1;
 
-
-    // »ù±¾Ğ£Ñé
-	if (act->max_participants > 0 && act->max_participants < p->current_count) return -1;  
-    //ÕâÀïµÄÇ°°ë¶ÎÅĞ¶ÏÊÇËµ£ºÔÚ½»»¥Ò³Ãæ£¬ÎÒÃÇÑ¯ÎÊÓÃ»§ÊÇ·ñ¸ü¸ÄÈËÊıÉÏÏŞ£¬Èç¹û²»¸ü¸Ä£¬½«ÈËÊıÉÏÏŞÉèÖÃÎª0£¬ÕâÀï¾Í²»»á·µ»Ø-1
-    //ºó°ë¶Î£º²»ÈÃĞŞ¸ÄºóµÄÈËÊıÉÏÏŞĞ¡ÓÚµ±Ç°±¨ÃûÈËÊı£¬ÓÃ»§²»ÄÜ¸Ä µ±Ç°±¨ÃûÈËÊı£¬Ö»ÄÜÔÚÑ§Éú²ã¸Ä
-
-
-
-    /*
-        °²È«µØÖğ×Ö¶Î¸üĞÂ£¨±£ÁôÏµÍ³×Ö¶Î id / current_count / next£¬ÕâĞ©¶¼ÊÇÓÃ»§²»ÄÜ¸ÄµÄ£©
-    */ 
-
-    // ×Ö·û´®×Ö¶ÎÊ¹ÓÃ strncpy ²¢±£Ö¤ÒÔ NUL ½áÊø
     strncpy(p->name, act->name, MAX_ACTIVITY_NAME - 1);
     p->name[MAX_ACTIVITY_NAME - 1] = '\0';
     strncpy(p->start_time, act->start_time, MAX_TIME - 1);
@@ -76,126 +41,82 @@ int update_activity(Activity* act) {
     p->max_participants = act->max_participants;
     strncpy(p->description, act->description, MAX_DESCRIPTION - 1);
     p->description[MAX_DESCRIPTION - 1] = '\0';
-    strncpy(p->reward, act->reward, MAX_REWARD - 1); p->reward[MAX_REWARD - 1] = '\0';
+    strncpy(p->reward, act->reward, MAX_REWARD - 1);
+    p->reward[MAX_REWARD - 1] = '\0';
     p->category_id = act->category_id;
-
-    // ×´Ì¬¿ÉÒÔ¸üĞÂ£¨ÀıÈç²İ¸å->·¢²¼£©£¬µ«²»×ö¶îÍâÑéÖ¤ here
     p->status = act->status;
 
-    // ³Ö¾Ã»¯
-    if (save_activities(ACTIVITIES_FILE) != 1) {
-        return -1;
-    }
-
+    if (save_activities(ACTIVITIES_FILE) != 1) return -1;
+    remind_activity_update(act->id);
     return 1;
 }
 
-
-
-
-
-// ÏÂ¼Ü»î¶¯£º¸ù¾İ activity_id ½«×´Ì¬ÉèÖÃÎª TAKEN_DOWN ²¢³Ö¾Ã»¯
-// ·µ»Ø 1 ³É¹¦£¬-1 Ê§°Ü
 int take_down_activity(int activity_id) {
     if (activity_id <= 0) return -1;
     Activity* p = find_activity_by_id(activity_id);
     if (!p) return -1;
-
-    if (p->status == TAKEN_DOWN) return 1; // ÒÑÏÂ¼Ü
+    if (p->status == TAKEN_DOWN) return 1;
     p->status = TAKEN_DOWN;
     return (save_activities(ACTIVITIES_FILE) == 1) ? 1 : -1;
 }
 
-
-
-// ·¢²¼²İ¸å»î¶¯£º½«»î¶¯×´Ì¬´Ó DRAFT ±äÎª PUBLISHED ²¢³Ö¾Ã»¯
-// ·µ»Ø 1 ³É¹¦£¬-1 Ê§°Ü£¨Î´ÕÒµ½/ÑéÖ¤Ê§°Ü/±£´æÊ§°Ü£©
 int publish_activity(int activity_id) {
     if (activity_id <= 0) return -1;
     Activity* p = find_activity_by_id(activity_id);
     if (!p) return -1;
-
-    // Ö»ÓĞ²İ¸å¿ÉÒÔ·¢²¼
-    if (p->status == PUBLISHED) return 1; // ÒÑ·¢²¼
-	if (p->status != DRAFT) return -1;    // ²»ÔÚ²İ¸åÏäÄÚ
-
-    // »ù±¾Ğ£Ñé£ºÃû³Æ¡¢ÈËÊıÉÏÏŞ¡¢·ÖÀà
+    if (p->status == PUBLISHED) return 1;
+    if (p->status != DRAFT) return -1;
     if (p->name[0] == '\0') return -1;
     if (p->max_participants <= 0) return -1;
-	if (p->category_id != 0 && !find_category_by_id(p->category_id)) return -1;  //ÌîÁË·ÖÀàµ«ÊÇÕÒ²»µ½·ÖÀà
-
+    if (p->category_id != 0 && !find_category_by_id(p->category_id)) return -1;
     p->status = PUBLISHED;
     if (save_activities(ACTIVITIES_FILE) != 1) {
-        // »Ø¹ö×´Ì¬
         p->status = DRAFT;
         return -1;
     }
     return 1;
 }
 
-
-
-
-
-// É¾³ı»î¶¯£ºÔÚÈ·±£Ã»ÓĞÏà¹Ø±¨Ãû¼ÇÂ¼µÄÇé¿öÏÂ´ÓÁ´±íÖĞÒÆ³ı²¢³Ö¾Ã»¯
-// ·µ»Ø 1 ³É¹¦£¬-1 Ê§°Ü£¨Î´ÕÒµ½ / ÓĞ±¨Ãû / ±£´æÊ§°Ü£©
 int delete_activity(int activity_id) {
     if (activity_id <= 0) return -1;
-
-	Activity* pre = NULL;    //ÓÃÀ´¼ÇÂ¼ÒªÉ¾³ı½ÚµãµÄÇ°Ò»¸ö½Úµã£¬·½±ãĞŞ¸ÄnextÖ¸Õë
+    Activity* pre = NULL;
     Activity* cur = activity_head;
     while (cur && cur->id != activity_id) {
         pre = cur;
         cur = cur->next;
     }
-    if (!cur) return -1; // Î´ÕÒµ½
-
-    // Èç¹ûÒÑÓĞ±¨Ãû¼ÇÂ¼£¬¾Ü¾øÉ¾³ı£¨±ÜÃâÊı¾İ²»Ò»ÖÂ£©
+    if (!cur) return -1;
     Enrollment* e = enrollment_head;
     while (e) {
         if (e->activity_id == activity_id) return -1;
         e = e->next;
     }
-
-    // ´ÓÁ´±íÖĞÒÆ³ı
-	if (pre) pre->next = cur->next;  //Êı¾İÂß¼­ÄÚ¼üºÍÁ´±íµÄÁ¬½Ó Çø·Ö¿ª£¬ËäÈ»ÊÇÉ¾³ı½ÚµãµÄÇ°Ò»¸ö£¬Âß¼­ÉÏÊÇºóÌí¼ÓµÄ£¬µ«ÊÇÁ´±íÂß¼­Àï¾ÍÓ¦¸ÃÓÉÇ°Ò»¸öÖ¸ÏòºóÒ»¸ö
-    else activity_head = cur->next;  //Èç¹ûpre²»ÎªNULL£¬ËµÃ÷ÒªÉ¾³ıµÄ½Úµã²»ÊÇÍ·½Úµã£¬Ö±½ÓÈÃÇ°Ò»¸ö½ÚµãµÄnextÖ¸Ïòµ±Ç°½ÚµãµÄÏÂÒ»¸ö½Úµã
-
+    if (pre) pre->next = cur->next;
+    else activity_head = cur->next;
     free(cur);
-
-    // ³Ö¾Ã»¯
     return (save_activities(ACTIVITIES_FILE) == 1) ? 1 : -1;
 }
 
-
-
-// Ìí¼Ó»î¶¯·ÖÀà£ºÈôÍ¬Ãû·ÖÀàÒÑ´æÔÚÔò·µ»ØÆä id£¬·ñÔòÌí¼ÓĞÂ·ÖÀà²¢·µ»ØĞÂ id
 int add_category(const char* name) {
-    if (!name || name[0] == '\0') return -1;   //Ãû×Ö²»Îª¿Õ
-    // ¼ì²éÊÇ·ñÒÑ´æÔÚÍ¬Ãû·ÖÀà
+    if (!name || name[0] == '\0') return -1;
     Category* p = category_head;
     while (p) {
-        if (strcmp(p->name, name) == 0) return p->id;   //Èç¹ûÕÒµ½ÁËÍ¬Ãû·ÖÀà£¬Ö±½Ó·µ»ØËüµÄid£¬²»Ìí¼ÓĞÂ·ÖÀà
+        if (strcmp(p->name, name) == 0) return p->id;
         p = p->next;
     }
-
-    //ĞŞ¸Ä»î¶¯·ÖÀàÁ´±í
     Category* node = (Category*)malloc(sizeof(Category));
     if (!node) return -1;
     node->id = get_next_category_id();
     strncpy(node->name, name, MAX_CATEGORY_NAME - 1);
     node->name[MAX_CATEGORY_NAME - 1] = '\0';
     node->next = NULL;
-
     if (!category_head) category_head = node;
     else {
         Category* tail = category_head;
         while (tail->next) tail = tail->next;
         tail->next = node;
     }
-
     if (save_categories(CATEGORIES_FILE) != 1) {
-        // »Ø¹ö
         if (category_head == node) category_head = node->next;
         else {
             Category* cur = category_head;
@@ -205,95 +126,62 @@ int add_category(const char* name) {
         free(node);
         return -1;
     }
-
     return node->id;
 }
 
-
-
-// É¾³ı·ÖÀà£ºÈç¹ûÓĞ»î¶¯ÈÔÒıÓÃ¸Ã·ÖÀà£¬Ôò¾Ü¾øÉ¾³ıÒÔ±ÜÃâÊı¾İ²»Ò»ÖÂ¡£
-// ·µ»Ø 1 ³É¹¦£¬-1 Ê§°Ü£¨Î´ÕÒµ½ / ÓĞ»î¶¯ÒıÓÃ / ±£´æÊ§°Ü£©¡£
 int delete_category(int id) {
     if (id <= 0) return -1;
-
-    // Èç¹ûÒÑÓĞ»î¶¯Ê¹ÓÃ¸Ã·ÖÀà£¬¾Ü¾øÉ¾³ı
     Activity* a = activity_head;
     while (a) {
         if (a->category_id == id) return -1;
         a = a->next;
     }
-
     Category* prev = NULL;
     Category* cur = category_head;
     while (cur && cur->id != id) {
         prev = cur;
         cur = cur->next;
     }
-    if (!cur) return -1; // Î´ÕÒµ½
-
+    if (!cur) return -1;
     if (prev) prev->next = cur->next;
     else category_head = cur->next;
-
     free(cur);
-
     return (save_categories(CATEGORIES_FILE) == 1) ? 1 : -1;
 }
 
-
-
-
-
-// °´Ãû³Æ»òÃèÊöËÑË÷ÒÑ·¢²¼µÄ»î¶¯£¨²»Çø·Ö´óĞ¡Ğ´£©£¬ÔÚ¿ØÖÆÌ¨´òÓ¡½á¹û
 void search_activities(const char* keyword) {
     if (!keyword || keyword[0] == '\0') {
-        printf("ËÑË÷¹Ø¼ü×ÖÎª¿Õ\n");
+        printf("æœç´¢å…³é”®å­—ä¸ºç©º\n");
         return;
     }
-
-	//°ÑËÑË÷¹Ø¼ü×Ö×ª»»ÎªĞ¡Ğ´£¬×¼±¸½øĞĞ²»Çø·Ö´óĞ¡Ğ´µÄ±È½Ï
     char kw[MAX_DESCRIPTION];
     size_t klen = strlen(keyword);
     if (klen >= sizeof(kw)) klen = sizeof(kw) - 1;
     for (size_t i = 0; i < klen; ++i) kw[i] = (char)tolower((unsigned char)keyword[i]);
-	//tolowerº¯Êı½«´óĞ´×ÖÄ¸×ª»»ÎªĞ¡Ğ´×ÖÄ¸£¬unsigned charÊÇÎªÁËÈ·±£ÊäÈë×Ö·û±»ÕıÈ·´¦Àí£¬±ÜÃâ¸ºÖµµ¼ÖÂµÄÎÊÌâ
     kw[klen] = '\0';
-
     int found = 0;
     Activity* p = activity_head;
     while (p) {
         if (p->status == PUBLISHED) {
-            // ×¼±¸Ğ¡Ğ´µÄÃû³Æ½øĞĞ²»Çø·Ö´óĞ¡Ğ´µÄ±È½Ï
             char name_lower[MAX_ACTIVITY_NAME];
             size_t nlen = strlen(p->name);
-			if (nlen >= sizeof(name_lower)) nlen = sizeof(name_lower) - 1;  //ÁôÒ»¸öÎ»ÖÃ¸ø'\0'
+            if (nlen >= sizeof(name_lower)) nlen = sizeof(name_lower) - 1;
             for (size_t i = 0; i < nlen; ++i) name_lower[i] = (char)tolower((unsigned char)p->name[i]);
             name_lower[nlen] = '\0';
-			// ×¼±¸Ğ¡Ğ´µÄÃèÊö½øĞĞ²»Çø·Ö´óĞ¡Ğ´µÄ±È½Ï
             char desc_lower[MAX_DESCRIPTION];
             size_t dlen = strlen(p->description);
             if (dlen >= sizeof(desc_lower)) dlen = sizeof(desc_lower) - 1;
             for (size_t i = 0; i < dlen; ++i) desc_lower[i] = (char)tolower((unsigned char)p->description[i]);
             desc_lower[dlen] = '\0';
-			//¿ªÊ¼ËÑË÷£¬Ê¹ÓÃstrstrº¯Êı¼ì²é¹Ø¼ü×ÖÊÇ·ñ³öÏÖÔÚÃû³Æ»òÃèÊöÖĞ
             if (strstr(name_lower, kw) != NULL || strstr(desc_lower, kw) != NULL) {
-                if (!found) printf("ËÑË÷½á¹û£º\n");
+                if (!found) printf("æœç´¢ç»“æœï¼š\n");
                 found = 1;
-                printf("ID:%d | Ãû³Æ:%s | Ê±¼ä:%s | µØµã:%s\n", p->id, p->name, p->start_time, p->location);
-                printf("    ±¨Ãû:%d/%d | ·ÖÀàID:%d\n", p->current_count, p->max_participants, p->category_id);
-                if (p->description[0]) printf("    ÃèÊö: %s\n", p->description);
+                printf("ID:%d | åç§°:%s | æ—¶é—´:%s | åœ°ç‚¹:%s\n", p->id, p->name, p->start_time, p->location);
+                printf("    æŠ¥å:%d/%d | åˆ†ç±»ID:%d\n", p->current_count, p->max_participants, p->category_id);
+                if (p->description[0]) printf("    æè¿°: %s\n", p->description);
             }
         }
         p = p->next;
     }
-    if (!found) printf("Î´ÕÒµ½Æ¥ÅäµÄÒÑ·¢²¼»î¶¯\n");
+    if (!found) printf("æœªæ‰¾åˆ°åŒ¹é…çš„å·²å‘å¸ƒæ´»åŠ¨\n");
 }
-
-
-
-
-
-
-
-
-
-
