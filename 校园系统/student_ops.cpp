@@ -150,17 +150,6 @@ int checkout(int student_id, int activity_id) {
 
 
 
-
-// 学生设置提醒提前量（秒）
-int set_remind_ahead(int student_id, int seconds) {
-	Student* s = find_student_by_id(student_id);
-	if (!s) return -1;
-	if (seconds < 0) return -2;
-	s->remind_ahead = seconds;
-	return 0; // 成功
-}
-
-
 // 学生查看已报名活动列表
 int view_enrolled_activities(int student_id) {
 	Student* s = find_student_by_id(student_id);

@@ -1,4 +1,4 @@
-#include <graphics.h>
+ï»¿#include <graphics.h>
 #include <conio.h>
 #include <stdio.h>
 #include <string.h>
@@ -6,7 +6,7 @@
 #include <windows.h>
 #include "head.h"
 
-// ==================== È«¾Ö³£Á¿¶¨Òå ====================
+// ==================== å…¨å±€å¸¸é‡å®šä¹‰ ====================
 #define WINDOW_WIDTH  1200
 #define WINDOW_HEIGHT 800
 #define BTN_WIDTH     200
@@ -39,7 +39,14 @@ typedef enum {
     PAGE_ADMIN_MAIN
 } PageType;
 
-// ==================== ¹¤¾ßº¯Êı ====================
+// ==================== å‡½æ•°å‰å‘å£°æ˜ ====================
+Role showWelcomePage();
+PageType showLoginPage(Role& currentRole);
+PageType showRegisterPage();
+void showStudentMainPage();
+void showAdminMainPage();
+
+// ==================== å·¥å…·å‡½æ•° ====================
 void drawButton(int x, int y, int w, int h, const wchar_t* text, bool isHover) {
     COLORREF btnColor = isHover ? RGB(100, 180, 255) : RGB(70, 150, 230);
     setfillcolor(btnColor);
@@ -47,7 +54,7 @@ void drawButton(int x, int y, int w, int h, const wchar_t* text, bool isHover) {
     fillroundrect(x, y, x + w, y + h, 10, 10);
     settextcolor(WHITE);
     setbkmode(TRANSPARENT);
-    settextstyle(20, 0, L"Î¢ÈíÑÅºÚ");
+    settextstyle(20, 0, L"å¾®è½¯é›…é»‘");
     int textX = x + (w - textwidth(text)) / 2;
     int textY = y + (h - textheight(text)) / 2;
     outtextxy(textX, textY, text);
@@ -58,7 +65,7 @@ void drawInputBox(int x, int y, int w, int h, const wchar_t* label, const wchar_
     setlinecolor(isFocus ? RGB(0, 120, 255) : RGB(180, 180, 180));
     fillroundrect(x, y, x + w, y + h, 5, 5);
     settextcolor(BLACK);
-    settextstyle(18, 0, L"Î¢ÈíÑÅºÚ");
+    settextstyle(18, 0, L"å¾®è½¯é›…é»‘");
     outtextxy(x - 120, y + 8, label);
 
     if (wcslen(content) > 0) {
@@ -77,7 +84,7 @@ void drawInputBoxNoLabel(int x, int y, int w, int h, const wchar_t* content, boo
     setlinecolor(isFocus ? RGB(0, 120, 255) : RGB(180, 180, 180));
     fillroundrect(x, y, x + w, y + h, 5, 5);
     settextcolor(BLACK);
-    settextstyle(18, 0, L"Î¢ÈíÑÅºÚ");
+    settextstyle(18, 0, L"å¾®è½¯é›…é»‘");
 
     if (wcslen(content) > 0) {
         outtextxy(x + 10, y + 8, content);
@@ -104,14 +111,18 @@ int checkLogin(const wchar_t* username, const wchar_t* password, Role role) {
     }
 }
 
-// ==================== »¶Ó­Ò³ ====================
+<<<<<<< HEAD
+// ==================== ï¿½ï¿½Ó­Ò³ ====================
+=======
+// ==================== æ¬¢è¿é¡µ ====================
+>>>>>>> 24407670da7495566a27c1e7e1d09df4d62e9f3c
 Role showWelcomePage() {
     cleardevice();
     setbkcolor(RGB(240, 245, 250));
     cleardevice();
     settextcolor(RGB(30, 60, 120));
-    settextstyle(36, 0, L"Î¢ÈíÑÅºÚ");
-    const wchar_t* title = L"Ğ£Ô°»î¶¯¹ÜÀíÏµÍ³";
+    settextstyle(36, 0, L"å¾®è½¯é›…é»‘");
+    const wchar_t* title = L"æ ¡å›­æ´»åŠ¨ç®¡ç†ç³»ç»Ÿ";
     outtextxy((WINDOW_WIDTH - textwidth(title)) / 2, 80, title);
 
     int centerX = WINDOW_WIDTH / 2;
@@ -137,10 +148,10 @@ Role showWelcomePage() {
                         adminHover = newAdminHover;
                         cleardevice();
                         settextcolor(RGB(30, 60, 120));
-                        settextstyle(36, 0, L"Î¢ÈíÑÅºÚ");
+                        settextstyle(36, 0, L"å¾®è½¯é›…é»‘");
                         outtextxy((WINDOW_WIDTH - textwidth(title)) / 2, 80, title);
-                        drawButton(studentBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"Ñ§ÉúµÇÂ¼", studentHover);
-                        drawButton(adminBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"¹ÜÀíÔ±µÇÂ¼", adminHover);
+                        drawButton(studentBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"å­¦ç”Ÿç™»å½•", studentHover);
+                        drawButton(adminBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"ç®¡ç†å‘˜ç™»å½•", adminHover);
                     }
                 }
             }
@@ -159,8 +170,13 @@ Role showWelcomePage() {
     }
 }
 
-// ==================== µÇÂ¼Ò³ ====================
-PageType showLoginPage(Role& currentRole) {  // ¸ÄÎª´«Öµ£¬²»ÊÇÒıÓÃ
+<<<<<<< HEAD
+// ==================== ï¿½ï¿½Â¼Ò³ ====================
+PageType showLoginPage(Role& currentRole) {  // ï¿½ï¿½Îªï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+=======
+// ==================== ç™»å½•é¡µ ====================
+PageType showLoginPage(Role& currentRole) {
+>>>>>>> 24407670da7495566a27c1e7e1d09df4d62e9f3c
     cleardevice();
     setbkcolor(RGB(240, 245, 250));
     cleardevice();
@@ -221,7 +237,7 @@ PageType showLoginPage(Role& currentRole) {  // ¸ÄÎª´«Öµ£¬²»ÊÇÒıÓÃ
                             return (currentRole == ROLE_STUDENT) ? PAGE_STUDENT_MAIN : PAGE_ADMIN_MAIN;
                         }
                         else {
-                            MessageBoxW(GetHWnd(), L"ÓÃ»§Ãû»òÃÜÂë´íÎó", L"µÇÂ¼Ê§°Ü", MB_OK);
+                            MessageBoxW(GetHWnd(), L"ç”¨æˆ·åæˆ–å¯†ç é”™è¯¯", L"ç™»å½•å¤±è´¥", MB_OK);
                             memset(username, 0, sizeof(username));
                             memset(password, 0, sizeof(password));
                             focusIndex = 0;
@@ -263,30 +279,41 @@ PageType showLoginPage(Role& currentRole) {  // ¸ÄÎª´«Öµ£¬²»ÊÇÒıÓÃ
         if (needRedraw) {
             cleardevice();
 
-            // ¸ù¾İ½ÇÉ«ÏÔÊ¾²»Í¬µÄ±êÌâºÍ±³¾°É«
+<<<<<<< HEAD
+            // ï¿½ï¿½ï¿½İ½ï¿½É«ï¿½ï¿½Ê¾ï¿½ï¿½Í¬ï¿½Ä±ï¿½ï¿½ï¿½Í±ï¿½ï¿½ï¿½É«
             const wchar_t* title;
             if (currentRole == ROLE_STUDENT) {
-                title = L"Ñ§ÉúµÇÂ¼";
+                title = L"Ñ§ï¿½ï¿½ï¿½ï¿½Â¼";
                 setbkcolor(RGB(240, 245, 250));
             }
             else {
-                title = L"¹ÜÀíÔ±µÇÂ¼";
-                setbkcolor(RGB(255, 240, 230));  // ¹ÜÀíÔ±µÇÂ¼Ò³ÓÃ²»Í¬µÄ±³¾°É«
+                title = L"ï¿½ï¿½ï¿½ï¿½Ô±ï¿½ï¿½Â¼";
+                setbkcolor(RGB(255, 240, 230));  // ï¿½ï¿½ï¿½ï¿½Ô±ï¿½ï¿½Â¼Ò³ï¿½Ã²ï¿½Í¬ï¿½Ä±ï¿½ï¿½ï¿½É«
+=======
+            const wchar_t* title;
+            if (currentRole == ROLE_STUDENT) {
+                title = L"å­¦ç”Ÿç™»å½•";
+                setbkcolor(RGB(240, 245, 250));
+            }
+            else {
+                title = L"ç®¡ç†å‘˜ç™»å½•";
+                setbkcolor(RGB(255, 240, 230));
+>>>>>>> 24407670da7495566a27c1e7e1d09df4d62e9f3c
             }
             cleardevice();
 
             settextcolor(RGB(30, 60, 120));
-            settextstyle(30, 0, L"Î¢ÈíÑÅºÚ");
+            settextstyle(30, 0, L"å¾®è½¯é›…é»‘");
             outtextxy((WINDOW_WIDTH - textwidth(title)) / 2, 80, title);
 
-            drawInputBox(inputX, userInputY, INPUT_WIDTH, INPUT_HEIGHT, L"ÓÃ»§Ãû£º", username, focusIndex == 0);
-            drawInputBox(inputX, pwdInputY, INPUT_WIDTH, INPUT_HEIGHT, L"ÃÜ  Âë£º", password, focusIndex == 1);
+            drawInputBox(inputX, userInputY, INPUT_WIDTH, INPUT_HEIGHT, L"ç”¨æˆ·åï¼š", username, focusIndex == 0);
+            drawInputBox(inputX, pwdInputY, INPUT_WIDTH, INPUT_HEIGHT, L"å¯†  ç ï¼š", password, focusIndex == 1);
 
-            drawButton(loginBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"µÇÂ¼", loginHover);
+            drawButton(loginBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"ç™»å½•", loginHover);
             if (currentRole == ROLE_STUDENT) {
-                drawButton(registerBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"×¢²á", registerHover);
+                drawButton(registerBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"æ³¨å†Œ", registerHover);
             }
-            drawButton(backBtnX, backBtnY, BTN_WIDTH, BTN_HEIGHT, L"·µ»Ø", backHover);
+            drawButton(backBtnX, backBtnY, BTN_WIDTH, BTN_HEIGHT, L"è¿”å›", backHover);
 
             needRedraw = false;
         }
@@ -294,7 +321,11 @@ PageType showLoginPage(Role& currentRole) {  // ¸ÄÎª´«Öµ£¬²»ÊÇÒıÓÃ
     }
 }
 
-// ==================== ×¢²áÒ³ ====================
+<<<<<<< HEAD
+// ==================== ×¢ï¿½ï¿½Ò³ ====================
+=======
+// ==================== æ³¨å†Œé¡µ ====================
+>>>>>>> 24407670da7495566a27c1e7e1d09df4d62e9f3c
 PageType showRegisterPage() {
     cleardevice();
     setbkcolor(RGB(240, 245, 250));
@@ -387,16 +418,16 @@ PageType showRegisterPage() {
                         WideCharToMultiByte(CP_ACP, 0, location, -1, locationA, 100, NULL, NULL);
 
                         if (strlen(usernameA) == 0 || strlen(passwordA) == 0 || strlen(studentIdA) == 0 || strlen(nameA) == 0) {
-                            MessageBoxW(GetHWnd(), L"ÇëÌîĞ´ÍêÕûĞÅÏ¢£¡", L"×¢²áÊ§°Ü", MB_OK);
+                            MessageBoxW(GetHWnd(), L"è¯·å¡«å†™å®Œæ•´ä¿¡æ¯ï¼", L"æ³¨å†Œå¤±è´¥", MB_OK);
                         }
                         else {
                             int regResult = register_student(usernameA, passwordA, nameA, studentIdA, phoneA, genderA, age, clnameA, locationA);
                             if (regResult == 1) {
-                                MessageBoxW(GetHWnd(), L"×¢²á³É¹¦£¡ÇëµÇÂ¼", L"³É¹¦", MB_OK);
+                                MessageBoxW(GetHWnd(), L"æ³¨å†ŒæˆåŠŸï¼è¯·ç™»å½•", L"æˆåŠŸ", MB_OK);
                                 return PAGE_LOGIN;
                             }
                             else {
-                                MessageBoxW(GetHWnd(), L"×¢²áÊ§°Ü£¬ÓÃ»§Ãû¿ÉÄÜÒÑ´æÔÚ£¡", L"´íÎó", MB_OK);
+                                MessageBoxW(GetHWnd(), L"æ³¨å†Œå¤±è´¥ï¼Œç”¨æˆ·åå¯èƒ½å·²å­˜åœ¨ï¼", L"é”™è¯¯", MB_OK);
                             }
                         }
                         needRedraw = true;
@@ -459,25 +490,32 @@ PageType showRegisterPage() {
         if (needRedraw) {
             cleardevice();
 
-            const wchar_t* title = L"Ñ§Éú×¢²á";
+            const wchar_t* title = L"å­¦ç”Ÿæ³¨å†Œ";
             settextcolor(RGB(30, 60, 120));
-            settextstyle(28, 0, L"Î¢ÈíÑÅºÚ");
+            settextstyle(28, 0, L"å¾®è½¯é›…é»‘");
             outtextxy((WINDOW_WIDTH - textwidth(title)) / 2, 40, title);
 
-            settextstyle(18, 0, L"Î¢ÈíÑÅºÚ");
+            settextstyle(18, 0, L"å¾®è½¯é›…é»‘");
             setbkmode(TRANSPARENT);
 
             settextcolor(RGB(60, 60, 60));
-            outtextxy(col1LabelX, userInputY + 8, L"ÓÃ»§Ãû£º");
-            outtextxy(col1LabelX, pwdInputY + 8, L"ÃÜ  Âë£º");
-            outtextxy(col1LabelX, idInputY + 8, L"Ñ§  ºÅ£º");
-            outtextxy(col1LabelX, nameInputY + 8, L"ĞÕ  Ãû£º");
-            outtextxy(col1LabelX, phoneInputY + 8, L"ÁªÏµ·½Ê½£º");
+            outtextxy(col1LabelX, userInputY + 8, L"ç”¨æˆ·åï¼š");
+            outtextxy(col1LabelX, pwdInputY + 8, L"å¯†  ç ï¼š");
+            outtextxy(col1LabelX, idInputY + 8, L"å­¦  å·ï¼š");
+            outtextxy(col1LabelX, nameInputY + 8, L"å§“  åï¼š");
+            outtextxy(col1LabelX, phoneInputY + 8, L"è”ç³»æ–¹å¼ï¼š");
 
-            outtextxy(col2LabelX, genderInputY + 8, L"ĞÔ  ±ğ£º");
-            outtextxy(col2LabelX, ageInputY + 8, L"Äê  Áä£º");
-            outtextxy(col2LabelX, clnameInputY + 8, L"°à  ¼¶£º");
-            outtextxy(col2LabelX, locationInputY + 8, L"Î»  ÖÃ£º");
+<<<<<<< HEAD
+            outtextxy(col2LabelX, genderInputY + 8, L"ï¿½ï¿½  ï¿½ï¿½");
+            outtextxy(col2LabelX, ageInputY + 8, L"ï¿½ï¿½  ï¿½ä£º");
+            outtextxy(col2LabelX, clnameInputY + 8, L"ï¿½ï¿½  ï¿½ï¿½ï¿½ï¿½");
+            outtextxy(col2LabelX, locationInputY + 8, L"Î»  ï¿½Ã£ï¿½");
+=======
+            outtextxy(col2LabelX, genderInputY + 8, L"æ€§  åˆ«ï¼š");
+            outtextxy(col2LabelX, ageInputY + 8, L"å¹´  é¾„ï¼š");
+            outtextxy(col2LabelX, clnameInputY + 8, L"ç­  çº§ï¼š");
+            outtextxy(col2LabelX, locationInputY + 8, L"ä½  ç½®ï¼š");
+>>>>>>> 24407670da7495566a27c1e7e1d09df4d62e9f3c
 
             drawInputBoxNoLabel(col1InputX, userInputY, inputWidth, INPUT_HEIGHT, username, focusIndex == 0);
             drawInputBoxNoLabel(col1InputX, pwdInputY, inputWidth, INPUT_HEIGHT, password, focusIndex == 1);
@@ -490,9 +528,15 @@ PageType showRegisterPage() {
             drawInputBoxNoLabel(col2InputX, clnameInputY, inputWidth, INPUT_HEIGHT, clname, focusIndex == 7);
             drawInputBoxNoLabel(col2InputX, locationInputY, inputWidth, INPUT_HEIGHT, location, focusIndex == 8);
 
-            settextstyle(20, 0, L"Î¢ÈíÑÅºÚ");
-            drawButton(registerBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"×¢²á", registerHover);
-            drawButton(backBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"·µ»ØµÇÂ¼", backHover);
+<<<<<<< HEAD
+            settextstyle(20, 0, L"Î¢ï¿½ï¿½ï¿½Åºï¿½");
+            drawButton(registerBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"×¢ï¿½ï¿½", registerHover);
+            drawButton(backBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"ï¿½ï¿½ï¿½Øµï¿½Â¼", backHover);
+=======
+            settextstyle(20, 0, L"å¾®è½¯é›…é»‘");
+            drawButton(registerBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"æ³¨å†Œ", registerHover);
+            drawButton(backBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"è¿”å›ç™»å½•", backHover);
+>>>>>>> 24407670da7495566a27c1e7e1d09df4d62e9f3c
 
             needRedraw = false;
         }
@@ -501,9 +545,15 @@ PageType showRegisterPage() {
 }
 
 void showStudentMainPage() {}
-void showAdminMainPage() {}
+void showAdminMainPage() {
+    runAdminMainPage();  // è°ƒç”¨ç®¡ç†å‘˜ç•Œé¢æ¨¡å—
+}
 
-// ==================== Ö÷º¯Êı ====================
+<<<<<<< HEAD
+// ==================== ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ====================
+=======
+// ==================== ä¸»å‡½æ•° ====================
+>>>>>>> 24407670da7495566a27c1e7e1d09df4d62e9f3c
 int main() {
     initgraph(WINDOW_WIDTH, WINDOW_HEIGHT);
     setbkcolor(RGB(240, 245, 250));

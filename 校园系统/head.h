@@ -231,7 +231,7 @@ int add_category(const char* name);
 int delete_category(int id);
 void list_categories(void);
 Category* find_category_by_id(int id);
-Category* find_category_by_id(int id);
+
 
 /* ---------- 报名管理 ---------- */
 int enroll_student(int student_id, int activity_id);     // 报名（含时间冲突检查）
@@ -276,5 +276,8 @@ void remind_activity_update(int activity_id);
 
 void showStudentMainPage(void);
 void showAdminMainPage(void);
+
+/* 管理员界面入口（在 admin_main.cpp 中实现） */
+void runAdminMainPage(void);
 
 #endif /* ACTIVITY_SYSTEM_H */

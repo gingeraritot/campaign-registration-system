@@ -1,5 +1,6 @@
 ﻿C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\VC\v180\Microsoft.CppBuild.targets(551,5): warning MSB8028: 中间目录(x64\Debug\)包含从另一个项目(campus_system.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
 cl : 命令行  warning D9025: 正在重写“/sdl”(用“/GS-”)
+<<<<<<< HEAD
   main.cpp
   student_ops.cpp
 C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(249,29): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
@@ -113,3 +114,17 @@ C:\Users\正电子\source\repos\campaign-registration-system\校园系统\studen
 C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(160,1): error C2059: 语法错误:“}”
 C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(160,1): error C2143: 语法错误: 缺少“;”(在“}”的前面)
   正在生成代码...
+=======
+  student_ops.cpp
+C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_ops.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\system_service.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+  (编译源文件“student_ops.cpp”)
+  
+C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\system_service.cpp(102,50): warning C4244: “+=”: 从“time_t”转换到“long”，可能丢失数据
+  (编译源文件“student_ops.cpp”)
+  
+C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_ops.cpp(155,5): error C2084: 函数“int set_remind_ahead(int,int)”已有主体
+      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\system_service.cpp(266,5):
+      参见“set_remind_ahead”的前一个定义
+  
+>>>>>>> 24407670da7495566a27c1e7e1d09df4d62e9f3c
