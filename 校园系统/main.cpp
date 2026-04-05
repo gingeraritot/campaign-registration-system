@@ -281,7 +281,7 @@ PageType showLoginPage(Role& currentRole) {
     }
 }
 
-// =================== ×¢²áÒ³ ==================
+// =================== ×¢²áÒ³ ================
 PageType showRegisterPage() {
     cleardevice();
     setbkcolor(RGB(240, 245, 250));
