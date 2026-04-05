@@ -1,6 +1,7 @@
 #include "head.h"
 #include "system_service.cpp"
 
+//活动报名（包含时间冲突检查、人数上限检查、活动状态检查等）
 int enroll_student(int student_id, int activity_id) {
 	if (student_id <= 0 || activity_id <= 0) return -1;
 	Student* s = find_student_by_id(student_id);
@@ -23,6 +24,7 @@ int enroll_student(int student_id, int activity_id) {
 		}
 		e = e->next;
 	}
+
 	// 创建报名记录
 	Enrollment* new_enrollment = (Enrollment*)malloc(sizeof(Enrollment));
 	if (!new_enrollment) return -1;
@@ -41,6 +43,9 @@ int enroll_student(int student_id, int activity_id) {
 
 	return 0; // 成功返回 0
 }
+
+
+
 
 //退报活动
 int cancel_enrollment (int student_id, int activity_id) {
@@ -69,6 +74,9 @@ int cancel_enrollment (int student_id, int activity_id) {
 	}
 	return -1; // 未找到报名记录
 }
+
+
+
 
 //签到（同步更新报名记录和签到记录）
 int checkin(int student_id, int activity_id) {
@@ -110,6 +118,9 @@ int checkin(int student_id, int activity_id) {
 	return -1; // 未找到签到记录（理论上不应该发生，因为报名时会创建签到记录）
 }
 
+
+
+
 //签退（同步更新签退并触发时长勋章检查）
 int checkout(int student_id, int activity_id) {
 	if (student_id <= 0 || activity_id <= 0) return -1;
@@ -128,7 +139,7 @@ int checkout(int student_id, int activity_id) {
 				return -1;
 			}
 			a_record->checkout_time = time(NULL); // 设置签退时间戳
-			// 签退后检查时长勋章
+			// 签退后检查时长勋章（计时）
 			check_and_award_time_based(student_id);
 			return 0; // 成功
 		}
@@ -137,11 +148,33 @@ int checkout(int student_id, int activity_id) {
 	return -1; // 未找到签到记录（理论上不应该发生，因为报名时会创建签到记录）
 }
 
+
+
+
 // 学生设置提醒提前量（秒）
 int set_remind_ahead(int student_id, int seconds) {
 	Student* s = find_student_by_id(student_id);
 	if (!s) return -1;
 	if (seconds < 0) return -2;
 	s->remind_ahead = seconds;
+	return 0; // 成功
+}
+
+
+// 学生查看已报名活动列表
+int view_enrolled_activities(int student_id) {
+	Student* s = find_student_by_id(student_id);
+	if (!s) return -1;
+	printf("已报名活动列表：\n");
+	Enrollment* e = enrollment_head;
+	while (e) {
+		if (e->student_id == student_id) {
+			Activity* a = find_activity_by_id(e->activity_id);
+			if (a) {
+				printf("活动ID: %d, 活动名称: %s, 报名时间: %s\n", a->id, a->name, ctime(&e->enroll_time));
+			}
+		}
+		e = e->next;
+	}
 	return 0; // 成功
 }
