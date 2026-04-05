@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-
+int delete_attendance_record(int student_id, int activity_id);
 
 
 

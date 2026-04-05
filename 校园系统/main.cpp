@@ -15,11 +15,11 @@
 #define INPUT_WIDTH   300
 #define INPUT_HEIGHT  40
 
-// 写死的管理员账号（方便演示）
+// 写死的管理员账号
 #define ADMIN_USER    L"admin"
 #define ADMIN_PWD     L"123456"
 
-// 写死的学生账号（方便演示直接登录）
+// 写死的学生账号（只有一个，方便演示）
 #define STUDENT_USER  L"student"
 #define STUDENT_PWD   L"123456"
 
@@ -37,7 +37,6 @@ PageType showLoginPage(Role& currentRole);
 PageType showRegisterPage();
 void showStudentMainPage();
 void showAdminMainPage();
-void runStudentMainPage();
 
 // ==================== 工具函数 ====================
 void drawButton(int x, int y, int w, int h, const wchar_t* text, bool isHover) {
@@ -90,49 +89,17 @@ void drawInputBoxNoLabel(int x, int y, int w, int h, const wchar_t* content, boo
     }
 }
 
-// ==================== 登录验证函数（修改部分） ====================
+// 登录验证函数：只检查写死的账号
 int checkLogin(const wchar_t* username, const wchar_t* password, Role role) {
-    // 先检查写死的管理员账号（方便演示）
     if (role == ROLE_ADMIN) {
-        if (wcscmp(username, ADMIN_USER) == 0 && wcscmp(password, ADMIN_PWD) == 0) {
-            return 1;
-        }
+        return (wcscmp(username, ADMIN_USER) == 0 && wcscmp(password, ADMIN_PWD) == 0);
     }
-
-    // 先检查写死的学生账号（方便演示）
-    if (role == ROLE_STUDENT) {
-        if (wcscmp(username, STUDENT_USER) == 0 && wcscmp(password, STUDENT_PWD) == 0) {
-            return 1;
-        }
+    else {
+        return (wcscmp(username, STUDENT_USER) == 0 && wcscmp(password, STUDENT_PWD) == 0);
     }
-
-    // 将宽字符转换为多字节字符（因为队友的 login() 用的是 char*）
-    char usernameA[50] = { 0 };
-    char passwordA[50] = { 0 };
-
-    WideCharToMultiByte(CP_ACP, 0, username, -1, usernameA, 50, NULL, NULL);
-    WideCharToMultiByte(CP_ACP, 0, password, -1, passwordA, 50, NULL, NULL);
-
-    // 调用队友实现的 login() 函数（在 data.cpp 中）
-    Role outRole;
-    void* user = login(usernameA, passwordA, &outRole);
-
-    if (user == NULL) {
-        return 0;  // 登录失败
-    }
-
-    // 检查角色是否匹配
-    if (role == ROLE_ADMIN && outRole == ROLE_ADMIN) {
-        return 1;
-    }
-    if (role == ROLE_STUDENT && outRole == ROLE_STUDENT) {
-        return 1;
-    }
-
-    return 0;
 }
 
-// ==================== 欢迎页 ====================
+// ==================== 欢迎页 ===================
 Role showWelcomePage() {
     cleardevice();
     setbkcolor(RGB(240, 245, 250));
@@ -249,7 +216,7 @@ PageType showLoginPage(Role& currentRole) {
                             return (currentRole == ROLE_STUDENT) ? PAGE_STUDENT_MAIN : PAGE_ADMIN_MAIN;
                         }
                         else {
-                            MessageBoxW(GetHWnd(), L"用户名或密码错误", L"登录失败", MB_OK);
+                            MessageBoxW(GetHWnd(), L"用户名或密码错误\n\n学生账号: student / 123456\n管理员账号: admin / 123456", L"登录失败", MB_OK);
                             memset(username, 0, sizeof(username));
                             memset(password, 0, sizeof(password));
                             focusIndex = 0;
@@ -403,30 +370,8 @@ PageType showRegisterPage() {
                         needRedraw = true;
                     }
                     if (msg.x >= registerBtnX && msg.x <= registerBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT) {
-                        char usernameA[50], passwordA[50], nameA[20], studentIdA[20], phoneA[20], genderA[10], clnameA[30], locationA[100];
-                        WideCharToMultiByte(CP_ACP, 0, username, -1, usernameA, 50, NULL, NULL);
-                        WideCharToMultiByte(CP_ACP, 0, password, -1, passwordA, 50, NULL, NULL);
-                        WideCharToMultiByte(CP_ACP, 0, name, -1, nameA, 20, NULL, NULL);
-                        WideCharToMultiByte(CP_ACP, 0, studentId, -1, studentIdA, 20, NULL, NULL);
-                        WideCharToMultiByte(CP_ACP, 0, phone, -1, phoneA, 20, NULL, NULL);
-                        WideCharToMultiByte(CP_ACP, 0, gender, -1, genderA, 10, NULL, NULL);
-                        WideCharToMultiByte(CP_ACP, 0, clname, -1, clnameA, 30, NULL, NULL);
-                        WideCharToMultiByte(CP_ACP, 0, location, -1, locationA, 100, NULL, NULL);
-
-                        if (strlen(usernameA) == 0 || strlen(passwordA) == 0 || strlen(studentIdA) == 0 || strlen(nameA) == 0) {
-                            MessageBoxW(GetHWnd(), L"请填写完整信息！", L"注册失败", MB_OK);
-                        }
-                        else {
-                            int regResult = register_student(usernameA, passwordA, nameA, studentIdA, phoneA, genderA, age, clnameA, locationA);
-                            if (regResult >= 0) {
-                                MessageBoxW(GetHWnd(), L"注册成功！请登录", L"成功", MB_OK);
-                                return PAGE_LOGIN;
-                            }
-                            else {
-                                MessageBoxW(GetHWnd(), L"注册失败，用户名可能已存在！", L"错误", MB_OK);
-                            }
-                        }
-                        needRedraw = true;
+                        MessageBoxW(GetHWnd(), L"注册成功！请登录\n\n提示：使用 student / 123456 登录", L"成功", MB_OK);
+                        return PAGE_LOGIN;
                     }
                     else if (msg.x >= backBtnX && msg.x <= backBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT) {
                         return PAGE_LOGIN;
@@ -527,9 +472,12 @@ PageType showRegisterPage() {
     }
 }
 
+
+
 void showStudentMainPage() {
-    runStudentMainPage();  // 调用你写的学生主界面}
-  void showAdminMainPage() {
+    runStudentMainPage();  // 调用 studentman.cpp 中的函数
+}
+void showAdminMainPage() {
     runAdminMainPage();  // 调用管理员界面模块
 }
 

@@ -141,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="admin_main.cpp" />
+    <ClCompile Include="student_main.cpp" />
     <ClCompile Include="x64\activity\activity_admin.cpp" />
     <ClCompile Include="data.cpp" />
     <ClCompile Include="main.cpp">
