@@ -1,26 +1,15 @@
 ﻿C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\VC\v180\Microsoft.CppBuild.targets(551,5): warning MSB8028: 中间目录(x64\Debug\)包含从另一个项目(campus_system.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
 cl : 命令行  warning D9025: 正在重写“/sdl”(用“/GS-”)
+  data.cpp
+  main.cpp
   student_ops.cpp
+C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\main.cpp(242,29): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\main.cpp(416,33): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\main.cpp(434,33): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
 C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_ops.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+  system_service.cpp
 C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\system_service.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-  (编译源文件“student_ops.cpp”)
-  
 C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\system_service.cpp(102,50): warning C4244: “+=”: 从“time_t”转换到“long”，可能丢失数据
-  (编译源文件“student_ops.cpp”)
-  
-system_service.obj : error LNK2005: "int __cdecl add_medal(char const *)" (?add_medal@@YAHPEBD@Z) 已经在 student_ops.obj 中定义
-system_service.obj : error LNK2005: "int __cdecl add_suggestion(int,char const *)" (?add_suggestion@@YAHHPEBD@Z) 已经在 student_ops.obj 中定义
-system_service.obj : error LNK2005: "int __cdecl award_medal(int,int)" (?award_medal@@YAHHH@Z) 已经在 student_ops.obj 中定义
-system_service.obj : error LNK2005: "void __cdecl check_and_award_first_enroll(int)" (?check_and_award_first_enroll@@YAXH@Z) 已经在 student_ops.obj 中定义
-system_service.obj : error LNK2005: "void __cdecl check_and_award_time_based(int)" (?check_and_award_time_based@@YAXH@Z) 已经在 student_ops.obj 中定义
-system_service.obj : error LNK2005: "void __cdecl check_and_remind(int)" (?check_and_remind@@YAXH@Z) 已经在 student_ops.obj 中定义
-system_service.obj : error LNK2005: "int __cdecl create_attendance_record(int,int)" (?create_attendance_record@@YAHHH@Z) 已经在 student_ops.obj 中定义
-system_service.obj : error LNK2005: "int __cdecl delete_attendance_record(int,int)" (?delete_attendance_record@@YAHHH@Z) 已经在 student_ops.obj 中定义
-system_service.obj : error LNK2005: "int __cdecl is_reminded(int,int)" (?is_reminded@@YAHHH@Z) 已经在 student_ops.obj 中定义
-system_service.obj : error LNK2005: "void __cdecl list_suggestions(void)" (?list_suggestions@@YAXXZ) 已经在 student_ops.obj 中定义
-system_service.obj : error LNK2005: "void __cdecl list_user_medals(int)" (?list_user_medals@@YAXH@Z) 已经在 student_ops.obj 中定义
-system_service.obj : error LNK2005: "int __cdecl mark_suggestion_read(int)" (?mark_suggestion_read@@YAHH@Z) 已经在 student_ops.obj 中定义
-system_service.obj : error LNK2005: "void __cdecl open_map_navigation(char const *)" (?open_map_navigation@@YAXPEBD@Z) 已经在 student_ops.obj 中定义
-system_service.obj : error LNK2005: "void __cdecl remind_activity_update(int)" (?remind_activity_update@@YAXH@Z) 已经在 student_ops.obj 中定义
-system_service.obj : error LNK2005: "int __cdecl set_remind_ahead(int,int)" (?set_remind_ahead@@YAHHH@Z) 已经在 student_ops.obj 中定义
-C:\Users\pLeOn\source\repos\campaign-registration-system\x64\Debug\校园系统.exe : fatal error LNK1169: 找到一个或多个多重定义的符号
+  activity_admin.cpp
+  正在生成代码...
+  校园系统.vcxproj -> C:\Users\pLeOn\source\repos\campaign-registration-system\x64\Debug\校园系统.exe
