@@ -274,4 +274,7 @@ int set_remind_ahead(int student_id, int seconds);
 void open_map_navigation(const char* location);
 void remind_activity_update(int activity_id);
 
+void showStudentMainPage(void);
+void showAdminMainPage(void);
+
 #endif /* ACTIVITY_SYSTEM_H */
