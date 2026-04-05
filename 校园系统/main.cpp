@@ -15,21 +15,13 @@
 #define INPUT_WIDTH   300
 #define INPUT_HEIGHT  40
 
+// 写死的管理员账号（方便演示）
 #define ADMIN_USER    L"admin"
 #define ADMIN_PWD     L"123456"
 
-typedef struct {
-    wchar_t username[20];
-    wchar_t password[20];
-} StudentAccount;
-
-StudentAccount stuAccounts[] = {
-    {L"jiang", L"123"},
-    {L"yang", L"456"},
-    {L"chen", L"111"},
-    {L"guo", L"222"}
-};
-int stuCount = sizeof(stuAccounts) / sizeof(StudentAccount);
+// 写死的学生账号（方便演示直接登录）
+#define STUDENT_USER  L"student"
+#define STUDENT_PWD   L"123456"
 
 typedef enum {
     PAGE_WELCOME,
@@ -45,6 +37,7 @@ PageType showLoginPage(Role& currentRole);
 PageType showRegisterPage();
 void showStudentMainPage();
 void showAdminMainPage();
+void runStudentMainPage();
 
 // ==================== 工具函数 ====================
 void drawButton(int x, int y, int w, int h, const wchar_t* text, bool isHover) {
@@ -97,25 +90,49 @@ void drawInputBoxNoLabel(int x, int y, int w, int h, const wchar_t* content, boo
     }
 }
 
+// ==================== 登录验证函数（修改部分） ====================
 int checkLogin(const wchar_t* username, const wchar_t* password, Role role) {
+    // 先检查写死的管理员账号（方便演示）
     if (role == ROLE_ADMIN) {
-        return (wcscmp(username, ADMIN_USER) == 0 && wcscmp(password, ADMIN_PWD) == 0);
-    }
-    else {
-        for (int i = 0; i < stuCount; i++) {
-            if (wcscmp(username, stuAccounts[i].username) == 0 &&
-                wcscmp(password, stuAccounts[i].password) == 0)
-                return 1;
+        if (wcscmp(username, ADMIN_USER) == 0 && wcscmp(password, ADMIN_PWD) == 0) {
+            return 1;
         }
-        return 0;
     }
+
+    // 先检查写死的学生账号（方便演示）
+    if (role == ROLE_STUDENT) {
+        if (wcscmp(username, STUDENT_USER) == 0 && wcscmp(password, STUDENT_PWD) == 0) {
+            return 1;
+        }
+    }
+
+    // 将宽字符转换为多字节字符（因为队友的 login() 用的是 char*）
+    char usernameA[50] = { 0 };
+    char passwordA[50] = { 0 };
+
+    WideCharToMultiByte(CP_ACP, 0, username, -1, usernameA, 50, NULL, NULL);
+    WideCharToMultiByte(CP_ACP, 0, password, -1, passwordA, 50, NULL, NULL);
+
+    // 调用队友实现的 login() 函数（在 data.cpp 中）
+    Role outRole;
+    void* user = login(usernameA, passwordA, &outRole);
+
+    if (user == NULL) {
+        return 0;  // 登录失败
+    }
+
+    // 检查角色是否匹配
+    if (role == ROLE_ADMIN && outRole == ROLE_ADMIN) {
+        return 1;
+    }
+    if (role == ROLE_STUDENT && outRole == ROLE_STUDENT) {
+        return 1;
+    }
+
+    return 0;
 }
 
-<<<<<<< HEAD
-// ==================== ��ӭҳ ====================
-=======
 // ==================== 欢迎页 ====================
->>>>>>> 24407670da7495566a27c1e7e1d09df4d62e9f3c
 Role showWelcomePage() {
     cleardevice();
     setbkcolor(RGB(240, 245, 250));
@@ -170,13 +187,8 @@ Role showWelcomePage() {
     }
 }
 
-<<<<<<< HEAD
-// ==================== ��¼ҳ ====================
-PageType showLoginPage(Role& currentRole) {  // ��Ϊ��ֵ����������
-=======
 // ==================== 登录页 ====================
 PageType showLoginPage(Role& currentRole) {
->>>>>>> 24407670da7495566a27c1e7e1d09df4d62e9f3c
     cleardevice();
     setbkcolor(RGB(240, 245, 250));
     cleardevice();
@@ -279,17 +291,6 @@ PageType showLoginPage(Role& currentRole) {
         if (needRedraw) {
             cleardevice();
 
-<<<<<<< HEAD
-            // ���ݽ�ɫ��ʾ��ͬ�ı���ͱ���ɫ
-            const wchar_t* title;
-            if (currentRole == ROLE_STUDENT) {
-                title = L"ѧ����¼";
-                setbkcolor(RGB(240, 245, 250));
-            }
-            else {
-                title = L"����Ա��¼";
-                setbkcolor(RGB(255, 240, 230));  // ����Ա��¼ҳ�ò�ͬ�ı���ɫ
-=======
             const wchar_t* title;
             if (currentRole == ROLE_STUDENT) {
                 title = L"学生登录";
@@ -298,7 +299,6 @@ PageType showLoginPage(Role& currentRole) {
             else {
                 title = L"管理员登录";
                 setbkcolor(RGB(255, 240, 230));
->>>>>>> 24407670da7495566a27c1e7e1d09df4d62e9f3c
             }
             cleardevice();
 
@@ -321,11 +321,7 @@ PageType showLoginPage(Role& currentRole) {
     }
 }
 
-<<<<<<< HEAD
-// ==================== ע��ҳ ====================
-=======
 // ==================== 注册页 ====================
->>>>>>> 24407670da7495566a27c1e7e1d09df4d62e9f3c
 PageType showRegisterPage() {
     cleardevice();
     setbkcolor(RGB(240, 245, 250));
@@ -422,7 +418,7 @@ PageType showRegisterPage() {
                         }
                         else {
                             int regResult = register_student(usernameA, passwordA, nameA, studentIdA, phoneA, genderA, age, clnameA, locationA);
-                            if (regResult == 1) {
+                            if (regResult >= 0) {
                                 MessageBoxW(GetHWnd(), L"注册成功！请登录", L"成功", MB_OK);
                                 return PAGE_LOGIN;
                             }
@@ -505,17 +501,10 @@ PageType showRegisterPage() {
             outtextxy(col1LabelX, nameInputY + 8, L"姓  名：");
             outtextxy(col1LabelX, phoneInputY + 8, L"联系方式：");
 
-<<<<<<< HEAD
-            outtextxy(col2LabelX, genderInputY + 8, L"��  ��");
-            outtextxy(col2LabelX, ageInputY + 8, L"��  �䣺");
-            outtextxy(col2LabelX, clnameInputY + 8, L"��  ����");
-            outtextxy(col2LabelX, locationInputY + 8, L"λ  �ã�");
-=======
             outtextxy(col2LabelX, genderInputY + 8, L"性  别：");
             outtextxy(col2LabelX, ageInputY + 8, L"年  龄：");
             outtextxy(col2LabelX, clnameInputY + 8, L"班  级：");
             outtextxy(col2LabelX, locationInputY + 8, L"位  置：");
->>>>>>> 24407670da7495566a27c1e7e1d09df4d62e9f3c
 
             drawInputBoxNoLabel(col1InputX, userInputY, inputWidth, INPUT_HEIGHT, username, focusIndex == 0);
             drawInputBoxNoLabel(col1InputX, pwdInputY, inputWidth, INPUT_HEIGHT, password, focusIndex == 1);
@@ -528,15 +517,9 @@ PageType showRegisterPage() {
             drawInputBoxNoLabel(col2InputX, clnameInputY, inputWidth, INPUT_HEIGHT, clname, focusIndex == 7);
             drawInputBoxNoLabel(col2InputX, locationInputY, inputWidth, INPUT_HEIGHT, location, focusIndex == 8);
 
-<<<<<<< HEAD
-            settextstyle(20, 0, L"΢���ź�");
-            drawButton(registerBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"ע��", registerHover);
-            drawButton(backBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"���ص�¼", backHover);
-=======
             settextstyle(20, 0, L"微软雅黑");
             drawButton(registerBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"注册", registerHover);
             drawButton(backBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"返回登录", backHover);
->>>>>>> 24407670da7495566a27c1e7e1d09df4d62e9f3c
 
             needRedraw = false;
         }
@@ -544,16 +527,13 @@ PageType showRegisterPage() {
     }
 }
 
-void showStudentMainPage() {}
-void showAdminMainPage() {
+void showStudentMainPage() {
+    runStudentMainPage();  // 调用你写的学生主界面}
+  void showAdminMainPage() {
     runAdminMainPage();  // 调用管理员界面模块
 }
 
-<<<<<<< HEAD
-// ==================== ������ ====================
-=======
 // ==================== 主函数 ====================
->>>>>>> 24407670da7495566a27c1e7e1d09df4d62e9f3c
 int main() {
     initgraph(WINDOW_WIDTH, WINDOW_HEIGHT);
     setbkcolor(RGB(240, 245, 250));

@@ -280,4 +280,7 @@ void showAdminMainPage(void);
 /* 管理员界面入口（在 admin_main.cpp 中实现） */
 void runAdminMainPage(void);
 
+// 学生界面入口（必须加，否则 main.cpp 找不到）
+void runStudentMainPage();
+
 #endif /* ACTIVITY_SYSTEM_H */
