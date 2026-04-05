@@ -281,7 +281,7 @@ PageType showLoginPage(Role& currentRole) {
     }
 }
 
-// ==================== ×¢²áÒ³ ==================
+// =================== ×¢²áÒ³ ==================
 PageType showRegisterPage() {
     cleardevice();
     setbkcolor(RGB(240, 245, 250));
@@ -504,7 +504,7 @@ PageType showRegisterPage() {
 void showStudentMainPage() {}
 void showAdminMainPage() {}
 
-// ==================== Ö÷º¯Êý ===================
+// =================== Ö÷º¯Êý ===================
 int main() {
     initgraph(WINDOW_WIDTH, WINDOW_HEIGHT);
     setbkcolor(RGB(240, 245, 250));
