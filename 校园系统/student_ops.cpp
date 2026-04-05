@@ -5,6 +5,7 @@
 
 
 
+
 int enroll_student(int student_id, int activity_id) {
     if (student_id <= 0 || activity_id <= 0) return -1;
 
