@@ -11,7 +11,7 @@
 #include <string.h>
 #include <time.h>
 
-// ==================== å‹‹ç« ç®¡ç† ====================
+// ==================== Ñ«ÕÂ¹ÜÀí ====================
 int add_medal(const char* name) {
     Medal* p = medal_head;
     while (p) {
@@ -59,7 +59,7 @@ int award_medal(int student_id, int medal_id) {
 }
 
 void list_user_medals(int student_id) {
-    printf("å­¦ç”Ÿ %d è·å¾—çš„å‹‹ç« ï¼š\n", student_id);
+    printf("Ñ§Éú %d »ñµÃµÄÑ«ÕÂ£º\n", student_id);
     UserMedal* um = usermedal_head;
     int found = 0;
     while (um) {
@@ -67,27 +67,27 @@ void list_user_medals(int student_id) {
             Medal* m = medal_head;
             while (m && m->id != um->medal_id) m = m->next;
             if (m) {
-                printf("  - %s (è·å¾—æ—¶é—´: %s)", m->name, ctime(&um->obtain_time));
+                printf("  - %s (»ñµÃÊ±¼ä: %s)", m->name, ctime(&um->obtain_time));
             }
             found = 1;
         }
         um = um->next;
     }
-    if (!found) printf("  æš‚æ— å‹‹ç« \n");
+    if (!found) printf("  ÔİÎŞÑ«ÕÂ\n");
 }
 
 void check_and_award_first_enroll(int student_id) {
     int count = 0;
     Enrollment* e = enrollment_head;
     while (e) {
-        if (e->student_id == student_id) count++;   // æŠ¥åè®°å½•å­˜åœ¨å³è¡¨ç¤ºå·²æŠ¥å
+        if (e->student_id == student_id) count++;   // ±¨Ãû¼ÇÂ¼´æÔÚ¼´±íÊ¾ÒÑ±¨Ãû
         e = e->next;
     }
     if (count == 1) {
         Medal* m = medal_head;
         int medal_id = -1;
         while (m) {
-            if (strcmp(m->name, "é¦–æ¬¡æŠ¥å") == 0) { medal_id = m->id; break; }
+            if (strcmp(m->name, "Ê×´Î±¨Ãû") == 0) { medal_id = m->id; break; }
             m = m->next;
         }
         if (medal_id != -1) award_medal(student_id, medal_id);
@@ -108,14 +108,14 @@ void check_and_award_time_based(int student_id) {
         Medal* m = medal_head;
         int medal_id = -1;
         while (m) {
-            if (strcmp(m->name, "æ—¶é•¿è¾¾äºº") == 0) { medal_id = m->id; break; }
+            if (strcmp(m->name, "Ê±³¤´ïÈË") == 0) { medal_id = m->id; break; }
             m = m->next;
         }
         if (medal_id != -1) award_medal(student_id, medal_id);
     }
 }
 
-// ==================== å»ºè®®ç®±ç®¡ç† ====================
+// ==================== ½¨ÒéÏä¹ÜÀí ====================
 int add_suggestion(int student_id, const char* content) {
     Suggestion* s = (Suggestion*)malloc(sizeof(Suggestion));
     if (!s) return -1;
@@ -135,13 +135,13 @@ int add_suggestion(int student_id, const char* content) {
 }
 
 void list_suggestions(void) {
-    printf("æ‰€æœ‰å»ºè®®ï¼ˆç®¡ç†å‘˜è§†å›¾ï¼‰ï¼š\n");
+    printf("ËùÓĞ½¨Òé£¨¹ÜÀíÔ±ÊÓÍ¼£©£º\n");
     Suggestion* s = suggestion_head;
-    if (!s) { printf("  æš‚æ— å»ºè®®\n"); return; }
+    if (!s) { printf("  ÔİÎŞ½¨Òé\n"); return; }
     while (s) {
-        printf("ID:%d | å­¦ç”ŸID:%d | çŠ¶æ€:%s | æäº¤æ—¶é—´:%så†…å®¹: %s\n",
+        printf("ID:%d | Ñ§ÉúID:%d | ×´Ì¬:%s | Ìá½»Ê±¼ä:%sÄÚÈİ: %s\n",
             s->id, s->student_id,
-            s->status == UNREAD ? "æœªè¯»" : "å·²è¯»",
+            s->status == UNREAD ? "Î´¶Á" : "ÒÑ¶Á",
             ctime(&s->submit_time), s->content);
         s = s->next;
     }
@@ -156,7 +156,7 @@ int mark_suggestion_read(int suggestion_id) {
     return -1;
 }
 
-// ==================== è‡ªåŠ¨æé†’ ====================
+// ==================== ×Ô¶¯ÌáĞÑ ====================
 int is_reminded(int student_id, int activity_id) {
     Reminder* r = reminder_head;
     while (r) {
@@ -166,7 +166,7 @@ int is_reminded(int student_id, int activity_id) {
     return 0;
 }
 
-// è¾…åŠ©å‡½æ•°ï¼šå°†å­—ç¬¦ä¸² "YYYY-MM-DD HH:MM" è½¬æ¢ä¸º time_tï¼ˆç®€åŒ–ç‰ˆï¼‰
+// ¸¨Öúº¯Êı£º½«×Ö·û´® "YYYY-MM-DD HH:MM" ×ª»»Îª time_t£¨¼ò»¯°æ£©
 static time_t str_to_time(const char* str) {
     struct tm tm = { 0 };
     if (sscanf(str, "%d-%d-%d %d:%d", &tm.tm_year, &tm.tm_mon, &tm.tm_mday,
@@ -190,15 +190,15 @@ void check_and_remind(int student_id) {
                 time_t start = str_to_time(act->start_time);
                 if (start > 0) {
                     double diff = difftime(start, now);
-                    if (diff > 0 && diff <= s->remind_ahead) {   // ä½¿ç”¨å­¦ç”Ÿè‡ªå®šä¹‰é˜ˆå€¼
+                    if (diff > 0 && diff <= s->remind_ahead) {   // Ê¹ÓÃÑ§Éú×Ô¶¨ÒåãĞÖµ
                         if (!is_reminded(student_id, act->id)) {
-                            printf("ã€æé†’ã€‘å­¦ç”Ÿ %dï¼šæ´»åŠ¨ \"%s\" å°†åœ¨ %.0f å°æ—¶åå¼€å§‹ï¼\n",
+                            printf("¡¾ÌáĞÑ¡¿Ñ§Éú %d£º»î¶¯ \"%s\" ½«ÔÚ %.0f Ğ¡Ê±ºó¿ªÊ¼£¡\n",
                                 student_id, act->name, diff / 3600);
-                            // è¾“å‡ºæºå¸¦ç‰©å“
+                            // Êä³öĞ¯´øÎïÆ·
                             if (strlen(act->items_to_bring) > 0) {
-                                printf("       è¯·æºå¸¦ï¼š%s\n", act->items_to_bring);
+                                printf("       ÇëĞ¯´ø£º%s\n", act->items_to_bring);
                             }
-                            // è®°å½•æé†’
+                            // ¼ÇÂ¼ÌáĞÑ
                             Reminder* r = (Reminder*)malloc(sizeof(Reminder));
                             if (r) {
                                 r->id = get_next_reminder_id();
@@ -222,7 +222,7 @@ void check_and_remind(int student_id) {
     }
 }
 
-// ==================== ç­¾åˆ°è®°å½•è¾…åŠ© ====================
+// ==================== Ç©µ½¼ÇÂ¼¸¨Öú ====================
 int create_attendance_record(int student_id, int activity_id) {
     Attendance* a = attendance_head;
     while (a) {
@@ -262,7 +262,7 @@ int delete_attendance_record(int student_id, int activity_id) {
     return -1;
 }
 
-// å­¦ç”Ÿè®¾ç½®æé†’æå‰é‡ï¼ˆç§’ï¼‰
+// Ñ§ÉúÉèÖÃÌáĞÑÌáÇ°Á¿£¨Ãë£©
 int set_remind_ahead(int student_id, int seconds) {
     Student* s = find_student_by_id(student_id);
     if (!s) return -1;
@@ -271,25 +271,25 @@ int set_remind_ahead(int student_id, int seconds) {
     return 1;
 }
 
-// æ‰“å¼€é«˜å¾·åœ°å›¾å¯¼èˆª
+// ´ò¿ª¸ßµÂµØÍ¼µ¼º½
 void open_map_navigation(const char* location) {
     if (!location || strlen(location) == 0) return;
 #ifdef _WIN32
     char url[512];
     char encoded[256];
     strcpy(encoded, location);
-    // ç®€å•ç¼–ç ï¼šå°†ç©ºæ ¼æ›¿æ¢ä¸º+ï¼Œä¸­æ–‡ç­‰ä¸åšå¤„ç†ï¼ˆæµè§ˆå™¨å¯è¯†åˆ«ï¼‰
+    // ¼òµ¥±àÂë£º½«¿Õ¸ñÌæ»»Îª+£¬ÖĞÎÄµÈ²»×ö´¦Àí£¨ä¯ÀÀÆ÷¿ÉÊ¶±ğ£©
     for (int i = 0; encoded[i]; i++) {
         if (encoded[i] == ' ') encoded[i] = '+';
     }
-    sprintf(url, "https://uri.amap.com/navigation?to=%s&mode=é©¾è½¦", encoded);
+    sprintf(url, "https://uri.amap.com/navigation?to=%s&mode=¼İ³µ", encoded);
     ShellExecuteA(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL);
 #else
-    printf("ä»…Windowsæ”¯æŒåœ°å›¾å¯¼èˆªã€‚\n");
+    printf("½öWindowsÖ§³ÖµØÍ¼µ¼º½¡£\n");
 #endif
 }
 
-// æ´»åŠ¨ä¿®æ”¹åé€šçŸ¥æ‰€æœ‰æŠ¥åçš„å­¦ç”Ÿ
+// »î¶¯ĞŞ¸ÄºóÍ¨ÖªËùÓĞ±¨ÃûµÄÑ§Éú
 void remind_activity_update(int activity_id) {
     Activity* act = find_activity_by_id(activity_id);
     if (!act) return;
@@ -297,26 +297,26 @@ void remind_activity_update(int activity_id) {
     int count = 0;
     while (e) {
         if (e->activity_id == activity_id) {
-            printf("ã€é€šçŸ¥ã€‘æ´»åŠ¨ \"%s\" å·²ä¿®æ”¹ï¼Œè¯·é‡æ–°æŸ¥çœ‹è¯¦æƒ…ã€‚å­¦ç”ŸID: %d\n", act->name, e->student_id);
-            // å¯é€‰ï¼šè®°å½•åˆ°æé†’è¡¨ï¼Œé¿å…é‡å¤æé†’
-            // è¿™é‡Œç®€å•æ‰“å°ï¼Œä¹Ÿå¯ä»¥åƒ check_and_remind ä¸€æ ·åˆ›å»º Reminder è®°å½•
+            printf("¡¾Í¨Öª¡¿»î¶¯ \"%s\" ÒÑĞŞ¸Ä£¬ÇëÖØĞÂ²é¿´ÏêÇé¡£Ñ§ÉúID: %d\n", act->name, e->student_id);
+            // ¿ÉÑ¡£º¼ÇÂ¼µ½ÌáĞÑ±í£¬±ÜÃâÖØ¸´ÌáĞÑ
+            // ÕâÀï¼òµ¥´òÓ¡£¬Ò²¿ÉÒÔÏñ check_and_remind Ò»Ñù´´½¨ Reminder ¼ÇÂ¼
             count++;
         }
         e = e->next;
     }
     if (count == 0) {
-        printf("æ´»åŠ¨ \"%s\" æ²¡æœ‰å­¦ç”ŸæŠ¥åï¼Œæ— éœ€æé†’ã€‚\n", act->name);
+        printf("»î¶¯ \"%s\" Ã»ÓĞÑ§Éú±¨Ãû£¬ÎŞĞèÌáĞÑ¡£\n", act->name);
     }
 }
 
-// åœ¨ system_service.cpp ä¸­
+// ÔÚ system_service.cpp ÖĞ
 int mousex() {
-    // è·å–é¼ æ ‡xåæ ‡
+    // »ñÈ¡Êó±êx×ø±ê
     MOUSEMSG msg = GetMouseMsg();
     return msg.x;
 }
 int mousey() {
-    // è·å–é¼ æ ‡yåæ ‡
+    // »ñÈ¡Êó±êy×ø±ê
     MOUSEMSG msg = GetMouseMsg();
     return msg.y;
 }

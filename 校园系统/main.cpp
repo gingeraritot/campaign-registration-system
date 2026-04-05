@@ -19,7 +19,7 @@ int mousey();
 #define INPUT_HEIGHT  40   //输入框高度
 
 
-// ==================== 演示用账号密码 ===================
+// =================== 演示用账号密码 ===================
 // 管理员账号
 #define ADMIN_USER    "admin"
 #define ADMIN_PWD     "123456"
@@ -91,30 +91,7 @@ void drawInputBox(int x, int y, int w, int h, const wchar_t* label, const char* 
 }
 
 // ==================== 同学A/B/C函数预留接口 ====================
-int login(const char* username, const char* password, Role role) {
-    printf("尝试登录：角色=%d, 用户名=%s, 密码=%s\n", role, username, password);
-
-    // 管理员登录
-    if (role == ROLE_ADMIN) {
-        if (strcmp(username, ADMIN_USER) == 0 && strcmp(password, ADMIN_PWD) == 0) {
-            return 1;   // 登录成功
-        }
-    }
-
-    // 学生登录（遍历我们写死的账号）
-    else if (role == ROLE_STUDENT) {
-        for (int i = 0; i < stuCount; i++) {
-            if (strcmp(username, stuAccounts[i].username) == 0 &&
-                strcmp(password, stuAccounts[i].password) == 0) {
-                return 1;   // 找到匹配，登录成功
-            }
-        }
-    }
-
-    // 都不对
-    return 0;
-}
-
+void* login(const char* username, const char* password, Role* role);
 // ==================== 页面1：欢迎页 ====================
 PageType showWelcomePage() {
     cleardevice();//清空绘图区域，画欢迎页
@@ -141,15 +118,24 @@ PageType showWelcomePage() {
         bool studentHover = (mx >= studentBtnX && mx <= studentBtnX + BTN_WIDTH && my >= btnY && my <= btnY + BTN_HEIGHT);
         bool adminHover = (mx >= adminBtnX && mx <= adminBtnX + BTN_WIDTH && my >= btnY && my <= btnY + BTN_HEIGHT);
         //绘制两个按钮
-        drawButton(studentBtnX,btnY,BTN_WIDTH,BTN_HEIGHT,L"xueshengdenglu",studentHover);  
-        drawButton(adminBtnX,btnY,BTN_WIDTH,BTN_HEIGHT,L"guanliyuandenglu",adminHover);  
+        drawButton(studentBtnX,btnY,BTN_WIDTH,BTN_HEIGHT,L"学生注册",studentHover);  
+        drawButton(adminBtnX,btnY,BTN_WIDTH,BTN_HEIGHT,L"管理员登陆",adminHover);  
         //监听鼠标点击事件，如果点击了按钮就跳转到登录页面
         if (peekmessage(&msg, EM_MOUSE)) {
             if (msg.message == WM_LBUTTONDOWN) {
-                if (studentHover) {
+                int clickX = msg.x;
+                int clickY = msg.y;
+
+                // 重新计算点击位置
+                bool clickStudent = (clickX >= studentBtnX && clickX <= studentBtnX + BTN_WIDTH &&
+                    clickY >= btnY && clickY <= btnY + BTN_HEIGHT);
+                bool clickAdmin = (clickX >= adminBtnX && clickX <= adminBtnX + BTN_WIDTH &&
+                    clickY >= btnY && clickY <= btnY + BTN_HEIGHT);
+
+                if (clickStudent) {
                     return PAGE_REGISTER;
                 }
-                if (adminHover) {
+                if (clickAdmin) {
                     return PAGE_LOGIN;
                 }
             }
@@ -229,8 +215,12 @@ PageType showLoginPage(Role& currentRole) {
                     focusIndex = 1;
                 }
                 else if (loginHover) {//处理登录按钮
-                    int loginResult = login(username, password, currentRole);//调用login函数验证账号密码，成功则跳转到对应角色的主页面，失败则弹窗提示
-                    if (loginResult == 1) {
+                    MessageBoxW(GetHWnd(), L"按钮被点击了", L"测试", MB_OK);  
+                    Role tempRole;
+                    void* userObj = login(username, password, &tempRole);  //调用真正的函数
+
+                    if (userObj != NULL) {
+                        currentRole = tempRole;
                         return (currentRole == ROLE_STUDENT) ? PAGE_STUDENT_MAIN : PAGE_ADMIN_MAIN;
                     }
                     else {
@@ -375,8 +365,8 @@ PageType showRegisterPage() {
 }
 
 // ==================主函数 ==================
-void showStudentMainPage();
-void showAdminMainPage();
+void showStudentMainPage() {};
+void showAdminMainPage() {};
 int main() {
     initgraph(WINDOW_WIDTH, WINDOW_HEIGHT);//初始化图形窗口
     setbkcolor(RGB(240, 245, 250));

@@ -1,60 +1,8 @@
-﻿D:\develop_tools\Visual_Studio2022\MSBuild\Microsoft\VC\v180\Microsoft.CppBuild.targets(551,5): warning MSB8028: 中间目录(x64\Debug\)包含从另一个项目(campus_system.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
+﻿C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\VC\v180\Microsoft.CppBuild.targets(551,5): warning MSB8028: 中间目录(x64\Debug\)包含从另一个项目(campus_system.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
 cl : 命令行  warning D9025: 正在重写“/sdl”(用“/GS-”)
-  activity_admin.cpp
-D:\Campaign_registration_system\校园系统\x64\activity\activity_admin.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-D:\Campaign_registration_system\校园系统\x64\activity\activity_admin.cpp(69,5): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\x64\activity\activity_admin.cpp(71,5): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\x64\activity\activity_admin.cpp(74,5): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\x64\activity\activity_admin.cpp(77,5): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\x64\activity\activity_admin.cpp(79,5): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\x64\activity\activity_admin.cpp(186,5): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  data.cpp
-D:\Campaign_registration_system\校园系统\data.cpp(44,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(69,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(82,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(107,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(120,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(145,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(158,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(183,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(196,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(221,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(234,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(259,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(272,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(297,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(310,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(335,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(348,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(373,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(386,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(411,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(471,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(472,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(473,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(474,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(475,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(476,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(478,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(479,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(562,9): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(563,9): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(564,9): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\data.cpp(565,9): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   main.cpp
-D:\Campaign_registration_system\校园系统\main.cpp(179,57): warning C4244: “=”: 从“TCHAR”转换到“char”，可能丢失数据
-D:\Campaign_registration_system\校园系统\main.cpp(187,57): warning C4244: “=”: 从“TCHAR”转换到“char”，可能丢失数据
-D:\Campaign_registration_system\校园系统\main.cpp(289,53): warning C4244: “=”: 从“TCHAR”转换到“char”，可能丢失数据
-  student_ops.cpp
-  system_service.cpp
-D:\Campaign_registration_system\校园系统\system_service.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-D:\Campaign_registration_system\校园系统\system_service.cpp(24,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\system_service.cpp(70,68): warning C4996: 'ctime': This function or variable may be unsafe. Consider using ctime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\system_service.cpp(102,50): warning C4244: “+=”: 从“time_t”转换到“long”，可能丢失数据
-D:\Campaign_registration_system\校园系统\system_service.cpp(124,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\system_service.cpp(145,13): warning C4996: 'ctime': This function or variable may be unsafe. Consider using ctime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\system_service.cpp(172,9): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\system_service.cpp(280,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Campaign_registration_system\校园系统\system_service.cpp(285,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  正在生成代码...
-  校园系统.vcxproj -> D:\Campaign_registration_system\x64\Debug\校园系统.exe
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(197,57): warning C4244: “=”: 从“TCHAR”转换到“char”，可能丢失数据
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(205,57): warning C4244: “=”: 从“TCHAR”转换到“char”，可能丢失数据
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(329,53): warning C4244: “=”: 从“TCHAR”转换到“char”，可能丢失数据
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(301,9): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  校园系统.vcxproj -> C:\Users\正电子\source\repos\campaign-registration-system\x64\Debug\校园系统.exe
