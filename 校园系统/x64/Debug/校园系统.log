@@ -1,14 +1,115 @@
 ﻿C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\VC\v180\Microsoft.CppBuild.targets(551,5): warning MSB8028: 中间目录(x64\Debug\)包含从另一个项目(campus_system.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
 cl : 命令行  warning D9025: 正在重写“/sdl”(用“/GS-”)
-  activity_admin.cpp
-  data.cpp
   main.cpp
-C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(242,29): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(416,33): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(434,33): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
   student_ops.cpp
-  system_service.cpp
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(249,29): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(367,29): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(532,33): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(550,33): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
 C:\Users\正电子\source\repos\campaign-registration-system\校园系统\system_service.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+  (编译源文件“student_ops.cpp”)
+  
 C:\Users\正电子\source\repos\campaign-registration-system\校园系统\system_service.cpp(102,50): warning C4244: “+=”: 从“time_t”转换到“long”，可能丢失数据
+  (编译源文件“student_ops.cpp”)
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(5,2): error C2059: 语法错误:“if”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(6,34): error C2065: “student_id”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(7,36): error C2065: “activity_id”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(8,2): error C2059: 语法错误:“if”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(9,2): error C2059: 语法错误:“if”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(11,2): error C2059: 语法错误:“while”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(11,12): error C2143: 语法错误: 缺少“;”(在“{”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(11,12): error C2447: “{”: 缺少函数标题(是否是老式的形式表?)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(45,2): error C2059: 语法错误:“if”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(46,11): error C2374: “s”: 重定义；多次初始化
+      C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(6,11):
+      参见“s”的声明
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(46,11): error C2086: “Student *s”: 重定义
+      C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(6,11):
+      参见“s”的声明
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(46,34): error C2065: “student_id”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(47,12): error C2374: “a”: 重定义；多次初始化
+      C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(7,12):
+      参见“a”的声明
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(47,12): error C2086: “Activity *a”: 重定义
+      C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(7,12):
+      参见“a”的声明
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(47,36): error C2065: “activity_id”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(48,2): error C2059: 语法错误:“if”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(52,2): error C2059: 语法错误:“while”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(52,16): error C2143: 语法错误: 缺少“;”(在“{”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(52,16): error C2447: “{”: 缺少函数标题(是否是老式的形式表?)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(67,2): error C2059: 语法错误:“return”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(73,2): error C2059: 语法错误:“if”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(74,11): error C2374: “s”: 重定义；多次初始化
+      C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(6,11):
+      参见“s”的声明
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(74,11): error C2086: “Student *s”: 重定义
+      C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(6,11):
+      参见“s”的声明
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(74,34): error C2065: “student_id”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(75,12): error C2374: “a”: 重定义；多次初始化
+      C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(7,12):
+      参见“a”的声明
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(75,12): error C2086: “Activity *a”: 重定义
+      C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(7,12):
+      参见“a”的声明
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(75,36): error C2065: “activity_id”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(76,2): error C2059: 语法错误:“if”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(80,2): error C2059: 语法错误:“while”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(80,12): error C2143: 语法错误: 缺少“;”(在“{”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(80,12): error C2447: “{”: 缺少函数标题(是否是老式的形式表?)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(86,2): error C2059: 语法错误:“if”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(86,17): error C2143: 语法错误: 缺少“;”(在“{”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(86,17): error C2447: “{”: 缺少函数标题(是否是老式的形式表?)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(116,9): error C2065: “a_record”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(117,7): error C2065: “a_record”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(117,45): error C2065: “a_record”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(118,8): error C2065: “a_record”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(121,8): error C2065: “a_record”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(124,4): error C2065: “a_record”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(127,3): error C2065: “a_record”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(127,14): error C2065: “a_record”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(136,5): error C2084: 函数“int set_remind_ahead(int,int)”已有主体
+      C:\Users\正电子\source\repos\campaign-registration-system\校园系统\system_service.cpp(266,5):
+      参见“set_remind_ahead”的前一个定义
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(146,11): error C2374: “s”: 重定义；多次初始化
+      C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(6,11):
+      参见“s”的声明
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(146,11): error C2086: “Student *s”: 重定义
+      C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(6,11):
+      参见“s”的声明
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(146,34): error C2065: “student_id”: 未声明的标识符
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(147,2): error C2059: 语法错误:“if”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(148,2): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(148,2): error C2365: “printf”: 重定义；以前的定义是“函数”
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\ucrt\stdio.h(950,37):
+      参见“printf”的声明
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(149,14): error C2374: “e”: 重定义；多次初始化
+      C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(79,14):
+      参见“e”的声明
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(149,14): error C2086: “Enrollment *e”: 重定义
+      C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(79,14):
+      参见“e”的声明
+  
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(150,2): error C2059: 语法错误:“while”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(150,12): error C2143: 语法错误: 缺少“;”(在“{”的前面)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(150,12): error C2447: “{”: 缺少函数标题(是否是老式的形式表?)
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(159,2): error C2059: 语法错误:“return”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(160,1): error C2059: 语法错误:“}”
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_ops.cpp(160,1): error C2143: 语法错误: 缺少“;”(在“}”的前面)
   正在生成代码...
-  校园系统.vcxproj -> C:\Users\正电子\source\repos\campaign-registration-system\x64\Debug\校园系统.exe

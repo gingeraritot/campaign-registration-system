@@ -72,7 +72,6 @@ void drawInputBox(int x, int y, int w, int h, const wchar_t* label, const wchar_
     }
 }
 
-// ========== 新增：不带标签的输入框函数 ==========
 void drawInputBoxNoLabel(int x, int y, int w, int h, const wchar_t* content, bool isFocus) {
     setfillcolor(WHITE);
     setlinecolor(isFocus ? RGB(0, 120, 255) : RGB(180, 180, 180));
@@ -106,7 +105,7 @@ int checkLogin(const wchar_t* username, const wchar_t* password, Role role) {
 }
 
 // ==================== 欢迎页 ====================
-PageType showWelcomePage() {
+Role showWelcomePage() {
     cleardevice();
     setbkcolor(RGB(240, 245, 250));
     cleardevice();
@@ -148,8 +147,12 @@ PageType showWelcomePage() {
             else if (msg.message == WM_LBUTTONDOWN) {
                 bool studentClick = (msg.x >= studentBtnX && msg.x <= studentBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
                 bool adminClick = (msg.x >= adminBtnX && msg.x <= adminBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
-                if (studentClick) return PAGE_REGISTER;
-                if (adminClick) return PAGE_LOGIN;
+                if (studentClick) {
+                    return ROLE_STUDENT;
+                }
+                if (adminClick) {
+                    return ROLE_ADMIN;
+                }
             }
         }
         Sleep(10);
@@ -157,8 +160,7 @@ PageType showWelcomePage() {
 }
 
 // ==================== 登录页 ====================
-PageType showLoginPage(Role& currentRole) {
-    // ... 登录页代码保持不变
+PageType showLoginPage(Role& currentRole) {  // 改为传值，不是引用
     cleardevice();
     setbkcolor(RGB(240, 245, 250));
     cleardevice();
@@ -261,7 +263,18 @@ PageType showLoginPage(Role& currentRole) {
         if (needRedraw) {
             cleardevice();
 
-            const wchar_t* title = (currentRole == ROLE_STUDENT) ? L"学生登录" : L"管理员登录";
+            // 根据角色显示不同的标题和背景色
+            const wchar_t* title;
+            if (currentRole == ROLE_STUDENT) {
+                title = L"学生登录";
+                setbkcolor(RGB(240, 245, 250));
+            }
+            else {
+                title = L"管理员登录";
+                setbkcolor(RGB(255, 240, 230));  // 管理员登录页用不同的背景色
+            }
+            cleardevice();
+
             settextcolor(RGB(30, 60, 120));
             settextstyle(30, 0, L"微软雅黑");
             outtextxy((WINDOW_WIDTH - textwidth(title)) / 2, 80, title);
@@ -281,28 +294,23 @@ PageType showLoginPage(Role& currentRole) {
     }
 }
 
-// =================== 注册页 ================
+// ==================== 注册页 ====================
 PageType showRegisterPage() {
     cleardevice();
     setbkcolor(RGB(240, 245, 250));
     cleardevice();
 
-    // 布局参数
-    int labelX = 200;              // 标签起始X
-    int inputX = labelX + 80;     // 输入框起始X
+    int labelX = 200;
+    int inputX = labelX + 80;
     int inputWidth = 300;
     int rowHeight = 48;
     int startY = 100;
 
-    // 第一列
     int col1LabelX = labelX;
     int col1InputX = inputX;
-
-    // 第二列
     int col2LabelX = labelX + 420;
     int col2InputX = col2LabelX + 80;
 
-    // Y坐标
     int userInputY = startY;
     int pwdInputY = startY + rowHeight;
     int idInputY = startY + rowHeight * 2;
@@ -352,7 +360,6 @@ PageType showRegisterPage() {
                     }
                 }
                 else if (msg.message == WM_LBUTTONDOWN) {
-                    // 第一列输入框
                     if (msg.x >= col1InputX && msg.x <= col1InputX + inputWidth) {
                         if (msg.y >= userInputY && msg.y <= userInputY + INPUT_HEIGHT) focusIndex = 0;
                         else if (msg.y >= pwdInputY && msg.y <= pwdInputY + INPUT_HEIGHT) focusIndex = 1;
@@ -361,7 +368,6 @@ PageType showRegisterPage() {
                         else if (msg.y >= phoneInputY && msg.y <= phoneInputY + INPUT_HEIGHT) focusIndex = 4;
                         needRedraw = true;
                     }
-                    // 第二列输入框
                     else if (msg.x >= col2InputX && msg.x <= col2InputX + inputWidth) {
                         if (msg.y >= genderInputY && msg.y <= genderInputY + INPUT_HEIGHT) focusIndex = 5;
                         else if (msg.y >= ageInputY && msg.y <= ageInputY + INPUT_HEIGHT) focusIndex = 6;
@@ -369,7 +375,6 @@ PageType showRegisterPage() {
                         else if (msg.y >= locationInputY && msg.y <= locationInputY + INPUT_HEIGHT) focusIndex = 8;
                         needRedraw = true;
                     }
-                    // 按钮
                     if (msg.x >= registerBtnX && msg.x <= registerBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT) {
                         char usernameA[50], passwordA[50], nameA[20], studentIdA[20], phoneA[20], genderA[10], clnameA[30], locationA[100];
                         WideCharToMultiByte(CP_ACP, 0, username, -1, usernameA, 50, NULL, NULL);
@@ -462,7 +467,6 @@ PageType showRegisterPage() {
             settextstyle(18, 0, L"微软雅黑");
             setbkmode(TRANSPARENT);
 
-            // 第一列标签
             settextcolor(RGB(60, 60, 60));
             outtextxy(col1LabelX, userInputY + 8, L"用户名：");
             outtextxy(col1LabelX, pwdInputY + 8, L"密  码：");
@@ -470,26 +474,22 @@ PageType showRegisterPage() {
             outtextxy(col1LabelX, nameInputY + 8, L"姓  名：");
             outtextxy(col1LabelX, phoneInputY + 8, L"联系方式：");
 
-            // 第二列标签
             outtextxy(col2LabelX, genderInputY + 8, L"性  别：");
             outtextxy(col2LabelX, ageInputY + 8, L"年  龄：");
             outtextxy(col2LabelX, clnameInputY + 8, L"班  级：");
             outtextxy(col2LabelX, locationInputY + 8, L"位  置：");
 
-            // 第一列输入框
             drawInputBoxNoLabel(col1InputX, userInputY, inputWidth, INPUT_HEIGHT, username, focusIndex == 0);
             drawInputBoxNoLabel(col1InputX, pwdInputY, inputWidth, INPUT_HEIGHT, password, focusIndex == 1);
             drawInputBoxNoLabel(col1InputX, idInputY, inputWidth, INPUT_HEIGHT, studentId, focusIndex == 2);
             drawInputBoxNoLabel(col1InputX, nameInputY, inputWidth, INPUT_HEIGHT, name, focusIndex == 3);
             drawInputBoxNoLabel(col1InputX, phoneInputY, inputWidth, INPUT_HEIGHT, phone, focusIndex == 4);
 
-            // 第二列输入框
             drawInputBoxNoLabel(col2InputX, genderInputY, inputWidth, INPUT_HEIGHT, gender, focusIndex == 5);
             drawInputBoxNoLabel(col2InputX, ageInputY, inputWidth, INPUT_HEIGHT, ageStr, focusIndex == 6);
             drawInputBoxNoLabel(col2InputX, clnameInputY, inputWidth, INPUT_HEIGHT, clname, focusIndex == 7);
             drawInputBoxNoLabel(col2InputX, locationInputY, inputWidth, INPUT_HEIGHT, location, focusIndex == 8);
 
-            // 按钮
             settextstyle(20, 0, L"微软雅黑");
             drawButton(registerBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"注册", registerHover);
             drawButton(backBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"返回登录", backHover);
@@ -500,11 +500,10 @@ PageType showRegisterPage() {
     }
 }
 
-// 临时占位函数
 void showStudentMainPage() {}
 void showAdminMainPage() {}
 
-// =================== 主函数 ===================
+// ==================== 主函数 ====================
 int main() {
     initgraph(WINDOW_WIDTH, WINDOW_HEIGHT);
     setbkcolor(RGB(240, 245, 250));
@@ -518,7 +517,8 @@ int main() {
     while (true) {
         switch (currentPage) {
         case PAGE_WELCOME:
-            currentPage = showWelcomePage();
+            currentRole = showWelcomePage();
+            currentPage = PAGE_LOGIN;
             break;
         case PAGE_LOGIN:
             currentPage = showLoginPage(currentRole);
