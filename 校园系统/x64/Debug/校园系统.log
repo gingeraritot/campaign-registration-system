@@ -1,8 +1,7 @@
 ﻿C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\VC\v180\Microsoft.CppBuild.targets(551,5): warning MSB8028: 中间目录(x64\Debug\)包含从另一个项目(campus_system.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
 cl : 命令行  warning D9025: 正在重写“/sdl”(用“/GS-”)
   main.cpp
-C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(197,57): warning C4244: “=”: 从“TCHAR”转换到“char”，可能丢失数据
-C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(205,57): warning C4244: “=”: 从“TCHAR”转换到“char”，可能丢失数据
-C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(329,53): warning C4244: “=”: 从“TCHAR”转换到“char”，可能丢失数据
-C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(301,9): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  校园系统.vcxproj -> C:\Users\正电子\source\repos\campaign-registration-system\x64\Debug\校园系统.exe
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\main.cpp(214,57): warning C4244: “=”: 从“TCHAR”转换到“char”，可能丢失数据
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\main.cpp(222,57): warning C4244: “=”: 从“TCHAR”转换到“char”，可能丢失数据
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\main.cpp(364,53): warning C4244: “=”: 从“TCHAR”转换到“char”，可能丢失数据
+  校园系统.vcxproj -> C:\Users\GingerariToT\Desktop\xiaoyuanxitong\x64\Debug\校园系统.exe
