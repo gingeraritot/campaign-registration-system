@@ -1,5 +1,6 @@
 #include "head.h"
-#include "system_service.cpp"
+
+int delete_attendance_record(int student_id, int activity_id);
 
 //活动报名（包含时间冲突检查、人数上限检查、活动状态检查等）
 int enroll_student(int student_id, int activity_id) {
