@@ -15,8 +15,14 @@
 #define INPUT_WIDTH   300
 #define INPUT_HEIGHT  40
 
+<<<<<<< HEAD
 #define ADMIN_USER    L"admin"
 #define ADMIN_PWD     L"123456"
+=======
+// ==================== 演示用账号密码 ====================
+#define ADMIN_USER    "admin"
+#define ADMIN_PWD     "123456"
+>>>>>>> 99f9f257c9498487e20e1e118ab329e8078133e6
 
 typedef struct {
     wchar_t username[20];
@@ -72,6 +78,7 @@ void drawInputBox(int x, int y, int w, int h, const wchar_t* label, const wchar_
     }
 }
 
+<<<<<<< HEAD
 // ========== 新增：不带标签的输入框函数 ==========
 void drawInputBoxNoLabel(int x, int y, int w, int h, const wchar_t* content, bool isFocus) {
     setfillcolor(WHITE);
@@ -82,6 +89,13 @@ void drawInputBoxNoLabel(int x, int y, int w, int h, const wchar_t* content, boo
 
     if (wcslen(content) > 0) {
         outtextxy(x + 10, y + 8, content);
+=======
+// ==================== 登录验证（临时用写死的账号）====================
+int loginCheck(const char* username, const char* password, Role role) {
+    if (role == ROLE_ADMIN) {
+        if (strcmp(username, ADMIN_USER) == 0 && strcmp(password, ADMIN_PWD) == 0)
+            return 1;
+>>>>>>> 99f9f257c9498487e20e1e118ab329e8078133e6
     }
 
     if (isFocus) {
@@ -91,6 +105,7 @@ void drawInputBoxNoLabel(int x, int y, int w, int h, const wchar_t* content, boo
     }
 }
 
+<<<<<<< HEAD
 int checkLogin(const wchar_t* username, const wchar_t* password, Role role) {
     if (role == ROLE_ADMIN) {
         return (wcscmp(username, ADMIN_USER) == 0 && wcscmp(password, ADMIN_PWD) == 0);
@@ -106,6 +121,9 @@ int checkLogin(const wchar_t* username, const wchar_t* password, Role role) {
 }
 
 // ==================== 欢迎页 ====================
+=======
+// ==================== 页面1：欢迎页 ====================
+>>>>>>> 99f9f257c9498487e20e1e118ab329e8078133e6
 PageType showWelcomePage() {
     cleardevice();
     setbkcolor(RGB(240, 245, 250));
@@ -126,7 +144,12 @@ PageType showWelcomePage() {
     bool studentHover = false, adminHover = false;
 
     while (true) {
+<<<<<<< HEAD
         while (peekmessage(&msg)) {
+=======
+        // 处理所有鼠标消息，更新坐标并检测点击
+        while (peekmessage(&msg, EM_MOUSE)) {
+>>>>>>> 99f9f257c9498487e20e1e118ab329e8078133e6
             if (msg.message == WM_MOUSEMOVE) {
                 if (msg.x != lastMx || msg.y != lastMy) {
                     lastMx = msg.x;
@@ -146,10 +169,17 @@ PageType showWelcomePage() {
                 }
             }
             else if (msg.message == WM_LBUTTONDOWN) {
+<<<<<<< HEAD
                 bool studentClick = (msg.x >= studentBtnX && msg.x <= studentBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
                 bool adminClick = (msg.x >= adminBtnX && msg.x <= adminBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
                 if (studentClick) return PAGE_REGISTER;
                 if (adminClick) return PAGE_LOGIN;
+=======
+                bool studentHover = (msg.x >= studentBtnX && msg.x <= studentBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
+                bool adminHover = (msg.x >= adminBtnX && msg.x <= adminBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
+                if (studentHover) return PAGE_REGISTER;
+                if (adminHover) return PAGE_LOGIN;
+>>>>>>> 99f9f257c9498487e20e1e118ab329e8078133e6
             }
         }
         Sleep(10);
@@ -182,6 +212,7 @@ PageType showLoginPage(Role& currentRole) {
     bool loginHover = false, registerHover = false, backHover = false;
 
     while (true) {
+<<<<<<< HEAD
         while (peekmessage(&msg)) {
             if (msg.message >= WM_MOUSEFIRST && msg.message <= WM_MOUSELAST) {
                 if (msg.message == WM_MOUSEMOVE) {
@@ -197,6 +228,36 @@ PageType showLoginPage(Role& currentRole) {
                             backHover = newBackHover;
                             needRedraw = true;
                         }
+=======
+        // 处理鼠标消息，更新坐标
+        while (peekmessage(&msg, EM_MOUSE)) {
+            if (msg.message == WM_MOUSEMOVE) {
+                mx = msg.x;
+                my = msg.y;
+            }
+            else if (msg.message == WM_LBUTTONDOWN) {
+                // 先判断输入框点击
+                if (msg.x >= inputX && msg.x <= inputX + INPUT_WIDTH) {
+                    if (msg.y >= userInputY && msg.y <= userInputY + INPUT_HEIGHT)
+                        focusIndex = 0;
+                    else if (msg.y >= pwdInputY && msg.y <= pwdInputY + INPUT_HEIGHT)
+                        focusIndex = 1;
+                }
+                // 判断按钮点击
+                bool loginHover = (msg.x >= loginBtnX && msg.x <= loginBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
+                bool registerHover = (currentRole == ROLE_STUDENT) && (msg.x >= registerBtnX && msg.x <= registerBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
+                bool backHover = (msg.x >= backBtnX && msg.x <= backBtnX + BTN_WIDTH && msg.y >= backBtnY && msg.y <= backBtnY + BTN_HEIGHT);
+
+                if (loginHover) {
+                    if (loginCheck(username, password, currentRole)) {
+                        return (currentRole == ROLE_STUDENT) ? PAGE_STUDENT_MAIN : PAGE_ADMIN_MAIN;
+                    }
+                    else {
+                        MessageBoxW(GetHWnd(), L"用户名或密码错误", L"登录失败", MB_OK | MB_ICONERROR);
+                        memset(username, 0, sizeof(username));
+                        memset(password, 0, sizeof(password));
+                        focusIndex = 0;
+>>>>>>> 99f9f257c9498487e20e1e118ab329e8078133e6
                     }
                 }
                 else if (msg.message == WM_LBUTTONDOWN) {
@@ -500,11 +561,18 @@ PageType showRegisterPage() {
     }
 }
 
+<<<<<<< HEAD
 // 临时占位函数
 void showStudentMainPage() {}
 void showAdminMainPage() {}
 
 // ==================== 主函数 ===================
+=======
+// ==================== 主函数 ====================
+void showStudentMainPage() {}
+void showAdminMainPage() {}
+
+>>>>>>> 99f9f257c9498487e20e1e118ab329e8078133e6
 int main() {
     initgraph(WINDOW_WIDTH, WINDOW_HEIGHT);
     setbkcolor(RGB(240, 245, 250));
