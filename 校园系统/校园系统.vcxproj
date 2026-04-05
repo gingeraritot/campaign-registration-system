@@ -140,9 +140,15 @@
     <ClInclude Include="标头.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="admin_main.cpp" />
     <ClCompile Include="x64\activity\activity_admin.cpp" />
     <ClCompile Include="data.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="main.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="student_ops.cpp" />
     <ClCompile Include="system_service.cpp" />
   </ItemGroup>

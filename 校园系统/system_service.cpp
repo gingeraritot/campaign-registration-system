@@ -5,7 +5,6 @@
 #include <shellapi.h>
 #endif
 
-#include <graphics.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -80,7 +79,7 @@ void check_and_award_first_enroll(int student_id) {
     int count = 0;
     Enrollment* e = enrollment_head;
     while (e) {
-        if (e->student_id == student_id) count++;   // 报名记录存在即表示已报名
+        if (e->student_id == student_id) count++;
         e = e->next;
     }
     if (count == 1) {
@@ -166,7 +165,6 @@ int is_reminded(int student_id, int activity_id) {
     return 0;
 }
 
-// 辅助函数：将字符串 "YYYY-MM-DD HH:MM" 转换为 time_t（简化版）
 static time_t str_to_time(const char* str) {
     struct tm tm = { 0 };
     if (sscanf(str, "%d-%d-%d %d:%d", &tm.tm_year, &tm.tm_mon, &tm.tm_mday,
@@ -190,15 +188,13 @@ void check_and_remind(int student_id) {
                 time_t start = str_to_time(act->start_time);
                 if (start > 0) {
                     double diff = difftime(start, now);
-                    if (diff > 0 && diff <= s->remind_ahead) {   // 使用学生自定义阈值
+                    if (diff > 0 && diff <= s->remind_ahead) {
                         if (!is_reminded(student_id, act->id)) {
                             printf("【提醒】学生 %d：活动 \"%s\" 将在 %.0f 小时后开始！\n",
                                 student_id, act->name, diff / 3600);
-                            // 输出携带物品
                             if (strlen(act->items_to_bring) > 0) {
                                 printf("       请携带：%s\n", act->items_to_bring);
                             }
-                            // 记录提醒
                             Reminder* r = (Reminder*)malloc(sizeof(Reminder));
                             if (r) {
                                 r->id = get_next_reminder_id();
@@ -262,7 +258,7 @@ int delete_attendance_record(int student_id, int activity_id) {
     return -1;
 }
 
-// 学生设置提醒提前量（秒）
+// ==================== 增强功能 ====================
 int set_remind_ahead(int student_id, int seconds) {
     Student* s = find_student_by_id(student_id);
     if (!s) return -1;
@@ -271,14 +267,12 @@ int set_remind_ahead(int student_id, int seconds) {
     return 1;
 }
 
-// 打开高德地图导航
 void open_map_navigation(const char* location) {
     if (!location || strlen(location) == 0) return;
 #ifdef _WIN32
     char url[512];
     char encoded[256];
     strcpy(encoded, location);
-    // 简单编码：将空格替换为+，中文等不做处理（浏览器可识别）
     for (int i = 0; encoded[i]; i++) {
         if (encoded[i] == ' ') encoded[i] = '+';
     }
@@ -289,7 +283,6 @@ void open_map_navigation(const char* location) {
 #endif
 }
 
-// 活动修改后通知所有报名的学生
 void remind_activity_update(int activity_id) {
     Activity* act = find_activity_by_id(activity_id);
     if (!act) return;
@@ -298,8 +291,6 @@ void remind_activity_update(int activity_id) {
     while (e) {
         if (e->activity_id == activity_id) {
             printf("【通知】活动 \"%s\" 已修改，请重新查看详情。学生ID: %d\n", act->name, e->student_id);
-            // 可选：记录到提醒表，避免重复提醒
-            // 这里简单打印，也可以像 check_and_remind 一样创建 Reminder 记录
             count++;
         }
         e = e->next;
@@ -308,4 +299,3 @@ void remind_activity_update(int activity_id) {
         printf("活动 \"%s\" 没有学生报名，无需提醒。\n", act->name);
     }
 }
-
