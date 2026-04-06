@@ -40,8 +40,8 @@ typedef struct {
     wchar_t requirement[200];
     wchar_t description[300];
     wchar_t items[200];
-    double lat;  // 纬度（模拟地图用）
-    double lng;  // 经度（模拟地图用）
+    double lat;
+    double lng;
 } ActivityCard;
 
 // 报名记录结构体
@@ -102,6 +102,9 @@ static int mouseX = 0, mouseY = 0;
 static StudentPageState currentPage = PAGE_HOME;
 static int currentActivityId = 0;
 
+// 当前登录的学生ID（模拟，实际应该从登录传递过来）
+static int currentStudentId = 1001;
+
 // 模拟当前用户报名的活动列表
 static EnrollmentRecord* myEnrollments = NULL;
 
@@ -111,6 +114,29 @@ void showMapDialog(double lat, double lng, const wchar_t* locationName) {
     swprintf(msg, 500, L"【地图功能】\n\n活动地点：%s\n\n坐标信息：纬度 %.4f，经度 %.4f\n\n提示：实际应用中这里会调用地图API显示具体位置",
         locationName, lat, lng);
     MessageBoxW(GetHWnd(), msg, L"活动地图", MB_OK);
+}
+
+// ==================== 提交建议弹窗 ====================
+void showSuggestionDialog() {
+    // 创建输入框获取建议内容
+    wchar_t input[500] = { 0 };
+    InputBox(input, 500, L"请输入您的建议：", L"提交建议", NULL, 0, 0, false);
+
+    if (wcslen(input) > 0) {
+        // 将宽字符转换为多字节字符
+        char contentA[500];
+        WideCharToMultiByte(CP_ACP, 0, input, -1, contentA, 500, NULL, NULL);
+
+        // 调用 head.h 中声明的 add_suggestion 函数
+        int result = add_suggestion(currentStudentId, contentA);
+
+        if (result == 1) {
+            MessageBoxW(GetHWnd(), L"建议提交成功！感谢您的反馈。", L"提示", MB_OK);
+        }
+        else {
+            MessageBoxW(GetHWnd(), L"建议提交失败，请稍后重试。", L"错误", MB_OK);
+        }
+    }
 }
 
 // 初始化模拟报名数据
@@ -245,17 +271,17 @@ void drawBtn(int x, int y, int w, int h, const wchar_t* text, bool isHover, COLO
     settextcolor(WHITE);
     setbkmode(TRANSPARENT);
     settextstyle(18, 0, L"微软雅黑");
-    int tx = x + (w - textwidth((wchar_t*)text)) / 2;
-    int ty = y + (h - textheight((wchar_t*)text)) / 2;
-    outtextxy(tx, ty, (wchar_t*)text);
+    int tx = x + (w - textwidth(text)) / 2;
+    int ty = y + (h - textheight(text)) / 2;
+    outtextxy(tx, ty, text);
 }
 
 void drawInfoRow(int x, int y, const wchar_t* label, const wchar_t* value, COLORREF labelColor, COLORREF valueColor) {
     settextcolor(labelColor);
     settextstyle(18, 0, L"微软雅黑");
-    outtextxy(x, y, (wchar_t*)label);
+    outtextxy(x, y, label);
     settextcolor(valueColor);
-    outtextxy(x + 100, y, (wchar_t*)value);
+    outtextxy(x + 100, y, value);
 }
 
 // 画活动卡片
@@ -307,7 +333,7 @@ void drawHotActivityItem(int x, int y, const wchar_t* name, int index) {
 
     settextcolor(RGB(50, 50, 50));
     settextstyle(14, 0, L"微软雅黑");
-    outtextxy(x + 40, y + 8, (wchar_t*)name);
+    outtextxy(x + 40, y + 8, name);
 
     setlinecolor(RGB(230, 230, 230));
     line(x, y + 32, x + 250, y + 32);
@@ -329,7 +355,7 @@ void drawMyActivitiesPage() {
     settextcolor(RGB(30, 60, 120));
     settextstyle(36, 0, L"微软雅黑");
     const wchar_t* title = L"我的活动";
-    outtextxy((WIN_WIDTH - textwidth((wchar_t*)title)) / 2, 80, (wchar_t*)title);
+    outtextxy((WIN_WIDTH - textwidth(title)) / 2, 80, title);
 
     int listStartY = 150;
     int listEndY = WIN_HEIGHT - 50;
@@ -346,7 +372,7 @@ void drawMyActivitiesPage() {
         settextcolor(RGB(150, 150, 150));
         settextstyle(24, 0, L"微软雅黑");
         const wchar_t* emptyMsg = L"暂无报名活动\n\n点击首页活动卡片上的\"详情\"按钮报名吧！";
-        outtextxy((WIN_WIDTH - textwidth((wchar_t*)emptyMsg)) / 2, 350, (wchar_t*)emptyMsg);
+        outtextxy((WIN_WIDTH - textwidth(emptyMsg)) / 2, 350, emptyMsg);
     }
     else {
         int y = listStartY;
@@ -387,12 +413,10 @@ void drawMyActivitiesPage() {
                 swprintf(itemsText, 200, L"需携带：%s", activity->items);
                 outtextxy(itemX + 20, y + 106, itemsText);
 
-                // 查看地图按钮（蓝色）
                 bool mapHover = (mouseX >= itemX + itemWidth - 210 && mouseX <= itemX + itemWidth - 110 &&
                     mouseY >= y + 50 && mouseY <= y + 90);
                 drawBtn(itemX + itemWidth - 210, y + 50, 90, 40, L"查看地图", mapHover, RGB(50, 150, 200));
 
-                // 取消报名按钮（红色）
                 bool cancelHover = (mouseX >= itemX + itemWidth - 110 && mouseX <= itemX + itemWidth - 20 &&
                     mouseY >= y + 50 && mouseY <= y + 90);
                 drawBtn(itemX + itemWidth - 110, y + 50, 90, 40, L"取消报名", cancelHover, RGB(200, 100, 100));
@@ -417,6 +441,10 @@ void drawStudentHomePage() {
     settextstyle(18, 0, L"微软雅黑");
     settextcolor(RGB(80, 80, 80));
     outtextxy(40, 70, L"欢迎，同学！");
+
+    // 右上角退出登录按钮
+    bool logoutHover = (mouseX >= WIN_WIDTH - 100 && mouseX <= WIN_WIDTH - 20 && mouseY >= 30 && mouseY <= 70);
+    drawBtn(WIN_WIDTH - 100, 30, 80, 40, L"退出", logoutHover, RGB(200, 100, 100));
 
     settextstyle(20, 0, L"微软雅黑");
     settextcolor(RGB(30, 60, 120));
@@ -449,7 +477,7 @@ void drawStudentHomePage() {
     int rightX = WIN_WIDTH - 210;
     int rightW = 190;
 
-    drawRoundRect(rightX, 120, rightW, 370, 10, RGB(220, 220, 220), RGB(255, 255, 255));
+    drawRoundRect(rightX, 120, rightW, 420, 10, RGB(220, 220, 220), RGB(255, 255, 255));
 
     settextcolor(RGB(30, 60, 120));
     settextstyle(16, 0, L"微软雅黑");
@@ -469,18 +497,23 @@ void drawStudentHomePage() {
     settextstyle(14, 0, L"微软雅黑");
     outtextxy(rightX + (rightW - textwidth(L"学生用户")) / 2, 250, L"学生用户");
 
+    // 我的活动按钮
     bool myActHover = (mouseX >= rightX + 20 && mouseX <= rightX + rightW - 20 && mouseY >= 280 && mouseY <= 315);
     drawBtn(rightX + 20, 280, rightW - 40, 35, L"我的活动", myActHover, RGB(70, 150, 230));
 
+    // 我的勋章按钮（保留，功能开发中）
     bool medalHover = (mouseX >= rightX + 20 && mouseX <= rightX + rightW - 20 && mouseY >= 325 && mouseY <= 360);
     drawBtn(rightX + 20, 325, rightW - 40, 35, L"我的勋章", medalHover, RGB(100, 180, 100));
 
-    bool settingHover = (mouseX >= rightX + 20 && mouseX <= rightX + rightW - 20 && mouseY >= 370 && mouseY <= 405);
-    drawBtn(rightX + 20, 370, rightW - 40, 35, L"个人设置", settingHover, RGB(150, 150, 150));
+    // 提交建议按钮
+    bool suggestionHover = (mouseX >= rightX + 20 && mouseX <= rightX + rightW - 20 && mouseY >= 370 && mouseY <= 405);
+    drawBtn(rightX + 20, 370, rightW - 40, 35, L"提交建议", suggestionHover, RGB(150, 150, 50));
 
-    bool logoutHover = (mouseX >= rightX + 25 && mouseX <= rightX + 175 && mouseY >= 465 && mouseY <= 505);
-    drawBtn(rightX + 25, 465, 150, 40, L"退出登录", logoutHover, RGB(220, 80, 80));
+    // 个人设置按钮
+    bool settingHover = (mouseX >= rightX + 20 && mouseX <= rightX + rightW - 20 && mouseY >= 415 && mouseY <= 450);
+    drawBtn(rightX + 20, 415, rightW - 40, 35, L"个人设置", settingHover, RGB(150, 150, 150));
 
+    // 查看更多活动按钮
     bool moreHover = (mouseX >= WIN_WIDTH / 2 - 100 && mouseX <= WIN_WIDTH / 2 + 100 &&
         mouseY >= WIN_HEIGHT - 60 && mouseY <= WIN_HEIGHT - 20);
     drawBtn(WIN_WIDTH / 2 - 100, WIN_HEIGHT - 60, 200, 40, L"查看更多活动", moreHover, RGB(70, 150, 230));
@@ -637,14 +670,12 @@ void handleMyActivitiesMouseClick(int x, int y) {
         }
 
         if (activity != NULL) {
-            // 查看地图按钮
             if (x >= itemX + itemWidth - 210 && x <= itemX + itemWidth - 110 &&
                 y >= yPos + 50 && y <= yPos + 90) {
                 showMapDialog(activity->lat, activity->lng, activity->location);
                 return;
             }
 
-            // 取消报名按钮
             if (x >= itemX + itemWidth - 110 && x <= itemX + itemWidth - 20 &&
                 y >= yPos + 50 && y <= yPos + 90) {
                 wchar_t msg[200];
@@ -697,8 +728,18 @@ void handleDetailMouseClick(int x, int y) {
     }
 }
 
+// ==================== 全局标志：是否退出 ====================
+static bool shouldExit = false;
+
 // ==================== 首页鼠标点击处理 ====================
 void handleHomeMouseClick(int x, int y) {
+    // 退出登录按钮
+    if (x >= WIN_WIDTH - 100 && x <= WIN_WIDTH - 20 && y >= 30 && y <= 70) {
+        shouldExit = true;  // 设置退出标志
+        return;
+    }
+
+    // 查看更多活动按钮
     if (x >= WIN_WIDTH / 2 - 100 && x <= WIN_WIDTH / 2 + 100 &&
         y >= WIN_HEIGHT - 60 && y <= WIN_HEIGHT - 20) {
         MessageBoxW(GetHWnd(), L"更多活动功能开发中...", L"提示", MB_OK);
@@ -708,28 +749,31 @@ void handleHomeMouseClick(int x, int y) {
     int rightX = WIN_WIDTH - 210;
     int rightW = 190;
 
+    // 我的活动按钮
     if (x >= rightX + 20 && x <= rightX + rightW - 20 && y >= 280 && y <= 315) {
         currentPage = PAGE_MY_ACTIVITIES;
         return;
     }
 
+    // 我的勋章按钮（开发中）
     if (x >= rightX + 20 && x <= rightX + rightW - 20 && y >= 325 && y <= 360) {
         MessageBoxW(GetHWnd(), L"我的勋章功能开发中...", L"提示", MB_OK);
         return;
     }
 
+    // 提交建议按钮
     if (x >= rightX + 20 && x <= rightX + rightW - 20 && y >= 370 && y <= 405) {
+        showSuggestionDialog();
+        return;
+    }
+
+    // 个人设置按钮
+    if (x >= rightX + 20 && x <= rightX + rightW - 20 && y >= 415 && y <= 450) {
         MessageBoxW(GetHWnd(), L"个人设置功能开发中...", L"提示", MB_OK);
         return;
     }
 
-    if (x >= rightX + 25 && x <= rightX + 175 && y >= 465 && y <= 505) {
-        int result = MessageBoxW(GetHWnd(), L"确定要退出登录吗？", L"退出确认", MB_YESNO | MB_ICONQUESTION);
-        if (result == IDYES) {
-            g_should_logout = true;
-        }
-        return;
-    }
+    // 活动卡片详情按钮
     int cardStartX = 330;
     int cardStartY = 160;
     int cardGap = 25;
@@ -754,16 +798,18 @@ void handleHomeMouseClick(int x, int y) {
 void runStudentMainPage() {
     ExMessage msg;
     bool running = true;
-    g_should_logout = false;  // 重置标志
 
     mouseX = 0;
     mouseY = 0;
     currentPage = PAGE_HOME;
     currentActivityId = 0;
+    shouldExit = false;  // 重置退出标志
 
     initMockEnrollments();
 
-    while (running && !g_should_logout) {
+    BeginBatchDraw();
+
+    while (running) {
         while (peekmessage(&msg)) {
             if (msg.message == WM_MOUSEMOVE) {
                 mouseX = msg.x;
@@ -782,10 +828,7 @@ void runStudentMainPage() {
             }
             else if (msg.message == WM_KEYDOWN) {
                 if (msg.vkcode == VK_ESCAPE) {
-                    if (currentPage == PAGE_DETAIL) {
-                        currentPage = PAGE_HOME;
-                    }
-                    else if (currentPage == PAGE_MY_ACTIVITIES) {
+                    if (currentPage == PAGE_DETAIL || currentPage == PAGE_MY_ACTIVITIES) {
                         currentPage = PAGE_HOME;
                     }
                     else {
@@ -793,6 +836,11 @@ void runStudentMainPage() {
                     }
                 }
             }
+        }
+
+        // 检查是否需要退出
+        if (shouldExit) {
+            running = false;
         }
 
         if (currentPage == PAGE_HOME) {
@@ -808,4 +856,6 @@ void runStudentMainPage() {
         FlushBatchDraw();
         Sleep(16);
     }
+
+    EndBatchDraw();
 }
