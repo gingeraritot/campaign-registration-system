@@ -1,37 +1,38 @@
 ﻿C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\VC\v180\Microsoft.CppBuild.targets(551,5): warning MSB8028: 中间目录(x64\Debug\)包含从另一个项目(campus_system.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
 cl : 命令行  warning D9025: 正在重写“/sdl”(用“/GS-”)
   admin_main.cpp
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\admin_main.cpp(284,34): warning C4477: “swprintf_s”: 格式字符串“%s”需要类型“wchar_t *”的参数，但可变参数 2 拥有了类型“char *”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\admin_main.cpp(284,34):
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\admin_main.cpp(284,34): warning C4477: “swprintf_s”: 格式字符串“%s”需要类型“wchar_t *”的参数，但可变参数 2 拥有了类型“char *”
+      C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\admin_main.cpp(284,34):
       请考虑在格式字符串中使用“%hs”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\admin_main.cpp(284,34):
+      C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\admin_main.cpp(284,34):
       请考虑在格式字符串中使用“%Ts”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\admin_main.cpp(284,34):
+      C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\admin_main.cpp(284,34):
       Visual C++ 使用非标准语义时会出现此警告
   
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\admin_main.cpp(335,39): warning C4477: “swprintf_s”: 格式字符串“%s”需要类型“wchar_t *”的参数，但可变参数 1 拥有了类型“char *”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\admin_main.cpp(335,39):
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\admin_main.cpp(335,39): warning C4477: “swprintf_s”: 格式字符串“%s”需要类型“wchar_t *”的参数，但可变参数 1 拥有了类型“char *”
+      C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\admin_main.cpp(335,39):
       请考虑在格式字符串中使用“%hs”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\admin_main.cpp(335,39):
+      C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\admin_main.cpp(335,39):
       请考虑在格式字符串中使用“%Ts”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\admin_main.cpp(335,39):
+      C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\admin_main.cpp(335,39):
       Visual C++ 使用非标准语义时会出现此警告
   
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\admin_main.cpp(335,39): warning C4477: “swprintf_s”: 格式字符串“%s”需要类型“wchar_t *”的参数，但可变参数 2 拥有了类型“char *”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\admin_main.cpp(335,39):
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\admin_main.cpp(335,39): warning C4477: “swprintf_s”: 格式字符串“%s”需要类型“wchar_t *”的参数，但可变参数 2 拥有了类型“char *”
+      C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\admin_main.cpp(335,39):
       请考虑在格式字符串中使用“%hs”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\admin_main.cpp(335,39):
+      C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\admin_main.cpp(335,39):
       请考虑在格式字符串中使用“%Ts”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\admin_main.cpp(335,39):
+      C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\admin_main.cpp(335,39):
       Visual C++ 使用非标准语义时会出现此警告
   
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\admin_main.cpp(397,25): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\admin_main.cpp(407,21): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\admin_main.cpp(416,21): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-  student_main.cpp
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\admin_main.cpp(397,25): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\admin_main.cpp(407,21): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\admin_main.cpp(416,21): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+  校园系统.vcxproj -> C:\Users\GingerariToT\Desktop\xiaoyuanxitong\x64\Debug\校园系统.exe
   main.cpp
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\main.cpp(251,29): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\main.cpp(426,33): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\main.cpp(443,33): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-  正在生成代码...
-  校园系统.vcxproj -> C:\Users\pLeOn\source\repos\campaign-registration-system\x64\Debug\校园系统.exe
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(251,29): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(426,33): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(443,33): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+  student_main.cpp
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_main.cpp(369,17): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+  校园系统.vcxproj -> C:\Users\正电子\source\repos\campaign-registration-system\x64\Debug\校园系统.exe
