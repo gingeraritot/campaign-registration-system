@@ -8,6 +8,9 @@
 #include <ctype.h>
 #include "head.h"
 
+// 在文件开头，其他全局变量附近添加
+static bool g_should_logout = false;
+
 // ==================== 常量定义 ====================
 #define WIN_WIDTH     1200
 #define WIN_HEIGHT    800
@@ -475,6 +478,9 @@ void drawStudentHomePage() {
     bool settingHover = (mouseX >= rightX + 20 && mouseX <= rightX + rightW - 20 && mouseY >= 370 && mouseY <= 405);
     drawBtn(rightX + 20, 370, rightW - 40, 35, L"个人设置", settingHover, RGB(150, 150, 150));
 
+    bool logoutHover = (mouseX >= rightX + 25 && mouseX <= rightX + 175 && mouseY >= 465 && mouseY <= 505);
+    drawBtn(rightX + 25, 465, 150, 40, L"退出登录", logoutHover, RGB(220, 80, 80));
+
     bool moreHover = (mouseX >= WIN_WIDTH / 2 - 100 && mouseX <= WIN_WIDTH / 2 + 100 &&
         mouseY >= WIN_HEIGHT - 60 && mouseY <= WIN_HEIGHT - 20);
     drawBtn(WIN_WIDTH / 2 - 100, WIN_HEIGHT - 60, 200, 40, L"查看更多活动", moreHover, RGB(70, 150, 230));
@@ -717,6 +723,13 @@ void handleHomeMouseClick(int x, int y) {
         return;
     }
 
+    if (x >= rightX + 25 && x <= rightX + 175 && y >= 465 && y <= 505) {
+        int result = MessageBoxW(GetHWnd(), L"确定要退出登录吗？", L"退出确认", MB_YESNO | MB_ICONQUESTION);
+        if (result == IDYES) {
+            g_should_logout = true;
+        }
+        return;
+    }
     int cardStartX = 330;
     int cardStartY = 160;
     int cardGap = 25;
@@ -741,6 +754,7 @@ void handleHomeMouseClick(int x, int y) {
 void runStudentMainPage() {
     ExMessage msg;
     bool running = true;
+    g_should_logout = false;  // 重置标志
 
     mouseX = 0;
     mouseY = 0;
@@ -749,7 +763,7 @@ void runStudentMainPage() {
 
     initMockEnrollments();
 
-    while (running) {
+    while (running && !g_should_logout) {
         while (peekmessage(&msg)) {
             if (msg.message == WM_MOUSEMOVE) {
                 mouseX = msg.x;
