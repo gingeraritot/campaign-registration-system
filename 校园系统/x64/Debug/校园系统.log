@@ -28,7 +28,6 @@ D:\Campaign_registration_system\校园系统\admin_main.cpp(335,39): warning C44
 D:\Campaign_registration_system\校园系统\admin_main.cpp(397,25): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
 D:\Campaign_registration_system\校园系统\admin_main.cpp(407,21): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
 D:\Campaign_registration_system\校园系统\admin_main.cpp(416,21): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-  activity_admin.cpp
   data.cpp
   main.cpp
 D:\Campaign_registration_system\校园系统\main.cpp(213,29): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
@@ -43,5 +42,6 @@ D:\Campaign_registration_system\校园系统\student_ops.cpp(104,45): warning C4
   system_service.cpp
 D:\Campaign_registration_system\校园系统\system_service.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
 D:\Campaign_registration_system\校园系统\system_service.cpp(101,50): warning C4244: “+=”: 从“time_t”转换到“long”，可能丢失数据
+  activity_admin.cpp
   正在生成代码...
   校园系统.vcxproj -> D:\Campaign_registration_system\x64\Debug\校园系统.exe
