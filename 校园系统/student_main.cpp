@@ -20,7 +20,9 @@
 typedef enum {
     PAGE_HOME,
     PAGE_DETAIL,
-    PAGE_MY_ACTIVITIES
+    PAGE_MY_ACTIVITIES,
+    PAGE_HISTORY,
+    PAGE_SEARCH_RESULT
 } StudentPageState;
 
 // 活动卡片数据结构
@@ -73,10 +75,24 @@ ActivityCard activities[] = {
     },
     {
         4, L"志愿者活动", L"社区中心", L"公益", L"报名人数：", 12, 25,
-        L"2025年11月10日 8:00-12:00", L"志愿者协会", L"有爱心，乐于助人",
+        L"2024年11月10日 8:00-12:00", L"志愿者协会", L"有爱心，乐于助人",
         L"社区志愿服务，帮助老人和儿童，获得志愿时长认证。",
         L"志愿者马甲（现场发放）",
         39.8842, 116.3874
+    },
+    {
+        5, L"读书分享会", L"图书馆", L"文化", L"报名人数：", 8, 30,
+        L"2025年11月15日 14:00-16:00", L"学生会", L"热爱阅读",
+        L"分享你最近读的好书，交流阅读心得。",
+        L"推荐一本书",
+        39.8942, 116.3974
+    },
+    {
+        6, L"篮球赛", L"篮球场", L"体育", L"报名人数：", 12, 40,
+        L"2025年11月20日 15:00-18:00", L"体育部", L"热爱篮球",
+        L"校园篮球友谊赛，欢迎篮球爱好者参加。",
+        L"运动装备",
+        39.9042, 116.4074
     }
 };
 int activityCount = sizeof(activities) / sizeof(ActivityCard);
@@ -99,11 +115,111 @@ static int mouseX = 0, mouseY = 0;
 static StudentPageState currentPage = PAGE_HOME;
 static int currentActivityId = 0;
 
+// 搜索相关变量
+static wchar_t searchKeyword[100] = { 0 };
+static bool isSearchFocus = false;
+static ActivityCard* searchResults[100];
+static int searchResultCount = 0;
+
 // 当前登录的学生ID（模拟，实际应该从登录传递过来）
 static int currentStudentId = 1001;
 
 // 模拟当前用户报名的活动列表
 static EnrollmentRecord* myEnrollments = NULL;
+
+// ==================== 工具函数（提前声明） ====================
+void drawRoundRect(int x, int y, int w, int h, int radius, COLORREF lineColor, COLORREF fillColor);
+void drawBtn(int x, int y, int w, int h, const wchar_t* text, bool isHover, COLORREF color);
+
+// ==================== 工具函数实现 ====================
+void drawRoundRect(int x, int y, int w, int h, int radius, COLORREF lineColor, COLORREF fillColor) {
+    setfillcolor(fillColor);
+    setlinecolor(lineColor);
+    fillroundrect(x, y, x + w, y + h, radius, radius);
+}
+
+void drawBtn(int x, int y, int w, int h, const wchar_t* text, bool isHover, COLORREF color) {
+    COLORREF btnColor = isHover ? RGB(100, 180, 255) : color;
+    drawRoundRect(x, y, w, h, 8, RGB(150, 150, 150), btnColor);
+    settextcolor(WHITE);
+    setbkmode(TRANSPARENT);
+    settextstyle(18, 0, L"微软雅黑");
+    int tx = x + (w - textwidth(text)) / 2;
+    int ty = y + (h - textheight(text)) / 2;
+    outtextxy(tx, ty, text);
+}
+
+// 画搜索框
+void drawSearchBox(int x, int y, int w, int h) {
+    drawRoundRect(x, y, w, h, 8, isSearchFocus ? RGB(0, 120, 255) : RGB(180, 180, 180), WHITE);
+
+    // 搜索图标
+    settextcolor(RGB(150, 150, 150));
+    settextstyle(20, 0, L"微软雅黑");
+    outtextxy(x + 10, y + 8, L"🔍");
+
+    settextcolor(BLACK);
+    settextstyle(18, 0, L"微软雅黑");
+
+    if (wcslen(searchKeyword) > 0) {
+        outtextxy(x + 40, y + 8, searchKeyword);
+    }
+    else if (!isSearchFocus) {
+        settextcolor(RGB(180, 180, 180));
+        outtextxy(x + 40, y + 8, L"搜索活动名称或标签...");
+    }
+
+    if (isSearchFocus) {
+        int cursorX = x + 40 + textwidth(searchKeyword);
+        setlinecolor(BLACK);
+        line(cursorX, y + 10, cursorX, y + h - 10);
+    }
+}
+
+// ==================== 称号系统 ====================
+int getTotalDuration() {
+    int count = 0;
+    EnrollmentRecord* p = myEnrollments;
+    while (p) { count++; p = p->next; }
+    return count * 2;
+}
+
+int getEnrollmentCount() {
+    int count = 0;
+    EnrollmentRecord* p = myEnrollments;
+    while (p) { count++; p = p->next; }
+    return count;
+}
+
+void getTitle(wchar_t* title, int titleSize) {
+    int count = getEnrollmentCount();
+    int duration = getTotalDuration();
+
+    if (count >= 4 && duration >= 8) {
+        wcscpy(title, L"⭐ 活动大师 ⭐");
+    }
+    else if (count >= 3 && duration >= 6) {
+        wcscpy(title, L"🏆 资深参与者 🏆");
+    }
+    else if (count >= 2 && duration >= 4) {
+        wcscpy(title, L"🌟 活跃成员 🌟");
+    }
+    else if (count >= 1 && duration >= 2) {
+        wcscpy(title, L"🌱 新手上路 🌱");
+    }
+    else {
+        wcscpy(title, L"📖 萌新小白 📖");
+    }
+}
+
+COLORREF getTitleColor() {
+    int count = getEnrollmentCount();
+    if (count >= 4) return RGB(255, 200, 0);
+    if (count >= 3) return RGB(255, 150, 50);
+    if (count >= 2) return RGB(100, 180, 100);
+    if (count >= 1) return RGB(100, 150, 200);
+    return RGB(150, 150, 150);
+}
 
 // 显示地图提示框
 void showMapDialog(double lat, double lng, const wchar_t* locationName) {
@@ -115,22 +231,60 @@ void showMapDialog(double lat, double lng, const wchar_t* locationName) {
 
 // ==================== 提交建议弹窗 ====================
 void showSuggestionDialog() {
-    // 创建输入框获取建议内容
-    wchar_t input[500] = {0};
+    wchar_t input[500] = { 0 };
     InputBox(input, 500, L"请输入您的建议：", L"提交建议", NULL, 0, 0, false);
-    
+
     if (wcslen(input) > 0) {
-        // 将宽字符转换为多字节字符
         char contentA[500];
         WideCharToMultiByte(CP_ACP, 0, input, -1, contentA, 500, NULL, NULL);
-        
-        // 调用 head.h 中声明的 add_suggestion 函数
         int result = add_suggestion(currentStudentId, contentA);
-        
+
         if (result == 1) {
             MessageBoxW(GetHWnd(), L"建议提交成功！感谢您的反馈。", L"提示", MB_OK);
-        } else {
+        }
+        else {
             MessageBoxW(GetHWnd(), L"建议提交失败，请稍后重试。", L"错误", MB_OK);
+        }
+    }
+}
+
+// ==================== 搜索功能 ====================
+void performSearch() {
+    searchResultCount = 0;
+
+    if (wcslen(searchKeyword) == 0) {
+        return;
+    }
+
+    wchar_t keywordLower[100];
+    wcscpy(keywordLower, searchKeyword);
+    _wcslwr(keywordLower);
+
+    for (int i = 0; i < activityCount; i++) {
+        wchar_t titleLower[50];
+        wcscpy(titleLower, activities[i].title);
+        _wcslwr(titleLower);
+
+        if (wcsstr(titleLower, keywordLower) != NULL) {
+            searchResults[searchResultCount++] = &activities[i];
+            continue;
+        }
+
+        wchar_t tagLower[20];
+        wcscpy(tagLower, activities[i].tag);
+        _wcslwr(tagLower);
+
+        if (wcsstr(tagLower, keywordLower) != NULL) {
+            searchResults[searchResultCount++] = &activities[i];
+            continue;
+        }
+
+        wchar_t locationLower[50];
+        wcscpy(locationLower, activities[i].location);
+        _wcslwr(locationLower);
+
+        if (wcsstr(locationLower, keywordLower) != NULL) {
+            searchResults[searchResultCount++] = &activities[i];
         }
     }
 }
@@ -145,10 +299,10 @@ void initMockEnrollments() {
     }
     myEnrollments = NULL;
 
-    int activityIds[] = { 1, 2, 4 };
-    const wchar_t* enrollTimes[] = { L"2025-10-15 10:30", L"2025-10-20 14:20", L"2025-11-05 09:15" };
+    int activityIds[] = { 1, 2 };
+    const wchar_t* enrollTimes[] = { L"2025-10-15 10:30", L"2025-10-20 14:20" };
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 2; i++) {
         EnrollmentRecord* newRecord = (EnrollmentRecord*)malloc(sizeof(EnrollmentRecord));
         newRecord->activityId = activityIds[i];
         wcscpy(newRecord->enrollTime, enrollTimes[i]);
@@ -254,24 +408,6 @@ ActivityCard* getCurrentActivity() {
     return NULL;
 }
 
-// ==================== 工具函数 ====================
-void drawRoundRect(int x, int y, int w, int h, int radius, COLORREF lineColor, COLORREF fillColor) {
-    setfillcolor(fillColor);
-    setlinecolor(lineColor);
-    fillroundrect(x, y, x + w, y + h, radius, radius);
-}
-
-void drawBtn(int x, int y, int w, int h, const wchar_t* text, bool isHover, COLORREF color) {
-    COLORREF btnColor = isHover ? RGB(100, 180, 255) : color;
-    drawRoundRect(x, y, w, h, 8, RGB(150, 150, 150), btnColor);
-    settextcolor(WHITE);
-    setbkmode(TRANSPARENT);
-    settextstyle(18, 0, L"微软雅黑");
-    int tx = x + (w - textwidth(text)) / 2;
-    int ty = y + (h - textheight(text)) / 2;
-    outtextxy(tx, ty, text);
-}
-
 void drawInfoRow(int x, int y, const wchar_t* label, const wchar_t* value, COLORREF labelColor, COLORREF valueColor) {
     settextcolor(labelColor);
     settextstyle(18, 0, L"微软雅黑");
@@ -333,6 +469,193 @@ void drawHotActivityItem(int x, int y, const wchar_t* name, int index) {
 
     setlinecolor(RGB(230, 230, 230));
     line(x, y + 32, x + 250, y + 32);
+}
+
+// ==================== 判断活动是否已结束 ====================
+bool isActivityEnded(ActivityCard* activity) {
+    int year, month, day;
+    if (wcslen(activity->time) >= 10) {
+        year = (activity->time[0] - L'0') * 1000 + (activity->time[1] - L'0') * 100 +
+            (activity->time[2] - L'0') * 10 + (activity->time[3] - L'0');
+        month = (activity->time[5] - L'0') * 10 + (activity->time[6] - L'0');
+        day = (activity->time[8] - L'0') * 10 + (activity->time[9] - L'0');
+
+        time_t now = time(NULL);
+        struct tm* t = localtime(&now);
+        int currentYear = t->tm_year + 1900;
+        int currentMonth = t->tm_mon + 1;
+        int currentDay = t->tm_mday;
+
+        if (year < currentYear) return true;
+        if (year > currentYear) return false;
+        if (month < currentMonth) return true;
+        if (month > currentMonth) return false;
+        if (day < currentDay) return true;
+    }
+    return false;
+}
+
+// ==================== 搜索结果页面绘制 ====================
+void drawSearchResultPage() {
+    cleardevice();
+    setbkcolor(RGB(240, 245, 250));
+    cleardevice();
+
+    settextcolor(RGB(30, 60, 120));
+    settextstyle(32, 0, L"微软雅黑");
+    outtextxy(40, 25, L"校园活动管理系统");
+
+    bool backHover = (mouseX >= 40 && mouseX <= 120 && mouseY >= 70 && mouseY <= 105);
+    drawBtn(40, 70, 80, 35, L"← 返回", backHover, RGB(100, 100, 100));
+
+    settextcolor(RGB(30, 60, 120));
+    settextstyle(36, 0, L"微软雅黑");
+    wchar_t titleText[150];
+    swprintf(titleText, 150, L"搜索结果：%s", searchKeyword);
+    outtextxy((WIN_WIDTH - textwidth(titleText)) / 2, 80, titleText);
+
+    settextstyle(18, 0, L"微软雅黑");
+    settextcolor(RGB(100, 100, 100));
+    wchar_t countText[100];
+    swprintf(countText, 100, L"共找到 %d 个活动", searchResultCount);
+    outtextxy((WIN_WIDTH - textwidth(countText)) / 2, 130, countText);
+
+    int listStartY = 180;
+    int listEndY = WIN_HEIGHT - 50;
+    int itemHeight = 120;
+    int itemGap = 15;
+    int itemWidth = 900;
+    int itemX = (WIN_WIDTH - itemWidth) / 2;
+
+    if (searchResultCount == 0) {
+        settextcolor(RGB(150, 150, 150));
+        settextstyle(24, 0, L"微软雅黑");
+        const wchar_t* emptyMsg = L"未找到相关活动\n\n试试其他关键词吧！";
+        outtextxy((WIN_WIDTH - textwidth(emptyMsg)) / 2, 350, emptyMsg);
+    }
+    else {
+        int y = listStartY;
+        for (int i = 0; i < searchResultCount && y + itemHeight < listEndY; i++) {
+            ActivityCard* activity = searchResults[i];
+            bool isHover = (mouseX >= itemX && mouseX <= itemX + itemWidth &&
+                mouseY >= y && mouseY <= y + itemHeight);
+
+            COLORREF bgColor = isHover ? RGB(250, 250, 255) : RGB(255, 255, 255);
+            drawRoundRect(itemX, y, itemWidth, itemHeight, 10, RGB(200, 200, 200), bgColor);
+
+            settextcolor(RGB(30, 60, 120));
+            settextstyle(20, 0, L"微软雅黑");
+            outtextxy(itemX + 20, y + 15, activity->title);
+
+            drawRoundRect(itemX + 180, y + 12, 60, 25, 5, RGB(150, 200, 255), RGB(200, 225, 255));
+            settextcolor(RGB(50, 100, 150));
+            settextstyle(12, 0, L"微软雅黑");
+            outtextxy(itemX + 190, y + 17, activity->tag);
+
+            settextcolor(RGB(100, 100, 100));
+            settextstyle(16, 0, L"微软雅黑");
+            wchar_t timeText[150];
+            swprintf(timeText, 150, L"活动时间：%s", activity->time);
+            outtextxy(itemX + 20, y + 50, timeText);
+
+            wchar_t locationText[150];
+            swprintf(locationText, 150, L"活动地点：%s", activity->location);
+            outtextxy(itemX + 20, y + 80, locationText);
+
+            bool detailHover = (mouseX >= itemX + itemWidth - 100 && mouseX <= itemX + itemWidth - 20 &&
+                mouseY >= y + 40 && mouseY <= y + 75);
+            drawBtn(itemX + itemWidth - 100, y + 40, 80, 35, L"查看详情", detailHover, RGB(70, 150, 230));
+
+            y += itemHeight + itemGap;
+        }
+    }
+}
+
+// ==================== 历史记录页面绘制 ====================
+void drawHistoryPage() {
+    cleardevice();
+    setbkcolor(RGB(240, 245, 250));
+    cleardevice();
+
+    settextcolor(RGB(30, 60, 120));
+    settextstyle(32, 0, L"微软雅黑");
+    outtextxy(40, 25, L"校园活动管理系统");
+
+    bool backHover = (mouseX >= 40 && mouseX <= 120 && mouseY >= 70 && mouseY <= 105);
+    drawBtn(40, 70, 80, 35, L"← 返回", backHover, RGB(100, 100, 100));
+
+    settextcolor(RGB(30, 60, 120));
+    settextstyle(36, 0, L"微软雅黑");
+    const wchar_t* title = L"历史记录";
+    outtextxy((WIN_WIDTH - textwidth(title)) / 2, 80, title);
+
+    settextstyle(18, 0, L"微软雅黑");
+    settextcolor(RGB(100, 100, 100));
+    const wchar_t* subtitle = L"已结束的活动";
+    outtextxy((WIN_WIDTH - textwidth(subtitle)) / 2, 130, subtitle);
+
+    ActivityCard* endedActivities[100];
+    int endedCount = 0;
+
+    for (int i = 0; i < activityCount; i++) {
+        if (isActivityEnded(&activities[i])) {
+            endedActivities[endedCount] = &activities[i];
+            endedCount++;
+        }
+    }
+
+    int listStartY = 180;
+    int listEndY = WIN_HEIGHT - 50;
+    int itemHeight = 120;
+    int itemGap = 15;
+    int itemWidth = 900;
+    int itemX = (WIN_WIDTH - itemWidth) / 2;
+
+    if (endedCount == 0) {
+        settextcolor(RGB(150, 150, 150));
+        settextstyle(24, 0, L"微软雅黑");
+        const wchar_t* emptyMsg = L"暂无已结束的活动记录";
+        outtextxy((WIN_WIDTH - textwidth(emptyMsg)) / 2, 350, emptyMsg);
+    }
+    else {
+        int y = listStartY;
+        for (int i = 0; i < endedCount && y + itemHeight < listEndY; i++) {
+            ActivityCard* activity = endedActivities[i];
+            bool isHover = (mouseX >= itemX && mouseX <= itemX + itemWidth &&
+                mouseY >= y && mouseY <= y + itemHeight);
+
+            COLORREF bgColor = isHover ? RGB(250, 250, 255) : RGB(255, 255, 255);
+            drawRoundRect(itemX, y, itemWidth, itemHeight, 10, RGB(200, 200, 200), bgColor);
+
+            settextcolor(RGB(30, 60, 120));
+            settextstyle(20, 0, L"微软雅黑");
+            outtextxy(itemX + 20, y + 15, activity->title);
+
+            drawRoundRect(itemX + 180, y + 12, 60, 25, 5, RGB(150, 200, 255), RGB(200, 225, 255));
+            settextcolor(RGB(50, 100, 150));
+            settextstyle(12, 0, L"微软雅黑");
+            outtextxy(itemX + 190, y + 17, activity->tag);
+
+            settextcolor(RGB(100, 100, 100));
+            settextstyle(16, 0, L"微软雅黑");
+            wchar_t timeText[150];
+            swprintf(timeText, 150, L"活动时间：%s", activity->time);
+            outtextxy(itemX + 20, y + 50, timeText);
+
+            wchar_t locationText[150];
+            swprintf(locationText, 150, L"活动地点：%s", activity->location);
+            outtextxy(itemX + 20, y + 80, locationText);
+
+            setfillcolor(RGB(180, 180, 180));
+            setlinecolor(RGB(150, 150, 150));
+            drawRoundRect(itemX + itemWidth - 100, y + 35, 80, 35, 8, RGB(150, 150, 150), RGB(180, 180, 180));
+            settextcolor(WHITE);
+            settextstyle(16, 0, L"微软雅黑");
+            outtextxy(itemX + itemWidth - 85, y + 45, L"已结束");
+
+            y += itemHeight + itemGap;
+        }
+    }
 }
 
 // ==================== 我的活动页面绘制 ====================
@@ -422,97 +745,6 @@ void drawMyActivitiesPage() {
             p = p->next;
         }
     }
-}
-
-// ==================== 首页绘制 ====================
-void drawStudentHomePage() {
-    cleardevice();
-    setbkcolor(RGB(240, 245, 250));
-    cleardevice();
-
-    settextcolor(RGB(30, 60, 120));
-    settextstyle(32, 0, L"微软雅黑");
-    outtextxy(40, 25, L"校园活动管理系统");
-
-    settextstyle(18, 0, L"微软雅黑");
-    settextcolor(RGB(80, 80, 80));
-    outtextxy(40, 70, L"欢迎，同学！");
-
-    // 右上角退出登录按钮
-    bool logoutHover = (mouseX >= WIN_WIDTH - 100 && mouseX <= WIN_WIDTH - 20 && mouseY >= 30 && mouseY <= 70);
-    drawBtn(WIN_WIDTH - 100, 30, 80, 40, L"退出", logoutHover, RGB(200, 100, 100));
-
-    settextstyle(20, 0, L"微软雅黑");
-    settextcolor(RGB(30, 60, 120));
-    outtextxy(40, 120, L"热门活动推荐");
-
-    drawRoundRect(40, 155, 260, 320, 10, RGB(220, 220, 220), RGB(255, 255, 255));
-
-    for (int i = 0; i < hotCount && i < 6; i++) {
-        drawHotActivityItem(50, 165 + i * 48, hotActivities[i].name, i);
-    }
-
-    settextstyle(20, 0, L"微软雅黑");
-    settextcolor(RGB(30, 60, 120));
-    outtextxy(330, 120, L"推荐活动");
-
-    int cardStartX = 330;
-    int cardStartY = 160;
-    int cardGap = 25;
-
-    for (int i = 0; i < activityCount && i < 4; i++) {
-        int col = i % 2;
-        int row = i / 2;
-        int x = cardStartX + col * (CARD_WIDTH + cardGap);
-        int y = cardStartY + row * (CARD_HEIGHT + cardGap);
-
-        bool isHover = (mouseX >= x && mouseX <= x + CARD_WIDTH && mouseY >= y && mouseY <= y + CARD_HEIGHT);
-        drawActivityCard(x, y, &activities[i], isHover);
-    }
-
-    int rightX = WIN_WIDTH - 210;
-    int rightW = 190;
-
-    drawRoundRect(rightX, 120, rightW, 420, 10, RGB(220, 220, 220), RGB(255, 255, 255));
-
-    settextcolor(RGB(30, 60, 120));
-    settextstyle(16, 0, L"微软雅黑");
-    outtextxy(rightX + (rightW - textwidth(L"个人中心")) / 2, 140, L"个人中心");
-
-    setlinecolor(RGB(230, 230, 230));
-    line(rightX + 10, 165, rightX + rightW - 10, 165);
-
-    setfillcolor(RGB(70, 150, 230));
-    setlinecolor(RGB(70, 150, 230));
-    fillcircle(rightX + rightW / 2, 205, 30);
-    settextcolor(WHITE);
-    settextstyle(20, 0, L"微软雅黑");
-    outtextxy(rightX + rightW / 2 - 10, 197, L"我");
-
-    settextcolor(RGB(50, 50, 50));
-    settextstyle(14, 0, L"微软雅黑");
-    outtextxy(rightX + (rightW - textwidth(L"学生用户")) / 2, 250, L"学生用户");
-
-    // 我的活动按钮
-    bool myActHover = (mouseX >= rightX + 20 && mouseX <= rightX + rightW - 20 && mouseY >= 280 && mouseY <= 315);
-    drawBtn(rightX + 20, 280, rightW - 40, 35, L"我的活动", myActHover, RGB(70, 150, 230));
-
-    // 我的勋章按钮（保留，功能开发中）
-    bool medalHover = (mouseX >= rightX + 20 && mouseX <= rightX + rightW - 20 && mouseY >= 325 && mouseY <= 360);
-    drawBtn(rightX + 20, 325, rightW - 40, 35, L"我的勋章", medalHover, RGB(100, 180, 100));
-
-    // 提交建议按钮
-    bool suggestionHover = (mouseX >= rightX + 20 && mouseX <= rightX + rightW - 20 && mouseY >= 370 && mouseY <= 405);
-    drawBtn(rightX + 20, 370, rightW - 40, 35, L"提交建议", suggestionHover, RGB(150, 150, 50));
-
-    // 个人设置按钮
-    bool settingHover = (mouseX >= rightX + 20 && mouseX <= rightX + rightW - 20 && mouseY >= 415 && mouseY <= 450);
-    drawBtn(rightX + 20, 415, rightW - 40, 35, L"个人设置", settingHover, RGB(150, 150, 150));
-
-    // 查看更多活动按钮
-    bool moreHover = (mouseX >= WIN_WIDTH / 2 - 100 && mouseX <= WIN_WIDTH / 2 + 100 &&
-        mouseY >= WIN_HEIGHT - 60 && mouseY <= WIN_HEIGHT - 20);
-    drawBtn(WIN_WIDTH / 2 - 100, WIN_HEIGHT - 60, 200, 40, L"查看更多活动", moreHover, RGB(70, 150, 230));
 }
 
 // ==================== 活动详情页绘制 ====================
@@ -640,7 +872,134 @@ void drawActivityDetailPage() {
     }
 }
 
-// ==================== 我的活动页鼠标点击处理 ====================
+// ==================== 首页绘制 ====================
+void drawStudentHomePage() {
+    cleardevice();
+    setbkcolor(RGB(240, 245, 250));
+    cleardevice();
+
+    settextcolor(RGB(30, 60, 120));
+    settextstyle(32, 0, L"微软雅黑");
+    outtextxy(40, 25, L"校园活动管理系统");
+
+    settextstyle(18, 0, L"微软雅黑");
+    settextcolor(RGB(80, 80, 80));
+    outtextxy(40, 70, L"欢迎，同学！");
+
+    // 右上角退出登录按钮
+    bool logoutHover = (mouseX >= WIN_WIDTH - 100 && mouseX <= WIN_WIDTH - 20 && mouseY >= 30 && mouseY <= 70);
+    drawBtn(WIN_WIDTH - 100, 30, 80, 40, L"退出", logoutHover, RGB(200, 100, 100));
+
+    // 搜索框（放在右上角退出按钮左边）
+    int searchX = WIN_WIDTH - 380;
+    int searchY = 32;
+    int searchW = 260;
+    int searchH = 36;
+    drawSearchBox(searchX, searchY, searchW, searchH);
+
+    settextstyle(20, 0, L"微软雅黑");
+    settextcolor(RGB(30, 60, 120));
+    outtextxy(40, 120, L"热门活动推荐");
+
+    drawRoundRect(40, 155, 260, 320, 10, RGB(220, 220, 220), RGB(255, 255, 255));
+
+    for (int i = 0; i < hotCount && i < 6; i++) {
+        drawHotActivityItem(50, 165 + i * 48, hotActivities[i].name, i);
+    }
+
+    settextstyle(20, 0, L"微软雅黑");
+    settextcolor(RGB(30, 60, 120));
+    outtextxy(330, 120, L"推荐活动");
+
+    int cardStartX = 330;
+    int cardStartY = 160;
+    int cardGap = 25;
+
+    for (int i = 0; i < 4 && i < activityCount; i++) {
+        int col = i % 2;
+        int row = i / 2;
+        int x = cardStartX + col * (CARD_WIDTH + cardGap);
+        int y = cardStartY + row * (CARD_HEIGHT + cardGap);
+
+        bool isHover = (mouseX >= x && mouseX <= x + CARD_WIDTH && mouseY >= y && mouseY <= y + CARD_HEIGHT);
+        drawActivityCard(x, y, &activities[i], isHover);
+    }
+
+    int rightX = WIN_WIDTH - 210;
+    int rightW = 190;
+
+    drawRoundRect(rightX, 120, rightW, 420, 10, RGB(220, 220, 220), RGB(255, 255, 255));
+
+    settextcolor(RGB(30, 60, 120));
+    settextstyle(16, 0, L"微软雅黑");
+    outtextxy(rightX + (rightW - textwidth(L"个人中心")) / 2, 140, L"个人中心");
+
+    setlinecolor(RGB(230, 230, 230));
+    line(rightX + 10, 165, rightX + rightW - 10, 165);
+
+    setfillcolor(RGB(70, 150, 230));
+    setlinecolor(RGB(70, 150, 230));
+    fillcircle(rightX + rightW / 2, 205, 30);
+    settextcolor(WHITE);
+    settextstyle(20, 0, L"微软雅黑");
+    outtextxy(rightX + rightW / 2 - 10, 197, L"我");
+
+    wchar_t titleText[50];
+    getTitle(titleText, 50);
+    settextcolor(getTitleColor());
+    settextstyle(16, 0, L"微软雅黑");
+    outtextxy(rightX + (rightW - textwidth(titleText)) / 2, 250, titleText);
+
+    settextcolor(RGB(120, 120, 120));
+    settextstyle(12, 0, L"微软雅黑");
+    wchar_t infoText[100];
+    int count = getEnrollmentCount();
+    int duration = getTotalDuration();
+    swprintf(infoText, 100, L"报名%d项 | 累计%d小时", count, duration);
+    outtextxy(rightX + (rightW - textwidth(infoText)) / 2, 275, infoText);
+
+    bool titleHover = (mouseX >= rightX + 20 && mouseX <= rightX + rightW - 20 && mouseY >= 305 && mouseY <= 340);
+    drawBtn(rightX + 20, 305, rightW - 40, 35, L"称号详情", titleHover, RGB(100, 180, 100));
+
+    bool myActHover = (mouseX >= rightX + 20 && mouseX <= rightX + rightW - 20 && mouseY >= 350 && mouseY <= 385);
+    drawBtn(rightX + 20, 350, rightW - 40, 35, L"我的活动", myActHover, RGB(70, 150, 230));
+
+    bool suggestionHover = (mouseX >= rightX + 20 && mouseX <= rightX + rightW - 20 && mouseY >= 395 && mouseY <= 430);
+    drawBtn(rightX + 20, 395, rightW - 40, 35, L"提交建议", suggestionHover, RGB(150, 150, 50));
+
+    bool historyHover = (mouseX >= rightX + 20 && mouseX <= rightX + rightW - 20 && mouseY >= 440 && mouseY <= 475);
+    drawBtn(rightX + 20, 440, rightW - 40, 35, L"历史记录", historyHover, RGB(100, 100, 200));
+
+    bool moreHover = (mouseX >= WIN_WIDTH / 2 - 100 && mouseX <= WIN_WIDTH / 2 + 100 &&
+        mouseY >= WIN_HEIGHT - 60 && mouseY <= WIN_HEIGHT - 20);
+    drawBtn(WIN_WIDTH / 2 - 100, WIN_HEIGHT - 60, 200, 40, L"查看更多活动", moreHover, RGB(70, 150, 230));
+}
+
+// ==================== 鼠标点击处理函数 ====================
+void handleSearchResultMouseClick(int x, int y) {
+    if (x >= 40 && x <= 120 && y >= 70 && y <= 105) {
+        currentPage = PAGE_HOME;
+        return;
+    }
+
+    int listStartY = 180;
+    int itemHeight = 120;
+    int itemGap = 15;
+    int itemWidth = 900;
+    int itemX = (WIN_WIDTH - itemWidth) / 2;
+
+    int yPos = listStartY;
+    for (int i = 0; i < searchResultCount && yPos + itemHeight < WIN_HEIGHT - 50; i++) {
+        if (x >= itemX + itemWidth - 100 && x <= itemX + itemWidth - 20 &&
+            y >= yPos + 40 && y <= yPos + 75) {
+            currentActivityId = searchResults[i]->id;
+            currentPage = PAGE_DETAIL;
+            return;
+        }
+        yPos += itemHeight + itemGap;
+    }
+}
+
 void handleMyActivitiesMouseClick(int x, int y) {
     if (x >= 40 && x <= 120 && y >= 70 && y <= 105) {
         currentPage = PAGE_HOME;
@@ -688,7 +1047,13 @@ void handleMyActivitiesMouseClick(int x, int y) {
     }
 }
 
-// ==================== 详情页鼠标点击处理 ====================
+void handleHistoryMouseClick(int x, int y) {
+    if (x >= 40 && x <= 120 && y >= 70 && y <= 105) {
+        currentPage = PAGE_HOME;
+        return;
+    }
+}
+
 void handleDetailMouseClick(int x, int y) {
     ActivityCard* activity = getCurrentActivity();
 
@@ -724,14 +1089,45 @@ void handleDetailMouseClick(int x, int y) {
     }
 }
 
-// ==================== 首页鼠标点击处理 ====================
+static bool shouldExit = false;
+
+void showTitleDetailDialog() {
+    wchar_t msg[800];
+    int count = getEnrollmentCount();
+    int duration = getTotalDuration();
+
+    wchar_t title[50];
+    getTitle(title, 50);
+
+    swprintf(msg, 800, L"【当前称号】\n%s\n\n━━━━━━━━━━━━━━━━━━━━\n\n📊 活动统计\n\n• 报名活动数量：%d 项\n• 累计参与时长：%d 小时\n\n━━━━━━━━━━━━━━━━━━━━\n\n🏅 称号等级\n\n⭐ 活动大师：报名≥4项 且 时长≥8小时\n🏆 资深参与者：报名≥3项 且 时长≥6小时\n🌟 活跃成员：报名≥2项 且 时长≥4小时\n🌱 新手上路：报名≥1项 且 时长≥2小时\n📖 萌新小白：初始称号\n\n━━━━━━━━━━━━━━━━━━━━\n\n💡 提示：参加更多活动可提升称号！",
+        title, count, duration);
+
+    MessageBoxW(GetHWnd(), msg, L"称号详情", MB_OK);
+}
+
 void handleHomeMouseClick(int x, int y) {
     // 退出登录按钮
     if (x >= WIN_WIDTH - 100 && x <= WIN_WIDTH - 20 && y >= 30 && y <= 70) {
-        // 退出登录，返回登录页
-        return;  // 返回后会退出 runStudentMainPage 函数
+        shouldExit = true;
+        return;
     }
-    
+
+    // 搜索框点击
+    int searchX = WIN_WIDTH - 380;
+    int searchY = 32;
+    int searchW = 260;
+    int searchH = 36;
+
+    if (x >= searchX && x <= searchX + searchW && y >= searchY && y <= searchY + searchH) {
+        isSearchFocus = true;
+        return;
+    }
+    else {
+        if (isSearchFocus) {
+            isSearchFocus = false;
+        }
+    }
+
     // 查看更多活动按钮
     if (x >= WIN_WIDTH / 2 - 100 && x <= WIN_WIDTH / 2 + 100 &&
         y >= WIN_HEIGHT - 60 && y <= WIN_HEIGHT - 20) {
@@ -742,27 +1138,23 @@ void handleHomeMouseClick(int x, int y) {
     int rightX = WIN_WIDTH - 210;
     int rightW = 190;
 
-    // 我的活动按钮
-    if (x >= rightX + 20 && x <= rightX + rightW - 20 && y >= 280 && y <= 315) {
+    if (x >= rightX + 20 && x <= rightX + rightW - 20 && y >= 305 && y <= 340) {
+        showTitleDetailDialog();
+        return;
+    }
+
+    if (x >= rightX + 20 && x <= rightX + rightW - 20 && y >= 350 && y <= 385) {
         currentPage = PAGE_MY_ACTIVITIES;
         return;
     }
-    
-    // 我的勋章按钮（开发中）
-    if (x >= rightX + 20 && x <= rightX + rightW - 20 && y >= 325 && y <= 360) {
-        MessageBoxW(GetHWnd(), L"我的勋章功能开发中...", L"提示", MB_OK);
-        return;
-    }
-    
-    // 提交建议按钮
-    if (x >= rightX + 20 && x <= rightX + rightW - 20 && y >= 370 && y <= 405) {
+
+    if (x >= rightX + 20 && x <= rightX + rightW - 20 && y >= 395 && y <= 430) {
         showSuggestionDialog();
         return;
     }
 
-    // 个人设置按钮
-    if (x >= rightX + 20 && x <= rightX + rightW - 20 && y >= 415 && y <= 450) {
-        MessageBoxW(GetHWnd(), L"个人设置功能开发中...", L"提示", MB_OK);
+    if (x >= rightX + 20 && x <= rightX + rightW - 20 && y >= 440 && y <= 475) {
+        currentPage = PAGE_HISTORY;
         return;
     }
 
@@ -771,7 +1163,7 @@ void handleHomeMouseClick(int x, int y) {
     int cardStartY = 160;
     int cardGap = 25;
 
-    for (int i = 0; i < activityCount && i < 4; i++) {
+    for (int i = 0; i < 4 && i < activityCount; i++) {
         int col = i % 2;
         int row = i / 2;
         int cardX = cardStartX + col * (CARD_WIDTH + cardGap);
@@ -787,6 +1179,30 @@ void handleHomeMouseClick(int x, int y) {
     }
 }
 
+// ==================== 修复：支持中文输入 ====================
+void handleKeyInput(wchar_t ch) {
+    if (!isSearchFocus) return;
+
+    if (ch == VK_BACK) {
+        int len = wcslen(searchKeyword);
+        if (len > 0) {
+            searchKeyword[len - 1] = L'\0';
+        }
+    }
+    else if (ch == VK_RETURN) {
+        performSearch();
+        if (searchResultCount > 0 || wcslen(searchKeyword) > 0) {
+            currentPage = PAGE_SEARCH_RESULT;
+        }
+        isSearchFocus = false;
+    }
+    else {
+        if (wcslen(searchKeyword) < 98) {
+            searchKeyword[wcslen(searchKeyword)] = ch;
+        }
+    }
+}
+
 // ==================== 学生主界面入口 ====================
 void runStudentMainPage() {
     ExMessage msg;
@@ -796,6 +1212,9 @@ void runStudentMainPage() {
     mouseY = 0;
     currentPage = PAGE_HOME;
     currentActivityId = 0;
+    shouldExit = false;
+    isSearchFocus = false;
+    wmemset(searchKeyword, 0, 100);
 
     initMockEnrollments();
 
@@ -817,17 +1236,33 @@ void runStudentMainPage() {
                 else if (currentPage == PAGE_MY_ACTIVITIES) {
                     handleMyActivitiesMouseClick(msg.x, msg.y);
                 }
+                else if (currentPage == PAGE_HISTORY) {
+                    handleHistoryMouseClick(msg.x, msg.y);
+                }
+                else if (currentPage == PAGE_SEARCH_RESULT) {
+                    handleSearchResultMouseClick(msg.x, msg.y);
+                }
+            }
+            else if (msg.message == WM_CHAR) {
+                handleKeyInput((wchar_t)msg.ch);
             }
             else if (msg.message == WM_KEYDOWN) {
                 if (msg.vkcode == VK_ESCAPE) {
-                    if (currentPage == PAGE_DETAIL || currentPage == PAGE_MY_ACTIVITIES) {
+                    if (currentPage == PAGE_DETAIL || currentPage == PAGE_MY_ACTIVITIES ||
+                        currentPage == PAGE_HISTORY || currentPage == PAGE_SEARCH_RESULT) {
                         currentPage = PAGE_HOME;
+                        wmemset(searchKeyword, 0, 100);
+                        searchResultCount = 0;
                     }
                     else {
                         running = false;
                     }
                 }
             }
+        }
+
+        if (shouldExit) {
+            running = false;
         }
 
         if (currentPage == PAGE_HOME) {
@@ -838,6 +1273,12 @@ void runStudentMainPage() {
         }
         else if (currentPage == PAGE_MY_ACTIVITIES) {
             drawMyActivitiesPage();
+        }
+        else if (currentPage == PAGE_HISTORY) {
+            drawHistoryPage();
+        }
+        else if (currentPage == PAGE_SEARCH_RESULT) {
+            drawSearchResultPage();
         }
 
         FlushBatchDraw();
