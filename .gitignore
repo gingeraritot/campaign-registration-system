@@ -1,3 +1,13 @@
+# 忽略所有 .dat 文件
+*.dat
+
+# 忽略 Visual Studio 生成的临时文件
+*.tlog
+*.log
+x64/
+Debug/
+Release/
+
 # Prerequisites
 *.d
 
