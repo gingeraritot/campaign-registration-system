@@ -203,6 +203,9 @@ int save_reminders(const char* filename);
 int load_attendances(const char* filename);
 int save_attendances(const char* filename);
 
+void showStudentMainPage(int studentId);
+void runStudentMainPage(int studentId);
+
 /* ---------- 用户管理 ---------- */
 void* login(const char* username, const char* password, Role* role); // 返回 Student* 或 Admin*
 int register_student(const char* username, const char* password, const char* name,
