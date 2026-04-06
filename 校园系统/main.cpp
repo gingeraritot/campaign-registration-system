@@ -141,15 +141,28 @@ PageType showLoginPage(Role& currentRole) {
     setbkcolor(RGB(240, 245, 250));
     cleardevice();
 
+    // 🔴 第一步：先定义所有基础变量（必须在if-else之前！）
     int inputX = WINDOW_WIDTH / 2 + 50;
     int userInputY = 200;
     int pwdInputY = 280;
     int btnY = 400;
-    int loginBtnX = WINDOW_WIDTH / 2 - BTN_WIDTH - 20;
-    int registerBtnX = WINDOW_WIDTH / 2 + 20;
-    int backBtnX = WINDOW_WIDTH / 2 - BTN_WIDTH / 2;
-    int backBtnY = 520;
 
+    // 🔴 第二步：分角色计算按钮坐标（用上面已经定义好的变量）
+    int loginBtnX, registerBtnX, backBtnX, backBtnY;
+    if (currentRole == ROLE_STUDENT) {
+        // 学生登录页：保持原来的左右布局
+        loginBtnX = WINDOW_WIDTH / 2 - BTN_WIDTH - 20;
+        registerBtnX = WINDOW_WIDTH / 2 + 20;
+        backBtnX = WINDOW_WIDTH / 2 - BTN_WIDTH / 2;
+        backBtnY = 520;
+    }
+    else {
+        // 管理员登录页：上下同列居中
+        loginBtnX = WINDOW_WIDTH / 2 - BTN_WIDTH / 2;
+        registerBtnX = WINDOW_WIDTH / 2 + 20; // 占位，不显示
+        backBtnX = WINDOW_WIDTH / 2 - BTN_WIDTH / 2;
+        backBtnY = btnY + BTN_HEIGHT + 30; // 登录按钮下方30px
+    }
     wchar_t username[50] = { 0 };
     wchar_t password[50] = { 0 };
     int focusIndex = 0;

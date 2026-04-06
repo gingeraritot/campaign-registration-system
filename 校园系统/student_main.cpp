@@ -421,25 +421,28 @@ void drawActivityCard(int x, int y, ActivityCard* card, bool isHover) {
     COLORREF bgColor = isHover ? RGB(250, 250, 255) : RGB(255, 255, 255);
     drawRoundRect(x, y, CARD_WIDTH, CARD_HEIGHT, 10, RGB(200, 200, 200), bgColor);
 
+    // 活动标题放大
     settextcolor(RGB(30, 60, 120));
-    settextstyle(20, 0, L"微软雅黑");
+    settextstyle(26, 0, L"微软雅黑");
     outtextxy(x + 15, y + 15, card->title);
 
+    // 地点放大
     settextcolor(RGB(100, 100, 100));
-    settextstyle(14, 0, L"微软雅黑");
+    settextstyle(20, 0, L"微软雅黑");
     wchar_t locationText[100];
     swprintf(locationText, 100, L"地点：%s", card->location);
-    outtextxy(x + 15, y + 55, locationText);
+    outtextxy(x + 15, y + 50, locationText);
 
     drawRoundRect(x + 15, y + 85, 60, 25, 5, RGB(150, 200, 255), RGB(200, 225, 255));
     settextcolor(RGB(50, 100, 150));
-    settextstyle(12, 0, L"微软雅黑");
+    settextstyle(16, 0, L"微软雅黑");
     outtextxy(x + 22, y + 90, card->tag);
 
+    // 报名人数放大
     wchar_t countText[100];
     swprintf(countText, 100, L"%s %d/%d", card->count, card->current, card->max);
     settextcolor(RGB(80, 80, 80));
-    settextstyle(14, 0, L"微软雅黑");
+    settextstyle(20, 0, L"微软雅黑");
     outtextxy(x + 15, y + 125, countText);
 
     bool btnHover = (mouseX >= x + CARD_WIDTH - 70 && mouseX <= x + CARD_WIDTH - 15 &&
@@ -447,11 +450,11 @@ void drawActivityCard(int x, int y, ActivityCard* card, bool isHover) {
     COLORREF btnColor = btnHover ? RGB(100, 180, 255) : RGB(70, 150, 230);
     drawRoundRect(x + CARD_WIDTH - 70, y + CARD_HEIGHT - 40, 55, 28, 5, RGB(50, 120, 200), btnColor);
     settextcolor(WHITE);
-    settextstyle(12, 0, L"微软雅黑");
+    settextstyle(20, 0, L"微软雅黑");
     outtextxy(x + CARD_WIDTH - 65, y + CARD_HEIGHT - 36, L"详情");
 }
 
-// 画热门活动项
+// 画热门活动项（文字放大）
 void drawHotActivityItem(int x, int y, const wchar_t* name, int index) {
     setfillcolor(RGB(70, 150, 230));
     setlinecolor(RGB(70, 150, 230));
@@ -464,11 +467,11 @@ void drawHotActivityItem(int x, int y, const wchar_t* name, int index) {
     outtextxy(x + 15 - textwidth(num) / 2, y + 15 - textheight(num) / 2, num);
 
     settextcolor(RGB(50, 50, 50));
-    settextstyle(14, 0, L"微软雅黑");
+    settextstyle(20, 0, L"微软雅黑");
     outtextxy(x + 40, y + 8, name);
 
     setlinecolor(RGB(230, 230, 230));
-    line(x, y + 32, x + 250, y + 32);
+    line(x-20, y + 32, x + 230, y + 32);
 }
 
 // ==================== 判断活动是否已结束 ====================
@@ -897,21 +900,23 @@ void drawStudentHomePage() {
     int searchH = 36;
     drawSearchBox(searchX, searchY, searchW, searchH);
 
-    settextstyle(20, 0, L"微软雅黑");
+    // 标题放大
+    settextstyle(24, 0, L"微软雅黑");
     settextcolor(RGB(30, 60, 120));
-    outtextxy(40, 120, L"热门活动推荐");
+    outtextxy(20, 120, L"热门活动推荐");
 
-    drawRoundRect(40, 155, 260, 320, 10, RGB(220, 220, 220), RGB(255, 255, 255));
+    drawRoundRect(20, 155, 260, 320, 10, RGB(220, 220, 220), RGB(255, 255, 255));
 
     for (int i = 0; i < hotCount && i < 6; i++) {
         drawHotActivityItem(50, 165 + i * 48, hotActivities[i].name, i);
     }
 
-    settextstyle(20, 0, L"微软雅黑");
+    // 推荐活动标题放大
+    settextstyle(24, 0, L"微软雅黑");
     settextcolor(RGB(30, 60, 120));
     outtextxy(330, 120, L"推荐活动");
 
-    int cardStartX = 330;
+    int cardStartX = 300;
     int cardStartY = 160;
     int cardGap = 25;
 
@@ -925,13 +930,14 @@ void drawStudentHomePage() {
         drawActivityCard(x, y, &activities[i], isHover);
     }
 
-    int rightX = WIN_WIDTH - 210;
+    // 右侧个人中心整体左移 50，彻底不遮挡活动
+    int rightX = WIN_WIDTH - 200;
     int rightW = 190;
 
     drawRoundRect(rightX, 120, rightW, 420, 10, RGB(220, 220, 220), RGB(255, 255, 255));
 
     settextcolor(RGB(30, 60, 120));
-    settextstyle(16, 0, L"微软雅黑");
+    settextstyle(20, 0, L"微软雅黑");
     outtextxy(rightX + (rightW - textwidth(L"个人中心")) / 2, 140, L"个人中心");
 
     setlinecolor(RGB(230, 230, 230));
@@ -947,11 +953,11 @@ void drawStudentHomePage() {
     wchar_t titleText[50];
     getTitle(titleText, 50);
     settextcolor(getTitleColor());
-    settextstyle(16, 0, L"微软雅黑");
+    settextstyle(20, 0, L"微软雅黑");
     outtextxy(rightX + (rightW - textwidth(titleText)) / 2, 250, titleText);
 
     settextcolor(RGB(120, 120, 120));
-    settextstyle(12, 0, L"微软雅黑");
+    settextstyle(16, 0, L"微软雅黑");
     wchar_t infoText[100];
     int count = getEnrollmentCount();
     int duration = getTotalDuration();
@@ -977,7 +983,7 @@ void drawStudentHomePage() {
 
 // ==================== 鼠标点击处理函数 ====================
 void handleSearchResultMouseClick(int x, int y) {
-    if (x >= 40 && x <= 120 && y >= 70 && y <= 105) {
+    if (x >= 40 && x <= 120 && y >= 70 && mouseY <= 105) {
         currentPage = PAGE_HOME;
         return;
     }
@@ -1135,7 +1141,8 @@ void handleHomeMouseClick(int x, int y) {
         return;
     }
 
-    int rightX = WIN_WIDTH - 210;
+    // 右侧个人中心整体左移后点击位置同步修改
+    int rightX = WIN_WIDTH - 260;
     int rightW = 190;
 
     if (x >= rightX + 20 && x <= rightX + rightW - 20 && y >= 305 && y <= 340) {
@@ -1179,7 +1186,7 @@ void handleHomeMouseClick(int x, int y) {
     }
 }
 
-// ==================== 修复：支持中文输入 ====================
+// ==================== 支持中文输入 ====================
 void handleKeyInput(wchar_t ch) {
     if (!isSearchFocus) return;
 
