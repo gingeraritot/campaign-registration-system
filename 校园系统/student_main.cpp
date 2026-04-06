@@ -1,4 +1,4 @@
-#include <graphics.h>
+ï»¿#include <graphics.h>
 #include <conio.h>
 #include <string.h>
 #include <windows.h>
@@ -8,21 +8,22 @@
 #include <ctype.h>
 #include "head.h"
 
-// ==================== ³£Á¿¶¨Òå ====================
+// ==================== å¸¸é‡å®šä¹‰ ====================
 #define WIN_WIDTH     1200
 #define WIN_HEIGHT    800
 #define BTN_WIDTH     200
 #define BTN_HEIGHT    50
-#define CARD_WIDTH    330      // ÉÔÎ¢ËõĞ¡¿¨Æ¬¿í¶È
+#define CARD_WIDTH    330
 #define CARD_HEIGHT   180
 
-// Ò³Ãæ×´Ì¬Ã¶¾Ù
+// é¡µé¢çŠ¶æ€æšä¸¾
 typedef enum {
     PAGE_HOME,
-    PAGE_DETAIL
+    PAGE_DETAIL,
+    PAGE_MY_ACTIVITIES
 } StudentPageState;
 
-// »î¶¯¿¨Æ¬Êı¾İ½á¹¹
+// æ´»åŠ¨å¡ç‰‡æ•°æ®ç»“æ„
 typedef struct {
     int id;
     wchar_t title[50];
@@ -31,58 +32,194 @@ typedef struct {
     wchar_t count[30];
     int current;
     int max;
-    // ÏêÇéÒ³¶îÍâĞÅÏ¢
     wchar_t time[50];
     wchar_t organizer[50];
     wchar_t requirement[200];
     wchar_t description[300];
+    wchar_t items[200];
+    double lat;  // çº¬åº¦ï¼ˆæ¨¡æ‹Ÿåœ°å›¾ç”¨ï¼‰
+    double lng;  // ç»åº¦ï¼ˆæ¨¡æ‹Ÿåœ°å›¾ç”¨ï¼‰
 } ActivityCard;
 
-// È«¾Ö»î¶¯¿¨Æ¬Êı¾İ£¨Ä£ÄâÊı¾İ£©
+// æŠ¥åè®°å½•ç»“æ„ä½“
+typedef struct EnrollmentRecord {
+    int activityId;
+    wchar_t enrollTime[50];
+    struct EnrollmentRecord* next;
+} EnrollmentRecord;
+
+// å…¨å±€æ´»åŠ¨å¡ç‰‡æ•°æ®ï¼ˆæ¨¡æ‹Ÿæ•°æ®ï¼‰
 ActivityCard activities[] = {
     {
-        1, L"ÔË¶¯»á", L"²Ù³¡", L"ÌåÓı", L"±¨ÃûÈËÊı£º", 25, 50,
-        L"2025Äê10ÔÂ20ÈÕ 9:00-17:00", L"ÌåÓı²¿", L"ÉíÌå½¡¿µ£¬ÈÈ°®ÔË¶¯",
-        L"Ò»ÄêÒ»¶ÈµÄĞ£Ô°ÔË¶¯»á£¬°üº¬Ìï¾¶¡¢ÇòÀàµÈ¶à¸öÏîÄ¿£¬»¶Ó­Í¬Ñ§ÃÇÓ»Ô¾±¨Ãû£¡"
+        1, L"è¿åŠ¨ä¼š", L"æ“åœº", L"ä½“è‚²", L"æŠ¥åäººæ•°ï¼š", 25, 50,
+        L"2025å¹´10æœˆ20æ—¥ 9:00-17:00", L"ä½“è‚²éƒ¨", L"èº«ä½“å¥åº·ï¼Œçƒ­çˆ±è¿åŠ¨",
+        L"ä¸€å¹´ä¸€åº¦çš„æ ¡å›­è¿åŠ¨ä¼šï¼ŒåŒ…å«ç”°å¾„ã€çƒç±»ç­‰å¤šä¸ªé¡¹ç›®ï¼Œæ¬¢è¿åŒå­¦ä»¬è¸Šè·ƒæŠ¥åï¼",
+        L"è¿åŠ¨é‹ã€è¿åŠ¨æœã€é¥®ç”¨æ°´",
+        39.9042, 116.4074
     },
     {
-        2, L"°à¼¶»î¶¯", L"½ÌÊÒA101", L"°à¼¶", L"±¨ÃûÈËÊı£º", 8, 30,
-        L"2025Äê10ÔÂ25ÈÕ 14:00-16:00", L"°à³¤", L"±¾°àÍ¬Ñ§",
-        L"°à¼¶ÍÅ½¨»î¶¯£¬Ôö½øÍ¬Ñ§¸ĞÇé£¬ÓĞÓÎÏ·ºÍÁãÊ³¡£"
+        2, L"ç­çº§æ´»åŠ¨", L"æ•™å®¤A101", L"ç­çº§", L"æŠ¥åäººæ•°ï¼š", 8, 30,
+        L"2025å¹´10æœˆ25æ—¥ 14:00-16:00", L"ç­é•¿", L"æœ¬ç­åŒå­¦",
+        L"ç­çº§å›¢å»ºæ´»åŠ¨ï¼Œå¢è¿›åŒå­¦æ„Ÿæƒ…ï¼Œæœ‰æ¸¸æˆå’Œé›¶é£Ÿã€‚",
+        L"æ— éœ€ç‰¹æ®Šç‰©å“",
+        39.9142, 116.4174
     },
     {
-        3, L"ÉçÍÅ»î¶¯", L"»î¶¯ÖĞĞÄ", L"ÉçÍÅ", L"±¨ÃûÈËÊı£º", 15, 40,
-        L"2025Äê11ÔÂ1ÈÕ 15:00-18:00", L"ÉçÍÅÁªºÏ»á", L"¶ÔÉçÍÅ»î¶¯¸ĞĞËÈ¤",
-        L"¸÷ÉçÍÅÁªºÏ¾Ù°ìµÄ´óĞÍ»î¶¯£¬ÓĞ±íÑİ¡¢»¥¶¯ÓÎÏ·µÈ¾«²ÊÄÚÈİ¡£"
+        3, L"ç¤¾å›¢æ´»åŠ¨", L"æ´»åŠ¨ä¸­å¿ƒ", L"ç¤¾å›¢", L"æŠ¥åäººæ•°ï¼š", 15, 40,
+        L"2025å¹´11æœˆ1æ—¥ 15:00-18:00", L"ç¤¾å›¢è”åˆä¼š", L"å¯¹ç¤¾å›¢æ´»åŠ¨æ„Ÿå…´è¶£",
+        L"å„ç¤¾å›¢è”åˆä¸¾åŠçš„å¤§å‹æ´»åŠ¨ï¼Œæœ‰è¡¨æ¼”ã€äº’åŠ¨æ¸¸æˆç­‰ç²¾å½©å†…å®¹ã€‚",
+        L"å­¦ç”Ÿè¯",
+        39.8942, 116.3974
     },
     {
-        4, L"Ö¾Ô¸Õß»î¶¯", L"ÉçÇøÖĞĞÄ", L"¹«Òæ", L"±¨ÃûÈËÊı£º", 12, 25,
-        L"2025Äê11ÔÂ10ÈÕ 8:00-12:00", L"Ö¾Ô¸ÕßĞ­»á", L"ÓĞ°®ĞÄ£¬ÀÖÓÚÖúÈË",
-        L"ÉçÇøÖ¾Ô¸·şÎñ£¬°ïÖúÀÏÈËºÍ¶ùÍ¯£¬»ñµÃÖ¾Ô¸Ê±³¤ÈÏÖ¤¡£"
+        4, L"å¿—æ„¿è€…æ´»åŠ¨", L"ç¤¾åŒºä¸­å¿ƒ", L"å…¬ç›Š", L"æŠ¥åäººæ•°ï¼š", 12, 25,
+        L"2025å¹´11æœˆ10æ—¥ 8:00-12:00", L"å¿—æ„¿è€…åä¼š", L"æœ‰çˆ±å¿ƒï¼Œä¹äºåŠ©äºº",
+        L"ç¤¾åŒºå¿—æ„¿æœåŠ¡ï¼Œå¸®åŠ©è€äººå’Œå„¿ç«¥ï¼Œè·å¾—å¿—æ„¿æ—¶é•¿è®¤è¯ã€‚",
+        L"å¿—æ„¿è€…é©¬ç”²ï¼ˆç°åœºå‘æ”¾ï¼‰",
+        39.8842, 116.3874
     }
 };
 int activityCount = sizeof(activities) / sizeof(ActivityCard);
 
-// ÈÈÃÅ»î¶¯Êı¾İ
+// çƒ­é—¨æ´»åŠ¨æ•°æ®
 typedef struct {
     wchar_t name[30];
 } HotActivity;
 
 HotActivity hotActivities[] = {
-    {L"ÔË¶¯»á"},
-    {L"°à¼¶»î¶¯"},
-    {L"ÉçÍÅ»î¶¯"},
-    {L"Ö¾Ô¸Õß»î¶¯"}
+    {L"è¿åŠ¨ä¼š"},
+    {L"ç­çº§æ´»åŠ¨"},
+    {L"ç¤¾å›¢æ´»åŠ¨"},
+    {L"å¿—æ„¿è€…æ´»åŠ¨"}
 };
 int hotCount = sizeof(hotActivities) / sizeof(HotActivity);
 
-// È«¾Ö±äÁ¿
+// å…¨å±€å˜é‡
 static int mouseX = 0, mouseY = 0;
 static StudentPageState currentPage = PAGE_HOME;
-static int currentActivityId = 0;  // µ±Ç°²é¿´µÄ»î¶¯ID
-static bool isEnrolled = false;     // µ±Ç°ÓÃ»§ÊÇ·ñÒÑ±¨Ãû£¨Ä£Äâ£©
+static int currentActivityId = 0;
 
-// »ñÈ¡µ±Ç°»î¶¯
+// æ¨¡æ‹Ÿå½“å‰ç”¨æˆ·æŠ¥åçš„æ´»åŠ¨åˆ—è¡¨
+static EnrollmentRecord* myEnrollments = NULL;
+
+// æ˜¾ç¤ºåœ°å›¾æç¤ºæ¡†
+void showMapDialog(double lat, double lng, const wchar_t* locationName) {
+    wchar_t msg[500];
+    swprintf(msg, 500, L"ã€åœ°å›¾åŠŸèƒ½ã€‘\n\næ´»åŠ¨åœ°ç‚¹ï¼š%s\n\nåæ ‡ä¿¡æ¯ï¼šçº¬åº¦ %.4fï¼Œç»åº¦ %.4f\n\næç¤ºï¼šå®é™…åº”ç”¨ä¸­è¿™é‡Œä¼šè°ƒç”¨åœ°å›¾APIæ˜¾ç¤ºå…·ä½“ä½ç½®",
+        locationName, lat, lng);
+    MessageBoxW(GetHWnd(), msg, L"æ´»åŠ¨åœ°å›¾", MB_OK);
+}
+
+// åˆå§‹åŒ–æ¨¡æ‹ŸæŠ¥åæ•°æ®
+void initMockEnrollments() {
+    EnrollmentRecord* p = myEnrollments;
+    while (p) {
+        EnrollmentRecord* tmp = p;
+        p = p->next;
+        free(tmp);
+    }
+    myEnrollments = NULL;
+
+    int activityIds[] = { 1, 2, 4 };
+    const wchar_t* enrollTimes[] = { L"2025-10-15 10:30", L"2025-10-20 14:20", L"2025-11-05 09:15" };
+
+    for (int i = 0; i < 3; i++) {
+        EnrollmentRecord* newRecord = (EnrollmentRecord*)malloc(sizeof(EnrollmentRecord));
+        newRecord->activityId = activityIds[i];
+        wcscpy(newRecord->enrollTime, enrollTimes[i]);
+        newRecord->next = NULL;
+
+        if (myEnrollments == NULL) {
+            myEnrollments = newRecord;
+        }
+        else {
+            EnrollmentRecord* tail = myEnrollments;
+            while (tail->next) tail = tail->next;
+            tail->next = newRecord;
+        }
+    }
+}
+
+// æ£€æŸ¥æ˜¯å¦å·²æŠ¥åæŸä¸ªæ´»åŠ¨
+bool isActivityEnrolled(int activityId) {
+    EnrollmentRecord* p = myEnrollments;
+    while (p) {
+        if (p->activityId == activityId) {
+            return true;
+        }
+        p = p->next;
+    }
+    return false;
+}
+
+// å–æ¶ˆæŠ¥å
+void cancelEnrollment(int activityId) {
+    EnrollmentRecord* prev = NULL;
+    EnrollmentRecord* p = myEnrollments;
+    while (p) {
+        if (p->activityId == activityId) {
+            if (prev) {
+                prev->next = p->next;
+            }
+            else {
+                myEnrollments = p->next;
+            }
+            free(p);
+
+            for (int i = 0; i < activityCount; i++) {
+                if (activities[i].id == activityId && activities[i].current > 0) {
+                    activities[i].current--;
+                    break;
+                }
+            }
+            return;
+        }
+        prev = p;
+        p = p->next;
+    }
+}
+
+// æŠ¥åæ´»åŠ¨
+void addEnrollment(int activityId) {
+    if (isActivityEnrolled(activityId)) return;
+
+    time_t now = time(NULL);
+    struct tm* t = localtime(&now);
+    wchar_t timeStr[50];
+    swprintf(timeStr, 50, L"%04d-%02d-%02d %02d:%02d",
+        t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
+        t->tm_hour, t->tm_min);
+
+    EnrollmentRecord* newRecord = (EnrollmentRecord*)malloc(sizeof(EnrollmentRecord));
+    newRecord->activityId = activityId;
+    wcscpy(newRecord->enrollTime, timeStr);
+    newRecord->next = NULL;
+
+    if (myEnrollments == NULL) {
+        myEnrollments = newRecord;
+    }
+    else if (wcscmp(timeStr, myEnrollments->enrollTime) < 0) {
+        newRecord->next = myEnrollments;
+        myEnrollments = newRecord;
+    }
+    else {
+        EnrollmentRecord* p = myEnrollments;
+        while (p->next && wcscmp(timeStr, p->next->enrollTime) > 0) {
+            p = p->next;
+        }
+        newRecord->next = p->next;
+        p->next = newRecord;
+    }
+
+    for (int i = 0; i < activityCount; i++) {
+        if (activities[i].id == activityId && activities[i].current < activities[i].max) {
+            activities[i].current++;
+            break;
+        }
+    }
+}
+
+// è·å–å½“å‰æ´»åŠ¨
 ActivityCard* getCurrentActivity() {
     for (int i = 0; i < activityCount; i++) {
         if (activities[i].id == currentActivityId) {
@@ -92,118 +229,195 @@ ActivityCard* getCurrentActivity() {
     return NULL;
 }
 
-// ==================== ¹¤¾ßº¯Êı ====================
-// »­Ô²½Ç¾ØĞÎ
+// ==================== å·¥å…·å‡½æ•° ====================
 void drawRoundRect(int x, int y, int w, int h, int radius, COLORREF lineColor, COLORREF fillColor) {
     setfillcolor(fillColor);
     setlinecolor(lineColor);
     fillroundrect(x, y, x + w, y + h, radius, radius);
 }
 
-// »­°´Å¥
 void drawBtn(int x, int y, int w, int h, const wchar_t* text, bool isHover, COLORREF color) {
     COLORREF btnColor = isHover ? RGB(100, 180, 255) : color;
     drawRoundRect(x, y, w, h, 8, RGB(150, 150, 150), btnColor);
     settextcolor(WHITE);
     setbkmode(TRANSPARENT);
-    settextstyle(18, 0, L"Î¢ÈíÑÅºÚ");
-    int tx = x + (w - textwidth(text)) / 2;
-    int ty = y + (h - textheight(text)) / 2;
-    outtextxy(tx, ty, text);
+    settextstyle(18, 0, L"å¾®è½¯é›…é»‘");
+    int tx = x + (w - textwidth((wchar_t*)text)) / 2;
+    int ty = y + (h - textheight((wchar_t*)text)) / 2;
+    outtextxy(tx, ty, (wchar_t*)text);
 }
 
-// »­ĞÅÏ¢ĞĞ
 void drawInfoRow(int x, int y, const wchar_t* label, const wchar_t* value, COLORREF labelColor, COLORREF valueColor) {
     settextcolor(labelColor);
-    settextstyle(18, 0, L"Î¢ÈíÑÅºÚ");
-    outtextxy(x, y, label);
+    settextstyle(18, 0, L"å¾®è½¯é›…é»‘");
+    outtextxy(x, y, (wchar_t*)label);
     settextcolor(valueColor);
-    outtextxy(x + 100, y, value);
+    outtextxy(x + 100, y, (wchar_t*)value);
 }
 
-// »­»î¶¯¿¨Æ¬£¨Ê×Ò³ÓÃ£©
+// ç”»æ´»åŠ¨å¡ç‰‡
 void drawActivityCard(int x, int y, ActivityCard* card, bool isHover) {
-    // ¿¨Æ¬±³¾°
     COLORREF bgColor = isHover ? RGB(250, 250, 255) : RGB(255, 255, 255);
     drawRoundRect(x, y, CARD_WIDTH, CARD_HEIGHT, 10, RGB(200, 200, 200), bgColor);
 
-    // »î¶¯±êÌâ
     settextcolor(RGB(30, 60, 120));
-    settextstyle(20, 0, L"Î¢ÈíÑÅºÚ");
+    settextstyle(20, 0, L"å¾®è½¯é›…é»‘");
     outtextxy(x + 15, y + 15, card->title);
 
-    // µØµãĞÅÏ¢
     settextcolor(RGB(100, 100, 100));
-    settextstyle(14, 0, L"Î¢ÈíÑÅºÚ");
+    settextstyle(14, 0, L"å¾®è½¯é›…é»‘");
     wchar_t locationText[100];
-    swprintf(locationText, 100, L"µØµã£º%s", card->location);
+    swprintf(locationText, 100, L"åœ°ç‚¹ï¼š%s", card->location);
     outtextxy(x + 15, y + 55, locationText);
 
-    // ±êÇ©£¨Ô²½ÇĞ¡±êÇ©£©
     drawRoundRect(x + 15, y + 85, 60, 25, 5, RGB(150, 200, 255), RGB(200, 225, 255));
     settextcolor(RGB(50, 100, 150));
-    settextstyle(12, 0, L"Î¢ÈíÑÅºÚ");
+    settextstyle(12, 0, L"å¾®è½¯é›…é»‘");
     outtextxy(x + 22, y + 90, card->tag);
 
-    // ±¨ÃûÈËÊı
     wchar_t countText[100];
     swprintf(countText, 100, L"%s %d/%d", card->count, card->current, card->max);
     settextcolor(RGB(80, 80, 80));
-    settextstyle(14, 0, L"Î¢ÈíÑÅºÚ");
+    settextstyle(14, 0, L"å¾®è½¯é›…é»‘");
     outtextxy(x + 15, y + 125, countText);
 
-    // ÏêÇé°´Å¥
     bool btnHover = (mouseX >= x + CARD_WIDTH - 70 && mouseX <= x + CARD_WIDTH - 15 &&
         mouseY >= y + CARD_HEIGHT - 40 && mouseY <= y + CARD_HEIGHT - 15);
     COLORREF btnColor = btnHover ? RGB(100, 180, 255) : RGB(70, 150, 230);
     drawRoundRect(x + CARD_WIDTH - 70, y + CARD_HEIGHT - 40, 55, 28, 5, RGB(50, 120, 200), btnColor);
     settextcolor(WHITE);
-    settextstyle(12, 0, L"Î¢ÈíÑÅºÚ");
-    outtextxy(x + CARD_WIDTH - 65, y + CARD_HEIGHT - 36, L"ÏêÇé");
+    settextstyle(12, 0, L"å¾®è½¯é›…é»‘");
+    outtextxy(x + CARD_WIDTH - 65, y + CARD_HEIGHT - 36, L"è¯¦æƒ…");
 }
 
-// »­ÈÈÃÅ»î¶¯Ïî
+// ç”»çƒ­é—¨æ´»åŠ¨é¡¹
 void drawHotActivityItem(int x, int y, const wchar_t* name, int index) {
-    // ĞòºÅÔ²È¦
     setfillcolor(RGB(70, 150, 230));
     setlinecolor(RGB(70, 150, 230));
     fillcircle(x + 15, y + 15, 12);
 
     settextcolor(WHITE);
-    settextstyle(14, 0, L"Î¢ÈíÑÅºÚ");
+    settextstyle(14, 0, L"å¾®è½¯é›…é»‘");
     wchar_t num[5];
     swprintf(num, 5, L"%d", index + 1);
     outtextxy(x + 15 - textwidth(num) / 2, y + 15 - textheight(num) / 2, num);
 
-    // »î¶¯Ãû³Æ
     settextcolor(RGB(50, 50, 50));
-    settextstyle(14, 0, L"Î¢ÈíÑÅºÚ");
-    outtextxy(x + 40, y + 8, name);
+    settextstyle(14, 0, L"å¾®è½¯é›…é»‘");
+    outtextxy(x + 40, y + 8, (wchar_t*)name);
 
-    // ·Ö¸îÏß
     setlinecolor(RGB(230, 230, 230));
     line(x, y + 32, x + 250, y + 32);
 }
 
-// ==================== Ê×Ò³»æÖÆ ====================
+// ==================== æˆ‘çš„æ´»åŠ¨é¡µé¢ç»˜åˆ¶ ====================
+void drawMyActivitiesPage() {
+    cleardevice();
+    setbkcolor(RGB(240, 245, 250));
+    cleardevice();
+
+    settextcolor(RGB(30, 60, 120));
+    settextstyle(32, 0, L"å¾®è½¯é›…é»‘");
+    outtextxy(40, 25, L"æ ¡å›­æ´»åŠ¨ç®¡ç†ç³»ç»Ÿ");
+
+    bool backHover = (mouseX >= 40 && mouseX <= 120 && mouseY >= 70 && mouseY <= 105);
+    drawBtn(40, 70, 80, 35, L"â† è¿”å›", backHover, RGB(100, 100, 100));
+
+    settextcolor(RGB(30, 60, 120));
+    settextstyle(36, 0, L"å¾®è½¯é›…é»‘");
+    const wchar_t* title = L"æˆ‘çš„æ´»åŠ¨";
+    outtextxy((WIN_WIDTH - textwidth((wchar_t*)title)) / 2, 80, (wchar_t*)title);
+
+    int listStartY = 150;
+    int listEndY = WIN_HEIGHT - 50;
+    int itemHeight = 140;
+    int itemGap = 15;
+    int itemWidth = 1000;
+    int itemX = (WIN_WIDTH - itemWidth) / 2;
+
+    int enrollCount = 0;
+    EnrollmentRecord* p = myEnrollments;
+    while (p) { enrollCount++; p = p->next; }
+
+    if (enrollCount == 0) {
+        settextcolor(RGB(150, 150, 150));
+        settextstyle(24, 0, L"å¾®è½¯é›…é»‘");
+        const wchar_t* emptyMsg = L"æš‚æ— æŠ¥åæ´»åŠ¨\n\nç‚¹å‡»é¦–é¡µæ´»åŠ¨å¡ç‰‡ä¸Šçš„\"è¯¦æƒ…\"æŒ‰é’®æŠ¥åå§ï¼";
+        outtextxy((WIN_WIDTH - textwidth((wchar_t*)emptyMsg)) / 2, 350, (wchar_t*)emptyMsg);
+    }
+    else {
+        int y = listStartY;
+        p = myEnrollments;
+
+        while (p && y + itemHeight < listEndY) {
+            ActivityCard* activity = NULL;
+            for (int i = 0; i < activityCount; i++) {
+                if (activities[i].id == p->activityId) {
+                    activity = &activities[i];
+                    break;
+                }
+            }
+
+            if (activity != NULL) {
+                bool isHover = (mouseX >= itemX && mouseX <= itemX + itemWidth &&
+                    mouseY >= y && mouseY <= y + itemHeight);
+
+                COLORREF bgColor = isHover ? RGB(250, 250, 255) : RGB(255, 255, 255);
+                drawRoundRect(itemX, y, itemWidth, itemHeight, 10, RGB(200, 200, 200), bgColor);
+
+                settextcolor(RGB(30, 60, 120));
+                settextstyle(22, 0, L"å¾®è½¯é›…é»‘");
+                outtextxy(itemX + 20, y + 15, activity->title);
+
+                settextcolor(RGB(100, 100, 100));
+                settextstyle(16, 0, L"å¾®è½¯é›…é»‘");
+                wchar_t timeText[100];
+                swprintf(timeText, 100, L"æ´»åŠ¨æ—¶é—´ï¼š%s", activity->time);
+                outtextxy(itemX + 20, y + 50, timeText);
+
+                wchar_t locationText[100];
+                swprintf(locationText, 100, L"æ´»åŠ¨åœ°ç‚¹ï¼š%s", activity->location);
+                outtextxy(itemX + 20, y + 78, locationText);
+
+                settextcolor(RGB(80, 80, 80));
+                wchar_t itemsText[200];
+                swprintf(itemsText, 200, L"éœ€æºå¸¦ï¼š%s", activity->items);
+                outtextxy(itemX + 20, y + 106, itemsText);
+
+                // æŸ¥çœ‹åœ°å›¾æŒ‰é’®ï¼ˆè“è‰²ï¼‰
+                bool mapHover = (mouseX >= itemX + itemWidth - 210 && mouseX <= itemX + itemWidth - 110 &&
+                    mouseY >= y + 50 && mouseY <= y + 90);
+                drawBtn(itemX + itemWidth - 210, y + 50, 90, 40, L"æŸ¥çœ‹åœ°å›¾", mapHover, RGB(50, 150, 200));
+
+                // å–æ¶ˆæŠ¥åæŒ‰é’®ï¼ˆçº¢è‰²ï¼‰
+                bool cancelHover = (mouseX >= itemX + itemWidth - 110 && mouseX <= itemX + itemWidth - 20 &&
+                    mouseY >= y + 50 && mouseY <= y + 90);
+                drawBtn(itemX + itemWidth - 110, y + 50, 90, 40, L"å–æ¶ˆæŠ¥å", cancelHover, RGB(200, 100, 100));
+            }
+
+            y += itemHeight + itemGap;
+            p = p->next;
+        }
+    }
+}
+
+// ==================== é¦–é¡µç»˜åˆ¶ ====================
 void drawStudentHomePage() {
     cleardevice();
     setbkcolor(RGB(240, 245, 250));
     cleardevice();
 
-    // ===== ¶¥²¿±êÌâÀ¸ =====
     settextcolor(RGB(30, 60, 120));
-    settextstyle(32, 0, L"Î¢ÈíÑÅºÚ");
-    outtextxy(40, 25, L"Ğ£Ô°»î¶¯¹ÜÀíÏµÍ³");
+    settextstyle(32, 0, L"å¾®è½¯é›…é»‘");
+    outtextxy(40, 25, L"æ ¡å›­æ´»åŠ¨ç®¡ç†ç³»ç»Ÿ");
 
-    settextstyle(18, 0, L"Î¢ÈíÑÅºÚ");
+    settextstyle(18, 0, L"å¾®è½¯é›…é»‘");
     settextcolor(RGB(80, 80, 80));
-    outtextxy(40, 70, L"»¶Ó­£¬Í¬Ñ§£¡");
+    outtextxy(40, 70, L"æ¬¢è¿ï¼ŒåŒå­¦ï¼");
 
-    // ===== ×ó²à£ºÈÈÃÅ»î¶¯ÍÆ¼ö =====
-    settextstyle(20, 0, L"Î¢ÈíÑÅºÚ");
+    settextstyle(20, 0, L"å¾®è½¯é›…é»‘");
     settextcolor(RGB(30, 60, 120));
-    outtextxy(40, 120, L"ÈÈÃÅ»î¶¯ÍÆ¼ö");
+    outtextxy(40, 120, L"çƒ­é—¨æ´»åŠ¨æ¨è");
 
     drawRoundRect(40, 155, 260, 320, 10, RGB(220, 220, 220), RGB(255, 255, 255));
 
@@ -211,12 +425,10 @@ void drawStudentHomePage() {
         drawHotActivityItem(50, 165 + i * 48, hotActivities[i].name, i);
     }
 
-    // ===== ÖĞ¼ä£º»î¶¯¿¨Æ¬ÁĞ±í£¨µ÷ÕûÎ»ÖÃ£¬±ÜÃâ±»ÓÒ²àµ²×¡£©=====
-    settextstyle(20, 0, L"Î¢ÈíÑÅºÚ");
+    settextstyle(20, 0, L"å¾®è½¯é›…é»‘");
     settextcolor(RGB(30, 60, 120));
-    outtextxy(330, 120, L"ÍÆ¼ö»î¶¯");
+    outtextxy(330, 120, L"æ¨èæ´»åŠ¨");
 
-    // µ÷Õû»î¶¯¿¨Æ¬ÆğÊ¼Î»ÖÃ£¨×óÒÆ£¬±ÜÃâ±»ÓÒ²à¸öÈËÖĞĞÄµ²×¡£©
     int cardStartX = 330;
     int cardStartY = 160;
     int cardGap = 25;
@@ -231,51 +443,44 @@ void drawStudentHomePage() {
         drawActivityCard(x, y, &activities[i], isHover);
     }
 
-    // ===== ÓÒ²à£º¸öÈË¿ì½İÈë¿Ú£¨µ÷Õû¿í¶ÈºÍÎ»ÖÃ£¬²»ÔÙÕÚµ²£©=====
-    int rightX = WIN_WIDTH - 210;  // ÒÆµ½¸üÓÒ±ß
-    int rightW = 190;              // ¿í¶ÈËõĞ¡
+    int rightX = WIN_WIDTH - 210;
+    int rightW = 190;
 
     drawRoundRect(rightX, 120, rightW, 370, 10, RGB(220, 220, 220), RGB(255, 255, 255));
 
     settextcolor(RGB(30, 60, 120));
-    settextstyle(16, 0, L"Î¢ÈíÑÅºÚ");
-    outtextxy(rightX + (rightW - textwidth(L"¸öÈËÖĞĞÄ")) / 2, 140, L"¸öÈËÖĞĞÄ");
+    settextstyle(16, 0, L"å¾®è½¯é›…é»‘");
+    outtextxy(rightX + (rightW - textwidth(L"ä¸ªäººä¸­å¿ƒ")) / 2, 140, L"ä¸ªäººä¸­å¿ƒ");
 
     setlinecolor(RGB(230, 230, 230));
     line(rightX + 10, 165, rightX + rightW - 10, 165);
 
-    // ¸öÈËÍ·Ïñ£¨Ô²ĞÎ£©
     setfillcolor(RGB(70, 150, 230));
     setlinecolor(RGB(70, 150, 230));
     fillcircle(rightX + rightW / 2, 205, 30);
     settextcolor(WHITE);
-    settextstyle(20, 0, L"Î¢ÈíÑÅºÚ");
-    outtextxy(rightX + rightW / 2 - 10, 197, L"ÎÒ");
+    settextstyle(20, 0, L"å¾®è½¯é›…é»‘");
+    outtextxy(rightX + rightW / 2 - 10, 197, L"æˆ‘");
 
-    // ÓÃ»§Ãû
     settextcolor(RGB(50, 50, 50));
-    settextstyle(14, 0, L"Î¢ÈíÑÅºÚ");
-    outtextxy(rightX + (rightW - textwidth(L"Ñ§ÉúÓÃ»§")) / 2, 250, L"Ñ§ÉúÓÃ»§");
+    settextstyle(14, 0, L"å¾®è½¯é›…é»‘");
+    outtextxy(rightX + (rightW - textwidth(L"å­¦ç”Ÿç”¨æˆ·")) / 2, 250, L"å­¦ç”Ÿç”¨æˆ·");
 
-    // ÎÒµÄ»î¶¯°´Å¥
     bool myActHover = (mouseX >= rightX + 20 && mouseX <= rightX + rightW - 20 && mouseY >= 280 && mouseY <= 315);
-    drawBtn(rightX + 20, 280, rightW - 40, 35, L"ÎÒµÄ»î¶¯", myActHover, RGB(70, 150, 230));
+    drawBtn(rightX + 20, 280, rightW - 40, 35, L"æˆ‘çš„æ´»åŠ¨", myActHover, RGB(70, 150, 230));
 
-    // ÎÒµÄÑ«ÕÂ°´Å¥
     bool medalHover = (mouseX >= rightX + 20 && mouseX <= rightX + rightW - 20 && mouseY >= 325 && mouseY <= 360);
-    drawBtn(rightX + 20, 325, rightW - 40, 35, L"ÎÒµÄÑ«ÕÂ", medalHover, RGB(100, 180, 100));
+    drawBtn(rightX + 20, 325, rightW - 40, 35, L"æˆ‘çš„å‹‹ç« ", medalHover, RGB(100, 180, 100));
 
-    // ¸öÈËÉèÖÃ°´Å¥
     bool settingHover = (mouseX >= rightX + 20 && mouseX <= rightX + rightW - 20 && mouseY >= 370 && mouseY <= 405);
-    drawBtn(rightX + 20, 370, rightW - 40, 35, L"¸öÈËÉèÖÃ", settingHover, RGB(150, 150, 150));
+    drawBtn(rightX + 20, 370, rightW - 40, 35, L"ä¸ªäººè®¾ç½®", settingHover, RGB(150, 150, 150));
 
-    // ===== µ×²¿£º²é¿´¸ü¶à»î¶¯°´Å¥ =====
     bool moreHover = (mouseX >= WIN_WIDTH / 2 - 100 && mouseX <= WIN_WIDTH / 2 + 100 &&
         mouseY >= WIN_HEIGHT - 60 && mouseY <= WIN_HEIGHT - 20);
-    drawBtn(WIN_WIDTH / 2 - 100, WIN_HEIGHT - 60, 200, 40, L"²é¿´¸ü¶à»î¶¯", moreHover, RGB(70, 150, 230));
+    drawBtn(WIN_WIDTH / 2 - 100, WIN_HEIGHT - 60, 200, 40, L"æŸ¥çœ‹æ›´å¤šæ´»åŠ¨", moreHover, RGB(70, 150, 230));
 }
 
-// ==================== »î¶¯ÏêÇéÒ³»æÖÆ ====================
+// ==================== æ´»åŠ¨è¯¦æƒ…é¡µç»˜åˆ¶ ====================
 void drawActivityDetailPage() {
     ActivityCard* activity = getCurrentActivity();
     if (activity == NULL) {
@@ -287,84 +492,67 @@ void drawActivityDetailPage() {
     setbkcolor(RGB(240, 245, 250));
     cleardevice();
 
-    // ===== ¶¥²¿±êÌâÀ¸ =====
     settextcolor(RGB(30, 60, 120));
-    settextstyle(32, 0, L"Î¢ÈíÑÅºÚ");
-    outtextxy(40, 25, L"Ğ£Ô°»î¶¯¹ÜÀíÏµÍ³");
+    settextstyle(32, 0, L"å¾®è½¯é›…é»‘");
+    outtextxy(40, 25, L"æ ¡å›­æ´»åŠ¨ç®¡ç†ç³»ç»Ÿ");
 
-    // ·µ»Ø°´Å¥£¨×óÉÏ½Ç£©
     bool backHover = (mouseX >= 40 && mouseX <= 120 && mouseY >= 70 && mouseY <= 105);
-    drawBtn(40, 70, 80, 35, L"¡û ·µ»Ø", backHover, RGB(100, 100, 100));
+    drawBtn(40, 70, 80, 35, L"â† è¿”å›", backHover, RGB(100, 100, 100));
 
-    // ===== »î¶¯±êÌâ =====
     settextcolor(RGB(30, 60, 120));
-    settextstyle(36, 0, L"Î¢ÈíÑÅºÚ");
+    settextstyle(36, 0, L"å¾®è½¯é›…é»‘");
     wchar_t titleText[100];
     swprintf(titleText, 100, L"%s", activity->title);
     outtextxy((WIN_WIDTH - textwidth(titleText)) / 2, 80, titleText);
 
-    // »î¶¯±êÇ©
     drawRoundRect((WIN_WIDTH - 80) / 2, 130, 80, 30, 5, RGB(150, 200, 255), RGB(200, 225, 255));
     settextcolor(RGB(50, 100, 150));
-    settextstyle(16, 0, L"Î¢ÈíÑÅºÚ");
+    settextstyle(16, 0, L"å¾®è½¯é›…é»‘");
     outtextxy((WIN_WIDTH - textwidth(activity->tag)) / 2, 137, activity->tag);
 
-    // ===== »î¶¯ĞÅÏ¢¿¨Æ¬ =====
     int infoCardX = 100;
     int infoCardY = 180;
     int infoCardW = 1000;
-    int infoCardH = 500;
+    int infoCardH = 530;
 
     drawRoundRect(infoCardX, infoCardY, infoCardW, infoCardH, 10, RGB(200, 200, 200), RGB(255, 255, 255));
 
     int lineY = infoCardY + 50;
     int leftX = infoCardX + 50;
-    int rightX = infoCardX + 550;
 
-    // »î¶¯Ê±¼ä
-    wchar_t timeLabel[50] = L"»î¶¯Ê±¼ä£º";
-    wchar_t timeValue[100];
-    swprintf(timeValue, 100, L"%s", activity->time);
-    drawInfoRow(leftX, lineY, timeLabel, timeValue, RGB(80, 80, 80), RGB(50, 50, 50));
+    wchar_t timeLabel[50] = L"æ´»åŠ¨æ—¶é—´ï¼š";
+    drawInfoRow(leftX, lineY, timeLabel, activity->time, RGB(80, 80, 80), RGB(50, 50, 50));
     lineY += 45;
 
-    // »î¶¯µØµã
-    wchar_t locationLabel[50] = L"»î¶¯µØµã£º";
-    wchar_t locationValue[100];
-    swprintf(locationValue, 100, L"%s", activity->location);
-    drawInfoRow(leftX, lineY, locationLabel, locationValue, RGB(80, 80, 80), RGB(50, 50, 50));
+    wchar_t locationLabel[50] = L"æ´»åŠ¨åœ°ç‚¹ï¼š";
+    drawInfoRow(leftX, lineY, locationLabel, activity->location, RGB(80, 80, 80), RGB(50, 50, 50));
     lineY += 45;
 
-    // ×éÖ¯Õß
-    wchar_t organizerLabel[50] = L"×éÖ¯Õß£º";
-    wchar_t organizerValue[100];
-    swprintf(organizerValue, 100, L"%s", activity->organizer);
-    drawInfoRow(leftX, lineY, organizerLabel, organizerValue, RGB(80, 80, 80), RGB(50, 50, 50));
+    wchar_t organizerLabel[50] = L"ç»„ç»‡è€…ï¼š";
+    drawInfoRow(leftX, lineY, organizerLabel, activity->organizer, RGB(80, 80, 80), RGB(50, 50, 50));
     lineY += 45;
 
-    // ÒªÇó
-    wchar_t requirementLabel[50] = L"ÒªÇó£º";
-    wchar_t requirementValue[200];
-    swprintf(requirementValue, 200, L"%s", activity->requirement);
-    drawInfoRow(leftX, lineY, requirementLabel, requirementValue, RGB(80, 80, 80), RGB(50, 50, 50));
+    wchar_t requirementLabel[50] = L"è¦æ±‚ï¼š";
+    drawInfoRow(leftX, lineY, requirementLabel, activity->requirement, RGB(80, 80, 80), RGB(50, 50, 50));
     lineY += 55;
 
-    // ±¨ÃûÇé¿ö
-    wchar_t enrollLabel[50] = L"±¨ÃûÇé¿ö£º";
+    wchar_t itemsLabel[50] = L"éœ€æºå¸¦ï¼š";
+    drawInfoRow(leftX, lineY, itemsLabel, activity->items, RGB(80, 80, 80), RGB(50, 50, 50));
+    lineY += 45;
+
+    wchar_t enrollLabel[50] = L"æŠ¥åæƒ…å†µï¼š";
     wchar_t enrollValue[100];
-    swprintf(enrollValue, 100, L"%d / %d ÈË", activity->current, activity->max);
+    swprintf(enrollValue, 100, L"%d / %d äºº", activity->current, activity->max);
     drawInfoRow(leftX, lineY, enrollLabel, enrollValue, RGB(80, 80, 80), RGB(50, 150, 50));
     lineY += 45;
 
-    // »î¶¯ÃèÊö±êÌâ
     settextcolor(RGB(30, 60, 120));
-    settextstyle(20, 0, L"Î¢ÈíÑÅºÚ");
-    outtextxy(leftX, lineY, L"»î¶¯ÃèÊö£º");
+    settextstyle(20, 0, L"å¾®è½¯é›…é»‘");
+    outtextxy(leftX, lineY, L"æ´»åŠ¨æè¿°ï¼š");
     lineY += 35;
 
-    // »î¶¯ÃèÊöÄÚÈİ£¨×Ô¶¯»»ĞĞ£©
     settextcolor(RGB(80, 80, 80));
-    settextstyle(16, 0, L"Î¢ÈíÑÅºÚ");
+    settextstyle(16, 0, L"å¾®è½¯é›…é»‘");
     wchar_t* desc = activity->description;
     int descLen = wcslen(desc);
     int maxCharsPerLine = 45;
@@ -377,120 +565,158 @@ void drawActivityDetailPage() {
         outtextxy(leftX, lineY + i * 28, lineText);
     }
 
-    // ===== ±¨Ãû×´Ì¬ºÍ°´Å¥ =====
     int btnY = infoCardY + infoCardH - 60;
     int btnX = (WIN_WIDTH - 200) / 2;
+    bool alreadyEnrolled = isActivityEnrolled(activity->id);
 
-    // ÏÔÊ¾±¨Ãû×´Ì¬
-    settextstyle(18, 0, L"Î¢ÈíÑÅºÚ");
-    if (isEnrolled) {
+    settextstyle(18, 0, L"å¾®è½¯é›…é»‘");
+    if (alreadyEnrolled) {
         settextcolor(RGB(50, 150, 50));
-        outtextxy(btnX - 120, btnY + 12, L"? ÄúÒÑ±¨Ãû´Ë»î¶¯");
+        outtextxy(btnX - 120, btnY + 12, L"âœ“ æ‚¨å·²æŠ¥åæ­¤æ´»åŠ¨");
     }
     else {
         if (activity->current >= activity->max) {
             settextcolor(RGB(200, 50, 50));
-            outtextxy(btnX - 120, btnY + 12, L"? »î¶¯ÒÑÂú£¬²»¿É±¨Ãû");
+            outtextxy(btnX - 120, btnY + 12, L"âœ— æ´»åŠ¨å·²æ»¡ï¼Œä¸å¯æŠ¥å");
         }
         else {
             settextcolor(RGB(150, 150, 150));
-            outtextxy(btnX - 120, btnY + 12, L"¡ñ Î´±¨Ãû");
+            outtextxy(btnX - 120, btnY + 12, L"â— æœªæŠ¥å");
         }
     }
 
-    // ±¨Ãû/È¡Ïû±¨Ãû°´Å¥
     bool actionHover = (mouseX >= btnX && mouseX <= btnX + 200 && mouseY >= btnY && mouseY <= btnY + 45);
 
-    if (isEnrolled) {
-        // ÒÑ±¨Ãû×´Ì¬£ºÏÔÊ¾"È¡Ïû±¨Ãû"
-        drawBtn(btnX, btnY, 200, 45, L"È¡Ïû±¨Ãû", actionHover, RGB(200, 100, 100));
+    if (alreadyEnrolled) {
+        drawBtn(btnX, btnY, 200, 45, L"å–æ¶ˆæŠ¥å", actionHover, RGB(200, 100, 100));
     }
     else {
-        // Î´±¨Ãû×´Ì¬£ºÏÔÊ¾"±¨Ãû"
         if (activity->current >= activity->max) {
-            // »î¶¯ÒÑÂú£¬°´Å¥ÖÃ»Ò
             COLORREF grayColor = RGB(180, 180, 180);
             drawRoundRect(btnX, btnY, 200, 45, 8, RGB(150, 150, 150), grayColor);
             settextcolor(WHITE);
             setbkmode(TRANSPARENT);
-            settextstyle(18, 0, L"Î¢ÈíÑÅºÚ");
-            outtextxy(btnX + (200 - textwidth(L"±¨Ãû")) / 2, btnY + 12, L"±¨Ãû");
+            settextstyle(18, 0, L"å¾®è½¯é›…é»‘");
+            outtextxy(btnX + (200 - textwidth(L"æŠ¥å")) / 2, btnY + 12, L"æŠ¥å");
         }
         else {
-            drawBtn(btnX, btnY, 200, 45, L"±¨Ãû", actionHover, RGB(70, 150, 230));
+            drawBtn(btnX, btnY, 200, 45, L"æŠ¥å", actionHover, RGB(70, 150, 230));
         }
     }
 }
 
-// ==================== ÏêÇéÒ³Êó±êµã»÷´¦Àí ====================
-void handleDetailMouseClick(int x, int y) {
-    ActivityCard* activity = getCurrentActivity();
-
-    // ·µ»Ø°´Å¥
+// ==================== æˆ‘çš„æ´»åŠ¨é¡µé¼ æ ‡ç‚¹å‡»å¤„ç† ====================
+void handleMyActivitiesMouseClick(int x, int y) {
     if (x >= 40 && x <= 120 && y >= 70 && y <= 105) {
         currentPage = PAGE_HOME;
         return;
     }
 
-    // ±¨Ãû/È¡Ïû±¨Ãû°´Å¥
+    int listStartY = 150;
+    int itemHeight = 140;
+    int itemGap = 15;
+    int itemWidth = 1000;
+    int itemX = (WIN_WIDTH - itemWidth) / 2;
+
+    int yPos = listStartY;
+    EnrollmentRecord* p = myEnrollments;
+
+    while (p) {
+        ActivityCard* activity = NULL;
+        for (int i = 0; i < activityCount; i++) {
+            if (activities[i].id == p->activityId) {
+                activity = &activities[i];
+                break;
+            }
+        }
+
+        if (activity != NULL) {
+            // æŸ¥çœ‹åœ°å›¾æŒ‰é’®
+            if (x >= itemX + itemWidth - 210 && x <= itemX + itemWidth - 110 &&
+                y >= yPos + 50 && y <= yPos + 90) {
+                showMapDialog(activity->lat, activity->lng, activity->location);
+                return;
+            }
+
+            // å–æ¶ˆæŠ¥åæŒ‰é’®
+            if (x >= itemX + itemWidth - 110 && x <= itemX + itemWidth - 20 &&
+                y >= yPos + 50 && y <= yPos + 90) {
+                wchar_t msg[200];
+                swprintf(msg, 200, L"ç¡®å®šè¦å–æ¶ˆæŠ¥åã€%sã€‘å—ï¼Ÿ", activity->title);
+                if (MessageBoxW(GetHWnd(), msg, L"ç¡®è®¤å–æ¶ˆ", MB_YESNO) == IDYES) {
+                    cancelEnrollment(p->activityId);
+                }
+                return;
+            }
+        }
+
+        yPos += itemHeight + itemGap;
+        p = p->next;
+    }
+}
+
+// ==================== è¯¦æƒ…é¡µé¼ æ ‡ç‚¹å‡»å¤„ç† ====================
+void handleDetailMouseClick(int x, int y) {
+    ActivityCard* activity = getCurrentActivity();
+
+    if (x >= 40 && x <= 120 && y >= 70 && y <= 105) {
+        currentPage = PAGE_HOME;
+        return;
+    }
+
     int btnX = (WIN_WIDTH - 200) / 2;
     int infoCardY = 180;
-    int infoCardH = 500;
+    int infoCardH = 530;
     int btnY = infoCardY + infoCardH - 60;
 
     if (x >= btnX && x <= btnX + 200 && y >= btnY && y <= btnY + 45) {
-        if (isEnrolled) {
-            // È¡Ïû±¨Ãû
-            isEnrolled = false;
-            // ¸üĞÂ±¨ÃûÈËÊı
-            if (activity != NULL && activity->current > 0) {
-                activity->current--;
+        if (activity == NULL) return;
+
+        if (isActivityEnrolled(activity->id)) {
+            wchar_t msg[200];
+            swprintf(msg, 200, L"ç¡®å®šè¦å–æ¶ˆæŠ¥åã€%sã€‘å—ï¼Ÿ", activity->title);
+            if (MessageBoxW(GetHWnd(), msg, L"ç¡®è®¤å–æ¶ˆ", MB_YESNO) == IDYES) {
+                cancelEnrollment(activity->id);
             }
-            MessageBoxW(GetHWnd(), L"ÒÑÈ¡Ïû±¨Ãû", L"ÌáÊ¾", MB_OK);
         }
         else {
-            // ±¨Ãû
-            if (activity != NULL && activity->current < activity->max) {
-                isEnrolled = true;
-                activity->current++;
-                MessageBoxW(GetHWnd(), L"±¨Ãû³É¹¦£¡", L"ÌáÊ¾", MB_OK);
+            if (activity->current < activity->max) {
+                addEnrollment(activity->id);
+                MessageBoxW(GetHWnd(), L"æŠ¥åæˆåŠŸï¼", L"æç¤º", MB_OK);
             }
             else {
-                MessageBoxW(GetHWnd(), L"»î¶¯ÒÑÂú£¬ÎŞ·¨±¨Ãû", L"ÌáÊ¾", MB_OK);
+                MessageBoxW(GetHWnd(), L"æ´»åŠ¨å·²æ»¡ï¼Œæ— æ³•æŠ¥å", L"æç¤º", MB_OK);
             }
         }
     }
 }
 
-// ==================== Ê×Ò³Êó±êµã»÷´¦Àí ====================
+// ==================== é¦–é¡µé¼ æ ‡ç‚¹å‡»å¤„ç† ====================
 void handleHomeMouseClick(int x, int y) {
-    // ¼ì²éµ×²¿"²é¿´¸ü¶à»î¶¯"°´Å¥
     if (x >= WIN_WIDTH / 2 - 100 && x <= WIN_WIDTH / 2 + 100 &&
         y >= WIN_HEIGHT - 60 && y <= WIN_HEIGHT - 20) {
-        MessageBoxW(GetHWnd(), L"¸ü¶à»î¶¯¹¦ÄÜ¿ª·¢ÖĞ...", L"ÌáÊ¾", MB_OK);
+        MessageBoxW(GetHWnd(), L"æ›´å¤šæ´»åŠ¨åŠŸèƒ½å¼€å‘ä¸­...", L"æç¤º", MB_OK);
         return;
     }
 
-    // ¼ì²éÓÒ²à¸öÈËÖĞĞÄ°´Å¥£¨µ÷ÕûºóµÄÎ»ÖÃ£©
     int rightX = WIN_WIDTH - 210;
     int rightW = 190;
 
     if (x >= rightX + 20 && x <= rightX + rightW - 20 && y >= 280 && y <= 315) {
-        MessageBoxW(GetHWnd(), L"ÎÒµÄ»î¶¯¹¦ÄÜ¿ª·¢ÖĞ...", L"ÌáÊ¾", MB_OK);
+        currentPage = PAGE_MY_ACTIVITIES;
         return;
     }
 
     if (x >= rightX + 20 && x <= rightX + rightW - 20 && y >= 325 && y <= 360) {
-        MessageBoxW(GetHWnd(), L"ÎÒµÄÑ«ÕÂ¹¦ÄÜ¿ª·¢ÖĞ...", L"ÌáÊ¾", MB_OK);
+        MessageBoxW(GetHWnd(), L"æˆ‘çš„å‹‹ç« åŠŸèƒ½å¼€å‘ä¸­...", L"æç¤º", MB_OK);
         return;
     }
 
     if (x >= rightX + 20 && x <= rightX + rightW - 20 && y >= 370 && y <= 405) {
-        MessageBoxW(GetHWnd(), L"¸öÈËÉèÖÃ¹¦ÄÜ¿ª·¢ÖĞ...", L"ÌáÊ¾", MB_OK);
+        MessageBoxW(GetHWnd(), L"ä¸ªäººè®¾ç½®åŠŸèƒ½å¼€å‘ä¸­...", L"æç¤º", MB_OK);
         return;
     }
 
-    // ¼ì²é»î¶¯¿¨Æ¬µÄÏêÇé°´Å¥
     int cardStartX = 330;
     int cardStartY = 160;
     int cardGap = 25;
@@ -504,30 +730,26 @@ void handleHomeMouseClick(int x, int y) {
         int btnX = cardX + CARD_WIDTH - 70;
         int btnY = cardY + CARD_HEIGHT - 40;
         if (x >= btnX && x <= btnX + 55 && y >= btnY && y <= btnY + 28) {
-            // Ìø×ªµ½ÏêÇéÒ³
             currentActivityId = activities[i].id;
-            // ¼ì²éµ±Ç°ÓÃ»§ÊÇ·ñÒÑ±¨Ãû´Ë»î¶¯£¨Ä£Äâ£¬Êµ¼ÊÓ¦´ÓÊı¾İ¿â¶ÁÈ¡£©
-            isEnrolled = false;
             currentPage = PAGE_DETAIL;
             return;
         }
     }
 }
 
-// ==================== Ñ§ÉúÖ÷½çÃæÈë¿Ú ====================
+// ==================== å­¦ç”Ÿä¸»ç•Œé¢å…¥å£ ====================
 void runStudentMainPage() {
     ExMessage msg;
     bool running = true;
 
-    // ³õÊ¼»¯
     mouseX = 0;
     mouseY = 0;
     currentPage = PAGE_HOME;
     currentActivityId = 0;
-    isEnrolled = false;
+
+    initMockEnrollments();
 
     while (running) {
-        // ´¦ÀíÏûÏ¢
         while (peekmessage(&msg)) {
             if (msg.message == WM_MOUSEMOVE) {
                 mouseX = msg.x;
@@ -540,26 +762,33 @@ void runStudentMainPage() {
                 else if (currentPage == PAGE_DETAIL) {
                     handleDetailMouseClick(msg.x, msg.y);
                 }
+                else if (currentPage == PAGE_MY_ACTIVITIES) {
+                    handleMyActivitiesMouseClick(msg.x, msg.y);
+                }
             }
             else if (msg.message == WM_KEYDOWN) {
                 if (msg.vkcode == VK_ESCAPE) {
                     if (currentPage == PAGE_DETAIL) {
-                        currentPage = PAGE_HOME;  // ESC·µ»ØÊ×Ò³
+                        currentPage = PAGE_HOME;
+                    }
+                    else if (currentPage == PAGE_MY_ACTIVITIES) {
+                        currentPage = PAGE_HOME;
                     }
                     else {
-                        running = false;  // ÔÚÊ×Ò³°´ESC·µ»ØµÇÂ¼Ò³
+                        running = false;
                     }
                 }
             }
         }
 
-
-        // ¸ù¾İµ±Ç°Ò³Ãæ»æÖÆ²»Í¬½çÃæ
         if (currentPage == PAGE_HOME) {
             drawStudentHomePage();
         }
         else if (currentPage == PAGE_DETAIL) {
             drawActivityDetailPage();
+        }
+        else if (currentPage == PAGE_MY_ACTIVITIES) {
+            drawMyActivitiesPage();
         }
 
         FlushBatchDraw();
