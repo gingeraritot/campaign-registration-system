@@ -39,13 +39,6 @@ typedef enum {
     PAGE_ADMIN_MAIN
 } PageType;
 
-// ==================== 函数前向声明 ====================
-Role showWelcomePage();
-PageType showLoginPage(Role& currentRole);
-PageType showRegisterPage();
-void showStudentMainPage();
-void showAdminMainPage();
-
 // ==================== 工具函数 ====================
 void drawButton(int x, int y, int w, int h, const wchar_t* text, bool isHover) {
     COLORREF btnColor = isHover ? RGB(100, 180, 255) : RGB(70, 150, 230);
@@ -67,29 +60,9 @@ void drawInputBox(int x, int y, int w, int h, const wchar_t* label, const wchar_
     settextcolor(BLACK);
     settextstyle(18, 0, L"微软雅黑");
     outtextxy(x - 120, y + 8, label);
-
     if (wcslen(content) > 0) {
         outtextxy(x + 10, y + 8, content);
     }
-
-    if (isFocus) {
-        int cursorX = x + 10 + textwidth(content);
-        setlinecolor(RGB(0, 0, 0));
-        line(cursorX, y + 10, cursorX, y + h - 10);
-    }
-}
-
-void drawInputBoxNoLabel(int x, int y, int w, int h, const wchar_t* content, bool isFocus) {
-    setfillcolor(WHITE);
-    setlinecolor(isFocus ? RGB(0, 120, 255) : RGB(180, 180, 180));
-    fillroundrect(x, y, x + w, y + h, 5, 5);
-    settextcolor(BLACK);
-    settextstyle(18, 0, L"微软雅黑");
-
-    if (wcslen(content) > 0) {
-        outtextxy(x + 10, y + 8, content);
-    }
-
     if (isFocus) {
         int cursorX = x + 10 + textwidth(content);
         setlinecolor(RGB(0, 0, 0));
@@ -154,12 +127,8 @@ Role showWelcomePage() {
             else if (msg.message == WM_LBUTTONDOWN) {
                 bool studentClick = (msg.x >= studentBtnX && msg.x <= studentBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
                 bool adminClick = (msg.x >= adminBtnX && msg.x <= adminBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
-                if (studentClick) {
-                    return ROLE_STUDENT;
-                }
-                if (adminClick) {
-                    return ROLE_ADMIN;
-                }
+                if (studentClick) return ROLE_STUDENT;
+                if (adminClick) return ROLE_ADMIN;
             }
         }
         Sleep(10);
@@ -211,16 +180,10 @@ PageType showLoginPage(Role& currentRole) {
                 else if (msg.message == WM_LBUTTONDOWN) {
                     if (msg.x >= inputX && msg.x <= inputX + INPUT_WIDTH) {
                         if (msg.y >= userInputY && msg.y <= userInputY + INPUT_HEIGHT) {
-                            if (focusIndex != 0) {
-                                focusIndex = 0;
-                                needRedraw = true;
-                            }
+                            if (focusIndex != 0) { focusIndex = 0; needRedraw = true; }
                         }
                         else if (msg.y >= pwdInputY && msg.y <= pwdInputY + INPUT_HEIGHT) {
-                            if (focusIndex != 1) {
-                                focusIndex = 1;
-                                needRedraw = true;
-                            }
+                            if (focusIndex != 1) { focusIndex = 1; needRedraw = true; }
                         }
                     }
                     if (msg.x >= loginBtnX && msg.x <= loginBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT) {
@@ -246,13 +209,9 @@ PageType showLoginPage(Role& currentRole) {
             else if (msg.message == WM_CHAR) {
                 wchar_t* target = (focusIndex == 0) ? username : password;
                 int maxLen = 49;
-
                 if (msg.ch == VK_BACK) {
                     int len = wcslen(target);
-                    if (len > 0) {
-                        target[len - 1] = L'\0';
-                        needRedraw = true;
-                    }
+                    if (len > 0) { target[len - 1] = L'\0'; needRedraw = true; }
                 }
                 else if (msg.ch != 0 && msg.ch != VK_RETURN && msg.ch != VK_ESCAPE) {
                     if (wcslen(target) < maxLen) {
@@ -266,10 +225,8 @@ PageType showLoginPage(Role& currentRole) {
                 needRedraw = true;
             }
         }
-
         if (needRedraw) {
             cleardevice();
-
             const wchar_t* title;
             if (currentRole == ROLE_STUDENT) {
                 title = L"学生登录";
@@ -280,20 +237,14 @@ PageType showLoginPage(Role& currentRole) {
                 setbkcolor(RGB(255, 240, 230));
             }
             cleardevice();
-
             settextcolor(RGB(30, 60, 120));
             settextstyle(30, 0, L"微软雅黑");
             outtextxy((WINDOW_WIDTH - textwidth(title)) / 2, 80, title);
-
             drawInputBox(inputX, userInputY, INPUT_WIDTH, INPUT_HEIGHT, L"用户名：", username, focusIndex == 0);
             drawInputBox(inputX, pwdInputY, INPUT_WIDTH, INPUT_HEIGHT, L"密  码：", password, focusIndex == 1);
-
             drawButton(loginBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"登录", loginHover);
-            if (currentRole == ROLE_STUDENT) {
-                drawButton(registerBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"注册", registerHover);
-            }
+            if (currentRole == ROLE_STUDENT) drawButton(registerBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"注册", registerHover);
             drawButton(backBtnX, backBtnY, BTN_WIDTH, BTN_HEIGHT, L"返回", backHover);
-
             needRedraw = false;
         }
         Sleep(10);
@@ -391,7 +342,6 @@ PageType showRegisterPage() {
                         WideCharToMultiByte(CP_ACP, 0, gender, -1, genderA, 10, NULL, NULL);
                         WideCharToMultiByte(CP_ACP, 0, clname, -1, clnameA, 30, NULL, NULL);
                         WideCharToMultiByte(CP_ACP, 0, location, -1, locationA, 100, NULL, NULL);
-
                         if (strlen(usernameA) == 0 || strlen(passwordA) == 0 || strlen(studentIdA) == 0 || strlen(nameA) == 0) {
                             MessageBoxW(GetHWnd(), L"请填写完整信息！", L"注册失败", MB_OK);
                         }
@@ -426,8 +376,7 @@ PageType showRegisterPage() {
                     if (msg.ch == VK_BACK) {
                         int len = wcslen(ageStr);
                         if (len > 0) ageStr[len - 1] = L'\0';
-                        if (wcslen(ageStr) > 0) age = _wtoi(ageStr);
-                        else age = 0;
+                        if (wcslen(ageStr) > 0) age = _wtoi(ageStr); else age = 0;
                         needRedraw = true;
                     }
                     else if (msg.ch >= L'0' && msg.ch <= L'9' && wcslen(ageStr) < 9) {
@@ -443,10 +392,7 @@ PageType showRegisterPage() {
                 if (target) {
                     if (msg.ch == VK_BACK) {
                         int len = wcslen(target);
-                        if (len > 0) {
-                            target[len - 1] = L'\0';
-                            needRedraw = true;
-                        }
+                        if (len > 0) { target[len - 1] = L'\0'; needRedraw = true; }
                     }
                     else if (msg.ch != 0 && msg.ch != VK_RETURN && msg.ch != VK_ESCAPE) {
                         if (wcslen(target) < maxLen) {
@@ -461,54 +407,49 @@ PageType showRegisterPage() {
                 needRedraw = true;
             }
         }
-
         if (needRedraw) {
             cleardevice();
-
             const wchar_t* title = L"学生注册";
             settextcolor(RGB(30, 60, 120));
             settextstyle(28, 0, L"微软雅黑");
             outtextxy((WINDOW_WIDTH - textwidth(title)) / 2, 40, title);
-
             settextstyle(18, 0, L"微软雅黑");
             setbkmode(TRANSPARENT);
-
             settextcolor(RGB(60, 60, 60));
             outtextxy(col1LabelX, userInputY + 8, L"用户名：");
             outtextxy(col1LabelX, pwdInputY + 8, L"密  码：");
             outtextxy(col1LabelX, idInputY + 8, L"学  号：");
             outtextxy(col1LabelX, nameInputY + 8, L"姓  名：");
             outtextxy(col1LabelX, phoneInputY + 8, L"联系方式：");
-
             outtextxy(col2LabelX, genderInputY + 8, L"性  别：");
             outtextxy(col2LabelX, ageInputY + 8, L"年  龄：");
             outtextxy(col2LabelX, clnameInputY + 8, L"班  级：");
             outtextxy(col2LabelX, locationInputY + 8, L"位  置：");
-
-            drawInputBoxNoLabel(col1InputX, userInputY, inputWidth, INPUT_HEIGHT, username, focusIndex == 0);
-            drawInputBoxNoLabel(col1InputX, pwdInputY, inputWidth, INPUT_HEIGHT, password, focusIndex == 1);
-            drawInputBoxNoLabel(col1InputX, idInputY, inputWidth, INPUT_HEIGHT, studentId, focusIndex == 2);
-            drawInputBoxNoLabel(col1InputX, nameInputY, inputWidth, INPUT_HEIGHT, name, focusIndex == 3);
-            drawInputBoxNoLabel(col1InputX, phoneInputY, inputWidth, INPUT_HEIGHT, phone, focusIndex == 4);
-
-            drawInputBoxNoLabel(col2InputX, genderInputY, inputWidth, INPUT_HEIGHT, gender, focusIndex == 5);
-            drawInputBoxNoLabel(col2InputX, ageInputY, inputWidth, INPUT_HEIGHT, ageStr, focusIndex == 6);
-            drawInputBoxNoLabel(col2InputX, clnameInputY, inputWidth, INPUT_HEIGHT, clname, focusIndex == 7);
-            drawInputBoxNoLabel(col2InputX, locationInputY, inputWidth, INPUT_HEIGHT, location, focusIndex == 8);
-
+            drawInputBox(col1InputX, userInputY, inputWidth, INPUT_HEIGHT, L"", username, focusIndex == 0);
+            drawInputBox(col1InputX, pwdInputY, inputWidth, INPUT_HEIGHT, L"", password, focusIndex == 1);
+            drawInputBox(col1InputX, idInputY, inputWidth, INPUT_HEIGHT, L"", studentId, focusIndex == 2);
+            drawInputBox(col1InputX, nameInputY, inputWidth, INPUT_HEIGHT, L"", name, focusIndex == 3);
+            drawInputBox(col1InputX, phoneInputY, inputWidth, INPUT_HEIGHT, L"", phone, focusIndex == 4);
+            drawInputBox(col2InputX, genderInputY, inputWidth, INPUT_HEIGHT, L"", gender, focusIndex == 5);
+            drawInputBox(col2InputX, ageInputY, inputWidth, INPUT_HEIGHT, L"", ageStr, focusIndex == 6);
+            drawInputBox(col2InputX, clnameInputY, inputWidth, INPUT_HEIGHT, L"", clname, focusIndex == 7);
+            drawInputBox(col2InputX, locationInputY, inputWidth, INPUT_HEIGHT, L"", location, focusIndex == 8);
             settextstyle(20, 0, L"微软雅黑");
             drawButton(registerBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"注册", registerHover);
             drawButton(backBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"返回登录", backHover);
-
             needRedraw = false;
         }
         Sleep(10);
     }
 }
 
-void showStudentMainPage() {}
+void showStudentMainPage() {
+    MessageBoxW(GetHWnd(), L"学生主界面待开发", L"提示", MB_OK);
+}
+
 void showAdminMainPage() {
-    runAdminMainPage();  // 调用管理员界面模块
+    MessageBoxW(GetHWnd(), L"进入管理员界面", L"调试", MB_OK);
+    runAdminMainPage();
 }
 
 // ==================== 主函数 ====================
