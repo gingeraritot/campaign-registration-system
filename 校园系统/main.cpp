@@ -135,7 +135,7 @@ Role showWelcomePage() {
     }
 }
 
-// ==================== 登录页 ====================
+// ==================== 登录页 ===================
 PageType showLoginPage(Role& currentRole) {
     cleardevice();
     setbkcolor(RGB(240, 245, 250));

@@ -1,7 +1,13 @@
 ﻿C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\VC\v180\Microsoft.CppBuild.targets(551,5): warning MSB8028: 中间目录(x64\Debug\)包含从另一个项目(campus_system.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
+<<<<<<< HEAD
+  校园系统.vcxproj -> C:\Users\pLeOn\source\repos\campaign-registration-system\x64\Debug\校园系统.exe
+=======
 cl : 命令行  warning D9025: 正在重写“/sdl”(用“/GS-”)
-  main.cpp
-C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(226,29): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(390,33): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\正电子\source\repos\campaign-registration-system\校园系统\main.cpp(407,33): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+  admin_main.cpp
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\admin_main.cpp(787,53): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\admin_main.cpp(824,54): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+  student_main.cpp
+C:\Users\正电子\source\repos\campaign-registration-system\校园系统\student_main.cpp(593,17): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+  正在生成代码...
   校园系统.vcxproj -> C:\Users\正电子\source\repos\campaign-registration-system\x64\Debug\校园系统.exe
+>>>>>>> f476760a32c344906e4e4e4905738d75822e3ad8

@@ -981,7 +981,7 @@ void drawStudentHomePage() {
     drawBtn(WIN_WIDTH / 2 - 100, WIN_HEIGHT - 60, 200, 40, L"查看更多活动", moreHover, RGB(70, 150, 230));
 }
 
-// ==================== 鼠标点击处理函数 ====================
+// ==================== 鼠标点击处理函数 ===================
 void handleSearchResultMouseClick(int x, int y) {
     if (x >= 40 && x <= 120 && y >= 70 && mouseY <= 105) {
         currentPage = PAGE_HOME;
