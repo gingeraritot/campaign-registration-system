@@ -116,20 +116,21 @@ void showMapDialog(double lat, double lng, const wchar_t* locationName) {
 // ==================== 提交建议弹窗 ====================
 void showSuggestionDialog() {
     // 创建输入框获取建议内容
-    wchar_t input[500] = {0};
+    wchar_t input[500] = { 0 };
     InputBox(input, 500, L"请输入您的建议：", L"提交建议", NULL, 0, 0, false);
-    
+
     if (wcslen(input) > 0) {
         // 将宽字符转换为多字节字符
         char contentA[500];
         WideCharToMultiByte(CP_ACP, 0, input, -1, contentA, 500, NULL, NULL);
-        
+
         // 调用 head.h 中声明的 add_suggestion 函数
         int result = add_suggestion(currentStudentId, contentA);
-        
+
         if (result == 1) {
             MessageBoxW(GetHWnd(), L"建议提交成功！感谢您的反馈。", L"提示", MB_OK);
-        } else {
+        }
+        else {
             MessageBoxW(GetHWnd(), L"建议提交失败，请稍后重试。", L"错误", MB_OK);
         }
     }
@@ -724,14 +725,17 @@ void handleDetailMouseClick(int x, int y) {
     }
 }
 
+// ==================== 全局标志：是否退出 ====================
+static bool shouldExit = false;
+
 // ==================== 首页鼠标点击处理 ====================
 void handleHomeMouseClick(int x, int y) {
     // 退出登录按钮
     if (x >= WIN_WIDTH - 100 && x <= WIN_WIDTH - 20 && y >= 30 && y <= 70) {
-        // 退出登录，返回登录页
-        return;  // 返回后会退出 runStudentMainPage 函数
+        shouldExit = true;  // 设置退出标志
+        return;
     }
-    
+
     // 查看更多活动按钮
     if (x >= WIN_WIDTH / 2 - 100 && x <= WIN_WIDTH / 2 + 100 &&
         y >= WIN_HEIGHT - 60 && y <= WIN_HEIGHT - 20) {
@@ -747,13 +751,13 @@ void handleHomeMouseClick(int x, int y) {
         currentPage = PAGE_MY_ACTIVITIES;
         return;
     }
-    
+
     // 我的勋章按钮（开发中）
     if (x >= rightX + 20 && x <= rightX + rightW - 20 && y >= 325 && y <= 360) {
         MessageBoxW(GetHWnd(), L"我的勋章功能开发中...", L"提示", MB_OK);
         return;
     }
-    
+
     // 提交建议按钮
     if (x >= rightX + 20 && x <= rightX + rightW - 20 && y >= 370 && y <= 405) {
         showSuggestionDialog();
@@ -796,6 +800,7 @@ void runStudentMainPage() {
     mouseY = 0;
     currentPage = PAGE_HOME;
     currentActivityId = 0;
+    shouldExit = false;  // 重置退出标志
 
     initMockEnrollments();
 
@@ -828,6 +833,11 @@ void runStudentMainPage() {
                     }
                 }
             }
+        }
+
+        // 检查是否需要退出
+        if (shouldExit) {
+            running = false;
         }
 
         if (currentPage == PAGE_HOME) {
