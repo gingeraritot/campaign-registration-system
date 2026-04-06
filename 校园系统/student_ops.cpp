@@ -2,9 +2,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-int delete_attendance_record(int student_id, int activity_id);
-
-
 
 int enroll_student(int student_id, int activity_id) {
     if (student_id <= 0 || activity_id <= 0) return -1;
@@ -110,51 +107,4 @@ int view_enrolled_activities(int student_id) {
 
     if (!found) printf("暂无报名\n");
     return 0;
-}
-
-//搜索活动（根据名称或分类）
-int search_activities(const char* keyword, Activity* results[]) {
-    if (keyword == NULL || results == NULL) {
-        return 0;
-    }
-
-    int count = 0;
-    Activity* current = activity_head;
-
-    while (current != NULL) {
-        // 只有已发布的活动才参与搜索 (根据你的结构体中的 status 字段）
-        if (current->status != PUBLISHED) {
-            current = current->next;
-            continue;
-        }
-
-        int found = 0;
-
-        if (strstr(current->name, keyword) != NULL) {
-            found = 1;
-        }
-
-        if (!found) {
-            Category* cat_curr = category_head;
-            while (cat_curr != NULL) {
-                // 找到对应的分类ID
-                if (cat_curr->id == current->category_id) {
-                    // 检查分类名称是否包含关键词
-                    if (strstr(cat_curr->name, keyword) != NULL) {
-                        found = 1;
-                    }
-                    break;
-                }
-                cat_curr = cat_curr->next;
-            }
-        }
-
-        if (found) {
-            results[count] = current;
-            count++;
-        }
-        current = current->next;
-    }
-
-    return count;
 }
