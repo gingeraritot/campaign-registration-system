@@ -1,10 +1,10 @@
-#include "head.h"
+ï»¿#include "head.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
-// È«¾ÖÁ´±íÍ·
+// å…¨å±€é“¾è¡¨å¤´
 Student* student_head = NULL;
 Admin* admin_head = NULL;
 Activity* activity_head = NULL;
@@ -16,7 +16,7 @@ UserMedal* usermedal_head = NULL;
 Suggestion* suggestion_head = NULL;
 Reminder* reminder_head = NULL;
 
-// ID ¼ÆÊıÆ÷£¨ÓÃÓÚ·ÖÅäĞÂID£©
+// ID è®¡æ•°å™¨ï¼ˆç”¨äºåˆ†é…æ–°IDï¼‰
 static int next_student_id = 1;
 static int next_admin_id = 1;
 static int next_activity_id = 1;
@@ -39,7 +39,7 @@ int get_next_usermedal_id(void) { return next_usermedal_id++; }
 int get_next_suggestion_id(void) { return next_suggestion_id++; }
 int get_next_reminder_id(void) { return next_reminder_id++; }
 
-// -------------------- Ñ§Éú --------------------
+// -------------------- å­¦ç”Ÿ --------------------
 int load_students(const char* filename) {
     FILE* fp = fopen(filename, "rb");
     if (!fp) return 0;
@@ -59,6 +59,9 @@ int load_students(const char* filename) {
             while (tail->next) tail = tail->next;
             tail->next = new_node;
         }
+
+
+
         if (s.id > max_id) max_id = s.id;
     }
     fclose(fp);
@@ -69,15 +72,28 @@ int save_students(const char* filename) {
     FILE* fp = fopen(filename, "wb");
     if (!fp) return -1;
     Student* p = student_head;
+    int count = 0;  // æ·»åŠ è®¡æ•°å˜é‡
+
+    // ã€åœ¨è¿™é‡Œæ·»åŠ è°ƒè¯•è¾“å‡ºã€‘
+    printf("ã€è°ƒè¯•ã€‘å¼€å§‹ä¿å­˜å­¦ç”Ÿæ•°æ®åˆ° %s\n", filename);
+
     while (p) {
-        if (fwrite(p, sizeof(Student), 1, fp) != 1) { fclose(fp); return -1; }
+        // ã€åœ¨è¿™é‡Œæ·»åŠ è°ƒè¯•è¾“å‡ºã€‘
+        printf("ã€è°ƒè¯•ã€‘ä¿å­˜å­¦ç”Ÿ #%d: ID=%d, ç”¨æˆ·å=%s, å¯†ç =%s\n",
+            ++count, p->id, p->username, p->password);
+
+        if (fwrite(p, sizeof(Student), 1, fp) != 1) {
+            fclose(fp);
+            return -1;
+        }
         p = p->next;
     }
+    printf("ã€è°ƒè¯•ã€‘æˆåŠŸä¿å­˜ %d ä¸ªå­¦ç”Ÿåˆ°æ–‡ä»¶\n", count);
     fclose(fp);
     return 1;
 }
 
-// -------------------- ¹ÜÀíÔ± --------------------
+// -------------------- ç®¡ç†å‘˜ --------------------
 int load_admins(const char* filename) {
     FILE* fp = fopen(filename, "rb");
     if (!fp) return 0;
@@ -115,7 +131,7 @@ int save_admins(const char* filename) {
     return 1;
 }
 
-// -------------------- »î¶¯·ÖÀà --------------------
+// -------------------- æ´»åŠ¨åˆ†ç±» --------------------
 int load_categories(const char* filename) {
     FILE* fp = fopen(filename, "rb");
     if (!fp) return 0;
@@ -153,7 +169,7 @@ int save_categories(const char* filename) {
     return 1;
 }
 
-// -------------------- »î¶¯ --------------------
+// -------------------- æ´»åŠ¨ --------------------
 int load_activities(const char* filename) {
     FILE* fp = fopen(filename, "rb");
     if (!fp) return 0;
@@ -191,7 +207,7 @@ int save_activities(const char* filename) {
     return 1;
 }
 
-// -------------------- ±¨Ãû¼ÇÂ¼ --------------------
+// -------------------- æŠ¥åè®°å½• --------------------
 int load_enrollments(const char* filename) {
     FILE* fp = fopen(filename, "rb");
     if (!fp) return 0;
@@ -229,7 +245,7 @@ int save_enrollments(const char* filename) {
     return 1;
 }
 
-// -------------------- Ç©µ½¼ÇÂ¼ --------------------
+// -------------------- ç­¾åˆ°è®°å½• --------------------
 int load_attendances(const char* filename) {
     FILE* fp = fopen(filename, "rb");
     if (!fp) return 0;
@@ -267,7 +283,7 @@ int save_attendances(const char* filename) {
     return 1;
 }
 
-// -------------------- Ñ«ÕÂ¶¨Òå --------------------
+// -------------------- å‹‹ç« å®šä¹‰ --------------------
 int load_medals(const char* filename) {
     FILE* fp = fopen(filename, "rb");
     if (!fp) return 0;
@@ -305,7 +321,7 @@ int save_medals(const char* filename) {
     return 1;
 }
 
-// -------------------- ÓÃ»§Ñ«ÕÂ --------------------
+// -------------------- ç”¨æˆ·å‹‹ç«  --------------------
 int load_usermedals(const char* filename) {
     FILE* fp = fopen(filename, "rb");
     if (!fp) return 0;
@@ -343,7 +359,7 @@ int save_usermedals(const char* filename) {
     return 1;
 }
 
-// -------------------- ½¨ÒéÏä --------------------
+// -------------------- å»ºè®®ç®± --------------------
 int load_suggestions(const char* filename) {
     FILE* fp = fopen(filename, "rb");
     if (!fp) return 0;
@@ -381,7 +397,7 @@ int save_suggestions(const char* filename) {
     return 1;
 }
 
-// -------------------- ÌáĞÑ¼ÇÂ¼ --------------------
+// -------------------- æé†’è®°å½• --------------------
 int load_reminders(const char* filename) {
     FILE* fp = fopen(filename, "rb");
     if (!fp) return 0;
@@ -419,7 +435,7 @@ int save_reminders(const char* filename) {
     return 1;
 }
 
-// -------------------- ²éÕÒº¯Êı --------------------
+// -------------------- æŸ¥æ‰¾å‡½æ•° --------------------
 Student* find_student_by_id(int id) {
     Student* p = student_head;
     while (p) { if (p->id == id) return p; p = p->next; }
@@ -452,7 +468,7 @@ Category* find_category_by_id(int id) {
     return NULL;
 }
 
-// -------------------- ÓÃ»§¹ÜÀí --------------------
+// -------------------- ç”¨æˆ·ç®¡ç† --------------------
 void* login(const char* username, const char* password, Role* role) {
     Student* s = find_student_by_username(username);
     if (s && strcmp(s->password, password) == 0) { *role = ROLE_STUDENT; return s; }
@@ -465,8 +481,10 @@ int register_student(const char* username, const char* password, const char* nam
     int age, const char* class_name, const char* location) {
     if (find_student_by_username(username) != NULL) return -1;
     if (find_admin_by_username(username) != NULL) return -1;
+
     Student* new_s = (Student*)malloc(sizeof(Student));
     if (!new_s) return -2;
+
     new_s->id = get_next_student_id();
     strcpy(new_s->username, username);
     strcpy(new_s->password, password);
@@ -478,18 +496,24 @@ int register_student(const char* username, const char* password, const char* nam
     strcpy(new_s->class_name, class_name);
     strcpy(new_s->location, location);
     new_s->role = ROLE_STUDENT;
-    new_s->remind_ahead = 24 * 3600;   // Ìí¼ÓÕâÒ»ĞĞ£¬Ä¬ÈÏ24Ğ¡Ê±
+    new_s->remind_ahead = 24 * 3600;
     new_s->next = NULL;
+
     if (!student_head) student_head = new_s;
     else {
         Student* tail = student_head;
         while (tail->next) tail = tail->next;
         tail->next = new_s;
     }
+
+    // âœ… æ·»åŠ è¿™ä¸€è¡Œï¼šä¿å­˜åˆ°æ–‡ä»¶
+    if (save_students(STUDENTS_FILE) != 1) {
+        return -2;  // ä¿å­˜å¤±è´¥
+    }
+
     return new_s->id;
 }
-
-// -------------------- ÏµÍ³³õÊ¼»¯ÓëÇåÀí --------------------
+// -------------------- ç³»ç»Ÿåˆå§‹åŒ–ä¸æ¸…ç† --------------------
 int load_all_data(void) {
     int ret;
     ret = load_students(STUDENTS_FILE); if (ret == -1) return -1;
@@ -552,25 +576,25 @@ void free_all(void) {
 void init_system(void) {
     int ret = load_all_data();
     if (ret == -1) {
-        printf("Êı¾İ¼ÓÔØÊ§°Ü£¬³ÌĞòÍË³ö\n");
+        printf("æ•°æ®åŠ è½½å¤±è´¥ï¼Œç¨‹åºé€€å‡º\n");
         exit(1);
     }
-    // Èç¹ûÃ»ÓĞÈÎºÎ¹ÜÀíÔ±£¬´´½¨Ò»¸öÄ¬ÈÏ¹ÜÀíÔ±
+    // å¦‚æœæ²¡æœ‰ä»»ä½•ç®¡ç†å‘˜ï¼Œåˆ›å»ºä¸€ä¸ªé»˜è®¤ç®¡ç†å‘˜
     if (admin_head == NULL) {
         Admin* default_admin = (Admin*)malloc(sizeof(Admin));
         default_admin->id = get_next_admin_id();
         strcpy(default_admin->username, "admin");
         strcpy(default_admin->password, "123456");
-        strcpy(default_admin->name, "ÏµÍ³¹ÜÀíÔ±");
+        strcpy(default_admin->name, "ç³»ç»Ÿç®¡ç†å‘˜");
         strcpy(default_admin->phone, "1234567890");
         default_admin->role = ROLE_ADMIN;
         default_admin->next = NULL;
         admin_head = default_admin;
     }
-    // Èç¹ûÃ»ÓĞÈÎºÎÑ«ÕÂ£¬´´½¨Ä¬ÈÏÑ«ÕÂ£¨add_medal ÔÚ system_service.c ÖĞÊµÏÖ£©
+    // å¦‚æœæ²¡æœ‰ä»»ä½•å‹‹ç« ï¼Œåˆ›å»ºé»˜è®¤å‹‹ç« ï¼ˆadd_medal åœ¨ system_service.c ä¸­å®ç°ï¼‰
     if (medal_head == NULL) {
-        add_medal("Ê×´Î±¨Ãû");
-        add_medal("Ê±³¤´ïÈË");
+        add_medal("é¦–æ¬¡æŠ¥å");
+        add_medal("æ—¶é•¿è¾¾äºº");
     }
     save_all_data();
 }
