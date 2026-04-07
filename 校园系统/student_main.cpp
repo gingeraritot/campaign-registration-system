@@ -65,7 +65,7 @@ static bool isSearchFocus = false;
 static ActivityCard* searchResults[100];
 static int searchResultCount = 0;
 
-
+int count_published_activities();
 
 // ==================== 辅助函数 ====================
 static wstring StringToWstring(const string& s) {

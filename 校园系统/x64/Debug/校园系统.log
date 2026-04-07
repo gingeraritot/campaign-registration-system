@@ -1,8 +1,9 @@
-﻿D:\develop_tools\Visual_Studio2022\MSBuild\Microsoft\VC\v180\Microsoft.CppBuild.targets(551,5): warning MSB8028: 中间目录(x64\Debug\)包含从另一个项目(campus_system.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
+﻿C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\VC\v180\Microsoft.CppBuild.targets(551,5): warning MSB8028: 中间目录(x64\Debug\)包含从另一个项目(campus_system.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
 cl : 命令行  warning D9025: 正在重写“/sdl”(用“/GS-”)
-<<<<<<< HEAD
+  admin_main.cpp
+C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\admin_main.cpp(1251,111): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\admin_main.cpp(1274,102): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
   student_main.cpp
-  student_ops.cpp
 C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(515,17): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
 C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(752,34): warning C4477: “swprintf”: 格式字符串“%S”需要类型“char *”的参数，但可变参数 2 拥有了类型“const _Elem *”
 C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(752,34): warning C4477:         with
@@ -46,34 +47,21 @@ C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_ma
       C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(758,33):
       请考虑在格式字符串中使用“%wS”
   
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(914,32): warning C4477: “swprintf”: 格式字符串“%s”需要类型“wchar_t *”的参数，但可变参数 1 拥有了类型“char *”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(914,32):
+C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(953,40): warning C4477: “swprintf”: 格式字符串“%s”需要类型“wchar_t *”的参数，但可变参数 1 拥有了类型“char *”
+      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(953,40):
       请考虑在格式字符串中使用“%hs”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(914,32):
+      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(953,40):
       请考虑在格式字符串中使用“%Ts”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(914,32):
+      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(953,40):
       Visual C++ 使用非标准语义时会出现此警告
   
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(949,40): warning C4477: “swprintf”: 格式字符串“%s”需要类型“wchar_t *”的参数，但可变参数 1 拥有了类型“char *”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(949,40):
-      请考虑在格式字符串中使用“%hs”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(949,40):
-      请考虑在格式字符串中使用“%Ts”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(949,40):
-      Visual C++ 使用非标准语义时会出现此警告
-  
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(992,23): error C3861: “count_published_activities”: 找不到标识符
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(1055,17): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(996,23): error C3861: “count_published_activities”: 找不到标识符
+C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(1059,17): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+  data.cpp
+  student_ops.cpp
 C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_ops.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_ops.cpp(106,45): warning C4474: printf: 格式字符串中传递的参数太多
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_ops.cpp(106,45):
+C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_ops.cpp(135,45): warning C4474: printf: 格式字符串中传递的参数太多
+      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_ops.cpp(135,45):
       占位符和其参数预计 0 可变参数，但提供的却是 1 参数
   
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_ops.cpp(191,86): error C1075: “{”: 未找到匹配令牌
   正在生成代码...
-=======
-  admin_main.cpp
-D:\Campaign_registration_system\校园系统\admin_main.cpp(1251,111): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
-D:\Campaign_registration_system\校园系统\admin_main.cpp(1274,102): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
-  校园系统.vcxproj -> D:\Campaign_registration_system\x64\Debug\校园系统.exe
->>>>>>> 972c35a13a9ea16dddfe5b613d9d80f42d980b07
