@@ -2,7 +2,11 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
+<<<<<<< HEAD
       <FullPath>C:\Users\pLeOn\source\repos\campaign-registration-system\x64\Debug\校园系统.exe</FullPath>
+=======
+      <FullPath>D:\Campaign_registration_system\x64\Debug\校园系统.exe</FullPath>
+>>>>>>> 972c35a13a9ea16dddfe5b613d9d80f42d980b07
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

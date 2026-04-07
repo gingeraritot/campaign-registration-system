@@ -1,2 +1,6 @@
 PlatformToolSet=v145:VCToolArchitecture=Native64Bit:VCToolsVersion=14.50.35717:VCServicingVersionCompilers=14.50.35728:TargetPlatformVersion=10.0.26100.0:
+<<<<<<< HEAD
 Debug|x64|C:\Users\pLeOn\source\repos\campaign-registration-system\|
+=======
+Debug|x64|D:\Campaign_registration_system\|
+>>>>>>> 972c35a13a9ea16dddfe5b613d9d80f42d980b07
