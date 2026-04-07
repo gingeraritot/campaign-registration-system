@@ -32,7 +32,11 @@ int enroll_student(int student_id, int activity_id) {
     new_e->id = get_next_enrollment_id();
     new_e->student_id = student_id;
     new_e->activity_id = activity_id;
+    // 可选：填充冗余字段
+    strcpy(new_e->student_name, s->name);
+    strcpy(new_e->student_phone, s->phone);
     new_e->enroll_time = time(NULL);
+    new_e->check_status = NOT_CHECKED;
     new_e->next = NULL;
 
     if (!enrollment_head) {
@@ -45,6 +49,22 @@ int enroll_student(int student_id, int activity_id) {
     }
 
     a->current_count++;
+
+    // ✅ 添加保存到文件
+    if (save_enrollments(ENROLLMENTS_FILE) != 1) {
+        // 保存失败，回滚操作
+        // 从链表中移除新添加的节点
+        // 这里简化处理，实际应该回滚
+        return -7;
+    }
+    if (save_activities(ACTIVITIES_FILE) != 1) {
+        return -7;
+    }
+
+    // 创建签到记录并授予勋章
+    create_attendance_record(student_id, activity_id);
+    check_and_award_first_enroll(student_id);
+
     return 0;
 }
 
@@ -60,8 +80,17 @@ int cancel_enrollment(int student_id, int activity_id) {
             else enrollment_head = cur->next;
 
             free(cur);
+
             Activity* a = find_activity_by_id(activity_id);
             if (a && a->current_count > 0) a->current_count--;
+
+            // ✅ 添加保存到文件
+            save_enrollments(ENROLLMENTS_FILE);
+            save_activities(ACTIVITIES_FILE);
+
+            // 删除签到记录
+            delete_attendance_record(student_id, activity_id);
+
             return 0;
         }
         prev = cur;

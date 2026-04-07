@@ -777,12 +777,16 @@ void handleDetailMouseClick(int x, int y) {
     }
     Activity* act = getCurrentActivityPtr();
     if (!act) return;
+
     int btnX = (WIN_WIDTH - 200) / 2, infoCardY = 180, infoCardH = 530, btnY = infoCardY + infoCardH - 60;
     if (x >= btnX && x <= btnX + 200 && y >= btnY && y <= btnY + 45) {
         if (isActivityEnrolled(act->id)) {
+            // ✅ 修复：将 char* 转换为 wchar_t*
+            wstring wName = StringToWstring(act->name);
             wchar_t msg[200];
-            swprintf(msg, 200, L"确定要取消报名【%s】吗？", act->name);
-            if (MessageBoxW(GetHWnd(), msg, L"确认取消", MB_YESNO) == IDYES) cancelEnrollment(act->id);
+            swprintf(msg, 200, L"确定要取消报名【%s】吗？", wName.c_str());
+            if (MessageBoxW(GetHWnd(), msg, L"确认取消", MB_YESNO) == IDYES)
+                cancelEnrollment(act->id);
         }
         else {
             if (act->current_count < act->max_participants) addEnrollment(act->id);
