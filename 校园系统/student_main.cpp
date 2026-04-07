@@ -15,6 +15,8 @@ using namespace std;
 
 static int g_currentStudentId = 0;   // 当前登录的学生ID
 static bool g_studentShouldExit = false;
+static int currentActivityPage = 0; // 当前活动列表页码（0开始）
+static const int ACTIVITIES_PER_PAGE = 8; // 每页显示8个活动
 
 // ==================== 常量定义 ====================
 #define WIN_WIDTH     1200
@@ -30,7 +32,8 @@ typedef enum {
     PAGE_DETAIL,
     PAGE_MY_ACTIVITIES,
     PAGE_HISTORY,
-    PAGE_SEARCH_RESULT
+    PAGE_SEARCH_RESULT,
+    PAGE_ALL_ACTIVITIES
 } StudentPageState;
 
 // 活动卡片数据结构（用于显示）
@@ -674,6 +677,132 @@ void drawSearchResultPage() {
     }
 }
 
+// ==================== 新增：所有活动列表页面 ====================
+void drawAllActivitiesPage() {
+    cleardevice();
+    setbkcolor(RGB(240, 245, 250));
+    cleardevice();
+
+    // 标题栏
+    settextcolor(RGB(30, 60, 120));
+    settextstyle(32, 0, L"微软雅黑");
+    outtextxy(40, 25, L"校园活动管理系统");
+
+    // 返回按钮
+    bool backHover = (mouseX >= 40 && mouseX <= 120 && mouseY >= 70 && mouseY <= 105);
+    drawBtn(40, 70, 80, 35, L"← 返回", backHover, RGB(100, 100, 100));
+
+    // 页面标题
+    settextcolor(RGB(30, 60, 120));
+    settextstyle(36, 0, L"微软雅黑");
+    outtextxy((WIN_WIDTH - textwidth(L"所有活动")) / 2, 80, L"所有活动");
+
+    // 计算总页数
+    int totalPublished = 0;
+    Activity* temp = activity_head;
+    while (temp) {
+        if (temp->status == PUBLISHED) totalPublished++;
+        temp = temp->next;
+    }
+    int totalPages = (totalPublished + ACTIVITIES_PER_PAGE - 1) / ACTIVITIES_PER_PAGE;
+
+    // 修正页码范围
+    if (currentActivityPage >= totalPages) currentActivityPage = max(0, totalPages - 1);
+
+    // 提示信息
+    settextcolor(RGB(100, 100, 100));
+    settextstyle(18, 0, L"微软雅黑");
+    wchar_t pageInfo[100];
+    swprintf(pageInfo, 100, L"共 %d 页，当前第 %d 页 (已发布活动总数: %d)", totalPages, currentActivityPage + 1, totalPublished);
+    outtextxy((WIN_WIDTH - textwidth(pageInfo)) / 2, 130, pageInfo);
+
+    // 计算起始位置
+    int listStartX = (WIN_WIDTH - 1100) / 2; // 居中
+    int listStartY = 180;
+    int itemWidth = 1100;
+    int itemHeight = 80;
+    int itemGap = 15;
+
+    // 遍历链表，跳过前面页数的活动
+    Activity* act = activity_head;
+    int skipCount = currentActivityPage * ACTIVITIES_PER_PAGE;
+    int displayedCount = 0;
+
+    // 先跳过
+    while (act && skipCount > 0) {
+        if (act->status == PUBLISHED) skipCount--;
+        act = act->next;
+    }
+
+    // 绘制当前页的活动
+    while (act && displayedCount < ACTIVITIES_PER_PAGE) {
+        if (act->status == PUBLISHED) {
+            int y = listStartY + displayedCount * (itemHeight + itemGap);
+
+            // 悬停效果
+            bool isHover = (mouseX >= listStartX && mouseX <= listStartX + itemWidth &&
+                mouseY >= y && mouseY <= y + itemHeight);
+            COLORREF bgColor = isHover ? RGB(250, 250, 255) : RGB(255, 255, 255);
+            drawRoundRect(listStartX, y, itemWidth, itemHeight, 10, RGB(200, 200, 200), bgColor);
+
+            // 活动信息
+            settextcolor(RGB(30, 60, 120));
+            settextstyle(20, 0, L"微软雅黑");
+            wchar_t title[100];
+            swprintf(title, 100, L"【%d】%S", act->id, StringToWstring(act->name).c_str());
+            outtextxy(listStartX + 20, y + 15, title);
+
+            settextcolor(RGB(100, 100, 100));
+            settextstyle(16, 0, L"微软雅黑");
+            wchar_t info[200];
+            swprintf(info, 200, L"时间: %S | 地点: %S | 报名: %d/%d",
+                StringToWstring(act->start_time).c_str(),
+                StringToWstring(act->location).c_str(),
+                act->current_count, act->max_participants);
+            outtextxy(listStartX + 20, y + 50, info);
+
+            // 操作按钮
+            bool btnHover = (mouseX >= listStartX + itemWidth - 100 && mouseX <= listStartX + itemWidth - 20 &&
+                mouseY >= y + 25 && mouseY <= y + 55);
+            drawBtn(listStartX + itemWidth - 100, y + 25, 80, 30, L"查看详情", btnHover, RGB(70, 150, 230));
+
+            displayedCount++;
+        }
+        act = act->next;
+    }
+
+    // 如果没有活动
+    if (displayedCount == 0) {
+        settextcolor(RGB(150, 150, 150));
+        settextstyle(24, 0, L"微软雅黑");
+        outtextxy((WIN_WIDTH - textwidth(L"暂无更多活动")) / 2, 350, L"暂无更多活动");
+    }
+
+    // 翻页按钮 (底部)
+    int btnY = WIN_HEIGHT - 100;
+    bool prevHover = (mouseX >= WIN_WIDTH / 2 - 150 && mouseX <= WIN_WIDTH / 2 - 50 && mouseY >= btnY && mouseY <= btnY + 40);
+    bool nextHover = (mouseX >= WIN_WIDTH / 2 + 50 && mouseX <= WIN_WIDTH / 2 + 150 && mouseY >= btnY && mouseY <= btnY + 40);
+
+    // 上一页
+    if (currentActivityPage > 0) {
+        drawBtn(WIN_WIDTH / 2 - 150, btnY, 100, 40, L"← 上一页", prevHover, RGB(100, 180, 100));
+    }
+    else {
+        drawRoundRect(WIN_WIDTH / 2 - 150, btnY, 100, 40, 8, RGB(200, 200, 200), RGB(240, 240, 240));
+        settextcolor(RGB(150, 150, 150));
+        outtextxy(WIN_WIDTH / 2 - 110, btnY + 12, L"← 上一页");
+    }
+
+    // 下一页
+    if (currentActivityPage < totalPages - 1) {
+        drawBtn(WIN_WIDTH / 2 + 50, btnY, 100, 40, L"下一页 →", nextHover, RGB(70, 150, 230));
+    }
+    else {
+        drawRoundRect(WIN_WIDTH / 2 + 50, btnY, 100, 40, 8, RGB(200, 200, 200), RGB(240, 240, 240));
+        settextcolor(RGB(150, 150, 150));
+        outtextxy(WIN_WIDTH / 2 + 90, btnY + 12, L"下一页 →");
+    }
+}
 // ==================== 搜索功能 ====================
 void performSearch() {
     searchResultCount = 0;
@@ -714,7 +843,8 @@ void handleHomeMouseClick(int x, int y) {
         if (isSearchFocus) isSearchFocus = false;
     }
     if (x >= WIN_WIDTH / 2 - 100 && x <= WIN_WIDTH / 2 + 100 && y >= WIN_HEIGHT - 60 && y <= WIN_HEIGHT - 20) {
-        MessageBoxW(GetHWnd(), L"更多活动功能开发中...", L"提示", MB_OK);
+        currentPage = PAGE_ALL_ACTIVITIES; // 跳转页面
+        currentActivityPage = 0; // 重置页码
         return;
     }
     int rightX = WIN_WIDTH - 260, rightW = 190;
@@ -849,7 +979,76 @@ void handleSearchResultMouseClick(int x, int y) {
         yPos += itemHeight + itemGap;
     }
 }
+// ==================== 新增：所有活动页面交互 ====================
+void handleAllActivitiesMouseClick(int x, int y) {
+    // 返回首页
+    if (x >= 40 && x <= 120 && y >= 70 && y <= 105) {
+        currentPage = PAGE_HOME;
+        return;
+    }
 
+    // 翻页逻辑
+    int btnY = WIN_HEIGHT - 100;
+    int totalPages = (count_published_activities() + ACTIVITIES_PER_PAGE - 1) / ACTIVITIES_PER_PAGE; // 需要辅助函数计算总数
+
+    if (x >= WIN_WIDTH / 2 - 150 && x <= WIN_WIDTH / 2 - 50 && y >= btnY && y <= btnY + 40) {
+        if (currentActivityPage > 0) {
+            currentActivityPage--;
+        }
+        return;
+    }
+    if (x >= WIN_WIDTH / 2 + 50 && x <= WIN_WIDTH / 2 + 150 && y >= btnY && y <= btnY + 40) {
+        if (currentActivityPage < totalPages - 1) {
+            currentActivityPage++;
+        }
+        return;
+    }
+
+    // 点击查看详情
+    int listStartX = (WIN_WIDTH - 1100) / 2;
+    int listStartY = 180;
+    int itemWidth = 1100;
+    int itemHeight = 80;
+    int itemGap = 15;
+
+    // 重新遍历以确定点击了哪个活动（简化版：只计算Y轴位置）
+    // 注意：这里为了简化逻辑，我们直接通过坐标反推页码内的索引，实际链表遍历需同步跳过逻辑
+    int rowIndex = (y - listStartY) / (itemHeight + itemGap);
+    if (rowIndex >= 0 && rowIndex < ACTIVITIES_PER_PAGE) {
+        // 这里需要重新遍历链表找到第 (currentActivityPage * 8 + rowIndex) 个发布的活动
+        int targetIndex = currentActivityPage * ACTIVITIES_PER_PAGE + rowIndex;
+        int currentIndex = 0;
+        Activity* act = activity_head;
+        while (act) {
+            if (act->status == PUBLISHED) {
+                if (currentIndex == targetIndex) {
+                    // 检查是否点击了“查看详情”按钮区域
+                    int btnX = listStartX + itemWidth - 100;
+                    int btnY = listStartY + rowIndex * (itemHeight + itemGap) + 25;
+                    if (x >= btnX && x <= btnX + 80 && y >= btnY && y <= btnY + 30) {
+                        currentActivityId = act->id;
+                        currentPage = PAGE_DETAIL;
+                        return;
+                    }
+                    break;
+                }
+                currentIndex++;
+            }
+            act = act->next;
+        }
+    }
+}
+
+// 辅助函数：计算已发布活动总数 (放在文件任意位置)
+int count_published_activities() {
+    int count = 0;
+    Activity* a = activity_head;
+    while (a) {
+        if (a->status == PUBLISHED) count++;
+        a = a->next;
+    }
+    return count;
+}
 void handleKeyInput(wchar_t ch) {
     if (!isSearchFocus) return;
     if (ch == VK_BACK) {
@@ -916,6 +1115,7 @@ void runStudentMainPage(int studentId) {
         case PAGE_MY_ACTIVITIES: drawMyActivitiesPage(); break;
         case PAGE_HISTORY: drawHistoryPage(); break;
         case PAGE_SEARCH_RESULT: drawSearchResultPage(); break;
+        case PAGE_ALL_ACTIVITIES:drawAllActivitiesPage(); break;
         }
         FlushBatchDraw();
         Sleep(16);
