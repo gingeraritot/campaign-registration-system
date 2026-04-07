@@ -16,7 +16,7 @@ using namespace std;
 static int g_currentStudentId = 0;   // 当前登录的学生ID
 static bool g_studentShouldExit = false;
 static int currentActivityPage = 0; // 当前活动列表页码（0开始）
-static const int ACTIVITIES_PER_PAGE = 8; // 每页显示8个活动
+static const int ACTIVITIES_PER_PAGE = 5; // 每页显示8个活动
 
 // ==================== 常量定义 ====================
 #define WIN_WIDTH     1200
