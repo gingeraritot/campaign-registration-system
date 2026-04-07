@@ -1055,16 +1055,6 @@ void handleAllActivitiesMouseClick(int x, int y) {
     }
 }
 
-// 辅助函数：计算已发布活动总数
-int count_published_activities() {
-    int count = 0;
-    Activity* a = activity_head;
-    while (a) {
-        if (a->status == PUBLISHED) count++;
-        a = a->next;
-    }
-    return count;
-}
 
 // 辅助函数：计算已发布活动总数 (放在文件任意位置)
 int count_published_activities() {

@@ -2,55 +2,16 @@
 cl : 命令行  warning D9025: 正在重写“/sdl”(用“/GS-”)
   student_main.cpp
 C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(515,17): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(752,34): warning C4477: “swprintf”: 格式字符串“%S”需要类型“char *”的参数，但可变参数 2 拥有了类型“const _Elem *”
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(752,34): warning C4477:         with
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(752,34): warning C4477:         [
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(752,34): warning C4477:             _Elem=wchar_t
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(752,34): warning C4477:         ]
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(752,34):
-      请考虑在格式字符串中使用“%lS”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(752,34):
-      请考虑在格式字符串中使用“%llS”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(752,34):
-      请考虑在格式字符串中使用“%LS”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(752,34):
-      请考虑在格式字符串中使用“%wS”
-  
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(758,33): warning C4477: “swprintf”: 格式字符串“%S”需要类型“char *”的参数，但可变参数 1 拥有了类型“const _Elem *”
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(758,33): warning C4477:         with
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(758,33): warning C4477:         [
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(758,33): warning C4477:             _Elem=wchar_t
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(758,33): warning C4477:         ]
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(758,33):
-      请考虑在格式字符串中使用“%lS”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(758,33):
-      请考虑在格式字符串中使用“%llS”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(758,33):
-      请考虑在格式字符串中使用“%LS”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(758,33):
-      请考虑在格式字符串中使用“%wS”
-  
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(758,33): warning C4477: “swprintf”: 格式字符串“%S”需要类型“char *”的参数，但可变参数 2 拥有了类型“const _Elem *”
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(758,33): warning C4477:         with
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(758,33): warning C4477:         [
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(758,33): warning C4477:             _Elem=wchar_t
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(758,33): warning C4477:         ]
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(758,33):
-      请考虑在格式字符串中使用“%lS”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(758,33):
-      请考虑在格式字符串中使用“%llS”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(758,33):
-      请考虑在格式字符串中使用“%LS”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(758,33):
-      请考虑在格式字符串中使用“%wS”
-  
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(953,40): warning C4477: “swprintf”: 格式字符串“%s”需要类型“wchar_t *”的参数，但可变参数 1 拥有了类型“char *”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(953,40):
+C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(952,40): warning C4477: “swprintf”: 格式字符串“%s”需要类型“wchar_t *”的参数，但可变参数 1 拥有了类型“char *”
+      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(952,40):
       请考虑在格式字符串中使用“%hs”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(953,40):
+      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(952,40):
       请考虑在格式字符串中使用“%Ts”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(953,40):
+      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(952,40):
       Visual C++ 使用非标准语义时会出现此警告
   
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(1059,17): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-  校园系统.vcxproj -> C:\Users\pLeOn\source\repos\campaign-registration-system\x64\Debug\校园系统.exe
+C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(1070,5): error C2084: 函数“int count_published_activities(void)”已有主体
+      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(1059,5):
+      参见“count_published_activities”的前一个定义
+  
+C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(1082,17): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
