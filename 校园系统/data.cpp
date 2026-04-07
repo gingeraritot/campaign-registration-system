@@ -237,11 +237,17 @@ int save_enrollments(const char* filename) {
     FILE* fp = fopen(filename, "wb");
     if (!fp) return -1;
     Enrollment* p = enrollment_head;
+    int count = 0;
     while (p) {
-        if (fwrite(p, sizeof(Enrollment), 1, fp) != 1) { fclose(fp); return -1; }
+        if (fwrite(p, sizeof(Enrollment), 1, fp) != 1) {
+            fclose(fp);
+            return -1;
+        }
+        count++;
         p = p->next;
     }
     fclose(fp);
+    printf("【调试】保存了 %d 条报名记录到 %s\n", count, filename);  // 控制台输出
     return 1;
 }
 
