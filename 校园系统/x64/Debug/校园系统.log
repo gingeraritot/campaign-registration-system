@@ -10,8 +10,5 @@ C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_ma
       C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(952,40):
       Visual C++ 使用非标准语义时会出现此警告
   
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(1070,5): error C2084: 函数“int count_published_activities(void)”已有主体
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(1059,5):
-      参见“count_published_activities”的前一个定义
-  
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(1082,17): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(1072,17): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+  校园系统.vcxproj -> C:\Users\pLeOn\source\repos\campaign-registration-system\x64\Debug\校园系统.exe

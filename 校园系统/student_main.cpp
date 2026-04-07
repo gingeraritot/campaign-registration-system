@@ -1107,6 +1107,7 @@ void runStudentMainPage(int studentId) {
                 else if (currentPage == PAGE_MY_ACTIVITIES) handleMyActivitiesMouseClick(msg.x, msg.y);
                 else if (currentPage == PAGE_HISTORY) handleHistoryMouseClick(msg.x, msg.y);
                 else if (currentPage == PAGE_SEARCH_RESULT) handleSearchResultMouseClick(msg.x, msg.y);
+                else if (currentPage == PAGE_ALL_ACTIVITIES) handleAllActivitiesMouseClick(msg.x, msg.y);
             }
             else if (msg.message == WM_CHAR) {
                 handleKeyInput((wchar_t)msg.ch);
