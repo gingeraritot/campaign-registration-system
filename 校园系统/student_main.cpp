@@ -16,7 +16,7 @@ using namespace std;
 static int g_currentStudentId = 0;   // 当前登录的学生ID
 static bool g_studentShouldExit = false;
 static int currentActivityPage = 0; // 当前活动列表页码（0开始）
-static const int ACTIVITIES_PER_PAGE = 5; // 每页显示8个活动
+static const int ACTIVITIES_PER_PAGE = 5; // 每页显示5个活动
 
 // ==================== 常量定义 ====================
 #define WIN_WIDTH     1200
@@ -990,7 +990,6 @@ void handleAllActivitiesMouseClick(int x, int y) {
         currentActivityPage = 0;  // 重置页码
         return;
     }
-
     // 翻页逻辑
     int btnY = WIN_HEIGHT - 100;
     int btnW = 100, btnH = 40;
@@ -1000,7 +999,6 @@ void handleAllActivitiesMouseClick(int x, int y) {
     int totalPublished = count_published_activities();
     int totalPages = (totalPublished + ACTIVITIES_PER_PAGE - 1) / ACTIVITIES_PER_PAGE;
     if (totalPages == 0) totalPages = 1;
-
     // 上一页
     if (x >= prevX && x <= prevX + btnW && y >= btnY && y <= btnY + btnH) {
         if (currentActivityPage > 0) {
@@ -1015,14 +1013,12 @@ void handleAllActivitiesMouseClick(int x, int y) {
         }
         return;
     }
-
     // 点击查看详情
     int listStartX = (WIN_WIDTH - 1100) / 2;
     int listStartY = 180;
     int itemWidth = 1100;
     int itemHeight = 80;
     int itemGap = 15;
-
     // 计算点击的行索引
     int rowIndex = (y - listStartY) / (itemHeight + itemGap);
     if (rowIndex >= 0 && rowIndex < ACTIVITIES_PER_PAGE) {
@@ -1030,7 +1026,6 @@ void handleAllActivitiesMouseClick(int x, int y) {
         int itemY = listStartY + rowIndex * (itemHeight + itemGap);
         if (x >= listStartX && x <= listStartX + itemWidth &&
             y >= itemY && y <= itemY + itemHeight) {
-
             // 检查是否点击了“查看详情”按钮区域
             int btnX = listStartX + itemWidth - 100;
             int btnY_start = itemY + 25;
