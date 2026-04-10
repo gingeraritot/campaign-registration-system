@@ -16,7 +16,7 @@ UserMedal* usermedal_head = NULL;
 Suggestion* suggestion_head = NULL;
 Reminder* reminder_head = NULL;
 
-// ID 计数器（用于分配新ID）
+// ID 计数器
 static int next_student_id = 1;
 static int next_admin_id = 1;
 static int next_activity_id = 1;
@@ -59,9 +59,6 @@ int load_students(const char* filename) {
             while (tail->next) tail = tail->next;
             tail->next = new_node;
         }
-
-
-
         if (s.id > max_id) max_id = s.id;
     }
     fclose(fp);
@@ -72,23 +69,10 @@ int save_students(const char* filename) {
     FILE* fp = fopen(filename, "wb");
     if (!fp) return -1;
     Student* p = student_head;
-    int count = 0;  // 添加计数变量
-
-    // 【在这里添加调试输出】
-    printf("【调试】开始保存学生数据到 %s\n", filename);
-
     while (p) {
-        // 【在这里添加调试输出】
-        printf("【调试】保存学生 #%d: ID=%d, 用户名=%s, 密码=%s\n",
-            ++count, p->id, p->username, p->password);
-
-        if (fwrite(p, sizeof(Student), 1, fp) != 1) {
-            fclose(fp);
-            return -1;
-        }
+        if (fwrite(p, sizeof(Student), 1, fp) != 1) { fclose(fp); return -1; }
         p = p->next;
     }
-    printf("【调试】成功保存 %d 个学生到文件\n", count);
     fclose(fp);
     return 1;
 }
@@ -196,14 +180,39 @@ int load_activities(const char* filename) {
     return 1;
 }
 int save_activities(const char* filename) {
-    FILE* fp = fopen(filename, "wb");
+    // 如果内存中没有活动，避免覆盖已有文件导致数据丢失
+    if (activity_head == NULL) return 1;
+
+    // 写入临时文件，写入成功后再替换原文件；同时保留备份以便恢复
+    char tmpname[MAX_FILENAME + 8];
+    char bakname[MAX_FILENAME + 8];
+    snprintf(tmpname, sizeof(tmpname), "%s.tmp", filename);
+    snprintf(bakname, sizeof(bakname), "%s.bak", filename);
+
+    FILE* fp = fopen(tmpname, "wb");
     if (!fp) return -1;
     Activity* p = activity_head;
     while (p) {
-        if (fwrite(p, sizeof(Activity), 1, fp) != 1) { fclose(fp); return -1; }
+        if (fwrite(p, sizeof(Activity), 1, fp) != 1) { fclose(fp); remove(tmpname); return -1; }
         p = p->next;
     }
     fclose(fp);
+
+    // 生成备份（覆盖旧备份）
+    remove(bakname);
+    FILE* orig = fopen(filename, "rb");
+    if (orig) {
+        fclose(orig);
+        rename(filename, bakname);
+    }
+
+    if (rename(tmpname, filename) != 0) {
+        // 恢复备份（如果存在）
+        remove(tmpname);
+        FILE* b = fopen(bakname, "rb");
+        if (b) { fclose(b); rename(bakname, filename); }
+        return -1;
+    }
     return 1;
 }
 
@@ -467,7 +476,6 @@ Activity* find_activity_by_id(int id) {
     while (p) { if (p->id == id) return p; p = p->next; }
     return NULL;
 }
-
 Category* find_category_by_id(int id) {
     Category* p = category_head;
     while (p) { if (p->id == id) return p; p = p->next; }
@@ -487,10 +495,8 @@ int register_student(const char* username, const char* password, const char* nam
     int age, const char* class_name, const char* location) {
     if (find_student_by_username(username) != NULL) return -1;
     if (find_admin_by_username(username) != NULL) return -1;
-
     Student* new_s = (Student*)malloc(sizeof(Student));
     if (!new_s) return -2;
-
     new_s->id = get_next_student_id();
     strcpy(new_s->username, username);
     strcpy(new_s->password, password);
@@ -504,21 +510,16 @@ int register_student(const char* username, const char* password, const char* nam
     new_s->role = ROLE_STUDENT;
     new_s->remind_ahead = 24 * 3600;
     new_s->next = NULL;
-
     if (!student_head) student_head = new_s;
     else {
         Student* tail = student_head;
         while (tail->next) tail = tail->next;
         tail->next = new_s;
     }
-
-    // ✅ 添加这一行：保存到文件
-    if (save_students(STUDENTS_FILE) != 1) {
-        return -2;  // 保存失败
-    }
-
+    if (save_students(STUDENTS_FILE) != 1) return -2;
     return new_s->id;
 }
+
 // -------------------- 系统初始化与清理 --------------------
 int load_all_data(void) {
     int ret;
@@ -583,9 +584,9 @@ void init_system(void) {
     int ret = load_all_data();
     if (ret == -1) {
         printf("数据加载失败，程序退出\n");
+        expire_activities();  // 清理过期活动
         exit(1);
     }
-    // 如果没有任何管理员，创建一个默认管理员
     if (admin_head == NULL) {
         Admin* default_admin = (Admin*)malloc(sizeof(Admin));
         default_admin->id = get_next_admin_id();
@@ -597,7 +598,6 @@ void init_system(void) {
         default_admin->next = NULL;
         admin_head = default_admin;
     }
-    // 如果没有任何勋章，创建默认勋章（add_medal 在 system_service.c 中实现）
     if (medal_head == NULL) {
         add_medal("首次报名");
         add_medal("时长达人");

@@ -11,6 +11,36 @@
 #include <time.h>
 
 // ==================== 勋章管理 ====================
+
+#ifdef _WIN32
+// 临时放大控制台字体以便于管理员查看建议内容
+static CONSOLE_FONT_INFOEX g_original_font = { 0 };
+static int g_original_font_saved = 0;
+
+static void set_console_font_size(short size) {
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (h == INVALID_HANDLE_VALUE) return;
+    CONSOLE_FONT_INFOEX info = { 0 };
+    info.cbSize = sizeof(info);
+    if (!g_original_font_saved) {
+        if (GetCurrentConsoleFontEx(h, FALSE, &g_original_font)) g_original_font_saved = 1;
+    }
+    if (GetCurrentConsoleFontEx(h, FALSE, &info)) {
+        info.dwFontSize.Y = size;
+        SetCurrentConsoleFontEx(h, FALSE, &info);
+    }
+}
+
+static void restore_console_font(void) {
+    if (!g_original_font_saved) return;
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (h == INVALID_HANDLE_VALUE) return;
+    SetCurrentConsoleFontEx(h, FALSE, &g_original_font);
+}
+#else
+static void set_console_font_size(short size) { (void)size; }
+static void restore_console_font(void) { }
+#endif
 int add_medal(const char* name) {
     Medal* p = medal_head;
     while (p) {
@@ -75,6 +105,33 @@ void list_user_medals(int student_id) {
     if (!found) printf("  暂无勋章\n");
 }
 
+void expire_activities() {
+    time_t now = time(NULL);
+    Activity* act = activity_head;
+    int changed = 0;
+    while (act) {
+        if (act->status == PUBLISHED) {
+            struct tm tm = { 0 };
+            if (sscanf(act->start_time, "%d-%d-%d %d:%d", &tm.tm_year, &tm.tm_mon, &tm.tm_mday, &tm.tm_hour, &tm.tm_min) == 5) {
+                tm.tm_year -= 1900;
+                tm.tm_mon -= 1;
+                time_t start = mktime(&tm);
+                if (start != -1) {
+                    time_t end = start + (time_t)act->duration * 3600;
+                    if (now > end) {
+                        act->status = TAKEN_DOWN;
+                        changed = 1;
+                    }
+                }
+            }
+        }
+        act = act->next;
+    }
+    if (changed) {
+        save_activities(ACTIVITIES_FILE);
+    }
+}
+
 void check_and_award_first_enroll(int student_id) {
     int count = 0;
     Enrollment* e = enrollment_head;
@@ -123,6 +180,8 @@ int add_suggestion(int student_id, const char* content) {
     strcpy(s->content, content);
     s->status = UNREAD;
     s->submit_time = time(NULL);
+    s->reply[0] = '\0';
+    s->reply_time = 0;
     s->next = NULL;
     if (!suggestion_head) suggestion_head = s;
     else {
@@ -133,7 +192,24 @@ int add_suggestion(int student_id, const char* content) {
     return s->id;
 }
 
+int reply_suggestion(int suggestion_id, const char* reply_content) {
+    Suggestion* s = suggestion_head;
+    while (s) {
+        if (s->id == suggestion_id) {
+            strcpy(s->reply, reply_content);
+            s->reply_time = time(NULL);
+            s->status = READ;
+            save_all_data();
+            return 1;
+        }
+        s = s->next;
+    }
+    return -1;
+}
+
 void list_suggestions(void) {
+    // 放大字体以便管理员阅读（Windows 控制台）
+    set_console_font_size(20);
     printf("所有建议（管理员视图）：\n");
     Suggestion* s = suggestion_head;
     if (!s) { printf("  暂无建议\n"); return; }
@@ -142,8 +218,13 @@ void list_suggestions(void) {
             s->id, s->student_id,
             s->status == UNREAD ? "未读" : "已读",
             ctime(&s->submit_time), s->content);
+        if (strlen(s->reply) > 0) {
+            printf("  回复: %s (回复时间: %s)", s->reply, ctime(&s->reply_time));
+        }
         s = s->next;
     }
+    // 恢复原始字体
+    restore_console_font();
 }
 
 int mark_suggestion_read(int suggestion_id) {

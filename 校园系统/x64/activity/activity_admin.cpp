@@ -74,6 +74,7 @@ int publish_activity(int activity_id) {
         p->status = DRAFT;
         return -1;
     }
+    expire_activities();  // 新增
     return 1;
 }
 

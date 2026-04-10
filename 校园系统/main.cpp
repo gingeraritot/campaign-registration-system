@@ -1,9 +1,8 @@
-﻿#include <graphics.h>
+﻿#include <windows.h>
+#include <graphics.h>
 #include <conio.h>
 #include <stdio.h>
 #include <string.h>
-#include <easyx.h>
-#include <windows.h>
 #include "head.h"
 
 // ==================== 全局常量定义 ====================
@@ -36,10 +35,10 @@ void drawButton(int x, int y, int w, int h, const wchar_t* text, bool isHover) {
     fillroundrect(x, y, x + w, y + h, 10, 10);
     settextcolor(WHITE);
     setbkmode(TRANSPARENT);
-    settextstyle(24, 0, L"微软雅黑");  // 字体放大
-    int textX = x + (w - textwidth(text)) / 2;
-    int textY = y + (h - textheight(text)) / 2;
-    outtextxy(textX, textY, text);
+    settextstyle(24, 0, L"微软雅黑");
+    int tx = x + (w - textwidth(text)) / 2;
+    int ty = y + (h - textheight(text)) / 2;
+    outtextxy(tx, ty, text);
 }
 
 void drawInputBox(int x, int y, int w, int h, const wchar_t* label, const wchar_t* content, bool isFocus) {
@@ -47,11 +46,9 @@ void drawInputBox(int x, int y, int w, int h, const wchar_t* label, const wchar_
     setlinecolor(isFocus ? RGB(0, 120, 255) : RGB(180, 180, 180));
     fillroundrect(x, y, x + w, y + h, 5, 5);
     settextcolor(BLACK);
-    settextstyle(22, 0, L"微软雅黑");  // 标签字体放大
+    settextstyle(22, 0, L"微软雅黑");
     outtextxy(x - 120, y + 8, label);
-    if (wcslen(content) > 0) {
-        outtextxy(x + 10, y + 8, content);
-    }
+    if (wcslen(content) > 0) outtextxy(x + 10, y + 8, content);
     if (isFocus) {
         int cursorX = x + 10 + textwidth(content);
         setlinecolor(RGB(0, 0, 0));
@@ -59,7 +56,6 @@ void drawInputBox(int x, int y, int w, int h, const wchar_t* label, const wchar_
     }
 }
 
-// 使用底层 login 函数验证
 int checkLogin(const wchar_t* username, const wchar_t* password, Role role) {
     char uname[MAX_USERNAME], pwd[MAX_PASSWORD];
     WideCharToMultiByte(CP_ACP, 0, username, -1, uname, MAX_USERNAME, NULL, NULL);
@@ -94,13 +90,12 @@ Role showWelcomePage() {
         while (peekmessage(&msg)) {
             if (msg.message == WM_MOUSEMOVE) {
                 if (msg.x != lastMx || msg.y != lastMy) {
-                    lastMx = msg.x;
-                    lastMy = msg.y;
-                    bool newStudentHover = (msg.x >= studentBtnX && msg.x <= studentBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
-                    bool newAdminHover = (msg.x >= adminBtnX && msg.x <= adminBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
-                    if (newStudentHover != studentHover || newAdminHover != adminHover) {
-                        studentHover = newStudentHover;
-                        adminHover = newAdminHover;
+                    lastMx = msg.x; lastMy = msg.y;
+                    bool newStudent = (msg.x >= studentBtnX && msg.x <= studentBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
+                    bool newAdmin = (msg.x >= adminBtnX && msg.x <= adminBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
+                    if (newStudent != studentHover || newAdmin != adminHover) {
+                        studentHover = newStudent;
+                        adminHover = newAdmin;
                         cleardevice();
                         settextcolor(RGB(30, 60, 120));
                         settextstyle(40, 0, L"微软雅黑");
@@ -111,10 +106,8 @@ Role showWelcomePage() {
                 }
             }
             else if (msg.message == WM_LBUTTONDOWN) {
-                bool studentClick = (msg.x >= studentBtnX && msg.x <= studentBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
-                bool adminClick = (msg.x >= adminBtnX && msg.x <= adminBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
-                if (studentClick) return ROLE_STUDENT;
-                if (adminClick) return ROLE_ADMIN;
+                if (msg.x >= studentBtnX && msg.x <= studentBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT) return ROLE_STUDENT;
+                if (msg.x >= adminBtnX && msg.x <= adminBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT) return ROLE_ADMIN;
             }
         }
         Sleep(10);
@@ -128,10 +121,7 @@ PageType showLoginPage(Role& currentRole) {
     cleardevice();
 
     int inputX = WINDOW_WIDTH / 2 + 50;
-    int userInputY = 200;
-    int pwdInputY = 280;
-    int btnY = 400;
-
+    int userInputY = 200, pwdInputY = 280, btnY = 400;
     int loginBtnX, registerBtnX, backBtnX, backBtnY;
     if (currentRole == ROLE_STUDENT) {
         loginBtnX = WINDOW_WIDTH / 2 - BTN_WIDTH - 20;
@@ -140,47 +130,36 @@ PageType showLoginPage(Role& currentRole) {
         backBtnY = 520;
     }
     else {
-        // 管理员：登录和返回并排
         loginBtnX = WINDOW_WIDTH / 2 - BTN_WIDTH - 20;
         registerBtnX = -1;
         backBtnX = WINDOW_WIDTH / 2 + 20;
         backBtnY = btnY;
     }
-    wchar_t username[50] = { 0 };
-    wchar_t password[50] = { 0 };
+    wchar_t username[50] = { 0 }, password[50] = { 0 };
     int focusIndex = 0;
-
     ExMessage msg;
     int lastMx = -1, lastMy = -1;
-    bool needRedraw = true;
-    bool loginHover = false, registerHover = false, backHover = false;
+    bool needRedraw = true, loginHover = false, registerHover = false, backHover = false;
 
     while (true) {
         while (peekmessage(&msg)) {
             if (msg.message >= WM_MOUSEFIRST && msg.message <= WM_MOUSELAST) {
                 if (msg.message == WM_MOUSEMOVE) {
                     if (msg.x != lastMx || msg.y != lastMy) {
-                        lastMx = msg.x;
-                        lastMy = msg.y;
-                        bool newLoginHover = (msg.x >= loginBtnX && msg.x <= loginBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
-                        bool newRegisterHover = (currentRole == ROLE_STUDENT) && (msg.x >= registerBtnX && msg.x <= registerBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
-                        bool newBackHover = (msg.x >= backBtnX && msg.x <= backBtnX + BTN_WIDTH && msg.y >= backBtnY && msg.y <= backBtnY + BTN_HEIGHT);
-                        if (newLoginHover != loginHover || newRegisterHover != registerHover || newBackHover != backHover) {
-                            loginHover = newLoginHover;
-                            registerHover = newRegisterHover;
-                            backHover = newBackHover;
+                        lastMx = msg.x; lastMy = msg.y;
+                        bool newLogin = (msg.x >= loginBtnX && msg.x <= loginBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
+                        bool newReg = (currentRole == ROLE_STUDENT) && (msg.x >= registerBtnX && msg.x <= registerBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
+                        bool newBack = (msg.x >= backBtnX && msg.x <= backBtnX + BTN_WIDTH && msg.y >= backBtnY && msg.y <= backBtnY + BTN_HEIGHT);
+                        if (newLogin != loginHover || newReg != registerHover || newBack != backHover) {
+                            loginHover = newLogin; registerHover = newReg; backHover = newBack;
                             needRedraw = true;
                         }
                     }
                 }
                 else if (msg.message == WM_LBUTTONDOWN) {
                     if (msg.x >= inputX && msg.x <= inputX + INPUT_WIDTH) {
-                        if (msg.y >= userInputY && msg.y <= userInputY + INPUT_HEIGHT) {
-                            if (focusIndex != 0) { focusIndex = 0; needRedraw = true; }
-                        }
-                        else if (msg.y >= pwdInputY && msg.y <= pwdInputY + INPUT_HEIGHT) {
-                            if (focusIndex != 1) { focusIndex = 1; needRedraw = true; }
-                        }
+                        if (msg.y >= userInputY && msg.y <= userInputY + INPUT_HEIGHT) { focusIndex = 0; needRedraw = true; }
+                        else if (msg.y >= pwdInputY && msg.y <= pwdInputY + INPUT_HEIGHT) { focusIndex = 1; needRedraw = true; }
                     }
                     if (msg.x >= loginBtnX && msg.x <= loginBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT) {
                         if (checkLogin(username, password, currentRole)) {
@@ -198,8 +177,7 @@ PageType showLoginPage(Role& currentRole) {
                             MessageBoxW(GetHWnd(), L"用户名或密码错误", L"登录失败", MB_OK);
                             memset(username, 0, sizeof(username));
                             memset(password, 0, sizeof(password));
-                            focusIndex = 0;
-                            needRedraw = true;
+                            focusIndex = 0; needRedraw = true;
                         }
                     }
                     else if (currentRole == ROLE_STUDENT && msg.x >= registerBtnX && msg.x <= registerBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT) {
@@ -218,28 +196,17 @@ PageType showLoginPage(Role& currentRole) {
                     if (len > 0) { target[len - 1] = L'\0'; needRedraw = true; }
                 }
                 else if (msg.ch != 0 && msg.ch != VK_RETURN && msg.ch != VK_ESCAPE) {
-                    if (wcslen(target) < maxLen) {
-                        target[wcslen(target)] = (wchar_t)msg.ch;
-                        needRedraw = true;
-                    }
+                    if (wcslen(target) < maxLen) { target[wcslen(target)] = (wchar_t)msg.ch; needRedraw = true; }
                 }
             }
             else if (msg.message == WM_KEYDOWN && msg.vkcode == VK_TAB) {
-                focusIndex = 1 - focusIndex;
-                needRedraw = true;
+                focusIndex = 1 - focusIndex; needRedraw = true;
             }
         }
         if (needRedraw) {
             cleardevice();
-            const wchar_t* title;
-            if (currentRole == ROLE_STUDENT) {
-                title = L"学生登录";
-                setbkcolor(RGB(240, 245, 250));
-            }
-            else {
-                title = L"管理员登录";
-                setbkcolor(RGB(255, 240, 230));
-            }
+            const wchar_t* title = (currentRole == ROLE_STUDENT) ? L"学生登录" : L"管理员登录";
+            setbkcolor((currentRole == ROLE_STUDENT) ? RGB(240, 245, 250) : RGB(255, 240, 230));
             cleardevice();
             settextcolor(RGB(30, 60, 120));
             settextstyle(36, 0, L"微软雅黑");
@@ -261,62 +228,33 @@ PageType showRegisterPage() {
     setbkcolor(RGB(240, 245, 250));
     cleardevice();
 
-    int labelX = 200;
-    int inputX = labelX + 80;
-    int inputWidth = 300;
-    int rowHeight = 48;
-    int startY = 100;
-
-    int col1LabelX = labelX;
-    int col1InputX = inputX;
-    int col2LabelX = labelX + 420;
-    int col2InputX = col2LabelX + 80;
-
-    int userInputY = startY;
-    int pwdInputY = startY + rowHeight;
-    int idInputY = startY + rowHeight * 2;
-    int nameInputY = startY + rowHeight * 3;
-    int phoneInputY = startY + rowHeight * 4;
-
-    int genderInputY = startY;
-    int ageInputY = startY + rowHeight;
-    int clnameInputY = startY + rowHeight * 2;
+    int labelX = 200, inputX = labelX + 80, inputWidth = 300, rowHeight = 48, startY = 100;
+    int col1LabelX = labelX, col1InputX = inputX, col2LabelX = labelX + 420, col2InputX = col2LabelX + 80;
+    int userInputY = startY, pwdInputY = startY + rowHeight, idInputY = startY + rowHeight * 2;
+    int nameInputY = startY + rowHeight * 3, phoneInputY = startY + rowHeight * 4;
+    int genderInputY = startY, ageInputY = startY + rowHeight, clnameInputY = startY + rowHeight * 2;
     int locationInputY = startY + rowHeight * 3;
-
     int btnY = startY + rowHeight * 5 + 20;
     int registerBtnX = WINDOW_WIDTH / 2 - BTN_WIDTH - 20;
     int backBtnX = WINDOW_WIDTH / 2 + 20;
 
-    wchar_t username[50] = { 0 };
-    wchar_t password[50] = { 0 };
-    wchar_t studentId[20] = { 0 };
-    wchar_t name[20] = { 0 };
-    wchar_t phone[20] = { 0 };
-    wchar_t gender[10] = { 0 };
-    wchar_t clname[30] = { 0 };
-    wchar_t location[100] = { 0 };
-    int age = 0;
-    wchar_t ageStr[10] = { 0 };
-    int focusIndex = 0;
-
+    wchar_t username[50] = { 0 }, password[50] = { 0 }, studentId[20] = { 0 }, name[20] = { 0 }, phone[20] = { 0 };
+    wchar_t gender[10] = { 0 }, clname[30] = { 0 }, location[100] = { 0 }, ageStr[10] = { 0 };
+    int age = 0, focusIndex = 0;
     ExMessage msg;
     int lastMx = -1, lastMy = -1;
-    bool needRedraw = true;
-    bool registerHover = false, backHover = false;
+    bool needRedraw = true, registerHover = false, backHover = false;
 
     while (true) {
         while (peekmessage(&msg)) {
             if (msg.message >= WM_MOUSEFIRST && msg.message <= WM_MOUSELAST) {
                 if (msg.message == WM_MOUSEMOVE) {
                     if (msg.x != lastMx || msg.y != lastMy) {
-                        lastMx = msg.x;
-                        lastMy = msg.y;
-                        bool newRegHover = (msg.x >= registerBtnX && msg.x <= registerBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
-                        bool newBackHover = (msg.x >= backBtnX && msg.x <= backBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
-                        if (newRegHover != registerHover || newBackHover != backHover) {
-                            registerHover = newRegHover;
-                            backHover = newBackHover;
-                            needRedraw = true;
+                        lastMx = msg.x; lastMy = msg.y;
+                        bool newReg = (msg.x >= registerBtnX && msg.x <= registerBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
+                        bool newBack = (msg.x >= backBtnX && msg.x <= backBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT);
+                        if (newReg != registerHover || newBack != backHover) {
+                            registerHover = newReg; backHover = newBack; needRedraw = true;
                         }
                     }
                 }
@@ -346,18 +284,12 @@ PageType showRegisterPage() {
                         WideCharToMultiByte(CP_ACP, 0, gender, -1, genderA, 10, NULL, NULL);
                         WideCharToMultiByte(CP_ACP, 0, clname, -1, clnameA, 30, NULL, NULL);
                         WideCharToMultiByte(CP_ACP, 0, location, -1, locationA, 100, NULL, NULL);
-                        if (strlen(usernameA) == 0 || strlen(passwordA) == 0 || strlen(studentIdA) == 0 || strlen(nameA) == 0) {
+                        if (strlen(usernameA) == 0 || strlen(passwordA) == 0 || strlen(studentIdA) == 0 || strlen(nameA) == 0)
                             MessageBoxW(GetHWnd(), L"请填写完整信息！", L"注册失败", MB_OK);
-                        }
                         else {
                             int regResult = register_student(usernameA, passwordA, nameA, studentIdA, phoneA, genderA, age, clnameA, locationA);
-                            if (regResult > 0) {
-                                MessageBoxW(GetHWnd(), L"注册成功！请登录", L"成功", MB_OK);
-                                return PAGE_LOGIN;
-                            }
-                            else {
-                                MessageBoxW(GetHWnd(), L"注册失败，用户名可能已存在！", L"错误", MB_OK);
-                            }
+                            if (regResult > 0) { MessageBoxW(GetHWnd(), L"注册成功！请登录", L"成功", MB_OK); return PAGE_LOGIN; }
+                            else MessageBoxW(GetHWnd(), L"注册失败，用户名可能已存在！", L"错误", MB_OK);
                         }
                         needRedraw = true;
                     }
@@ -367,8 +299,7 @@ PageType showRegisterPage() {
                 }
             }
             else if (msg.message == WM_CHAR) {
-                wchar_t* target = NULL;
-                int maxLen = 0;
+                wchar_t* target = NULL; int maxLen = 0;
                 switch (focusIndex) {
                 case 0: target = username; maxLen = 49; break;
                 case 1: target = password; maxLen = 49; break;
@@ -377,57 +308,30 @@ PageType showRegisterPage() {
                 case 4: target = phone; maxLen = 19; break;
                 case 5: target = gender; maxLen = 9; break;
                 case 6:
-                    if (msg.ch == VK_BACK) {
-                        int len = wcslen(ageStr);
-                        if (len > 0) ageStr[len - 1] = L'\0';
-                        if (wcslen(ageStr) > 0) age = _wtoi(ageStr); else age = 0;
-                        needRedraw = true;
-                    }
-                    else if (msg.ch >= L'0' && msg.ch <= L'9' && wcslen(ageStr) < 9) {
-                        ageStr[wcslen(ageStr)] = msg.ch;
-                        age = _wtoi(ageStr);
-                        needRedraw = true;
-                    }
-                    target = NULL;
-                    break;
+                    if (msg.ch == VK_BACK) { int len = wcslen(ageStr); if (len > 0) ageStr[len - 1] = L'\0'; age = _wtoi(ageStr); needRedraw = true; }
+                    else if (msg.ch >= L'0' && msg.ch <= L'9' && wcslen(ageStr) < 9) { ageStr[wcslen(ageStr)] = msg.ch; age = _wtoi(ageStr); needRedraw = true; }
+                    target = NULL; break;
                 case 7: target = clname; maxLen = 29; break;
                 case 8: target = location; maxLen = 99; break;
                 }
                 if (target) {
-                    if (msg.ch == VK_BACK) {
-                        int len = wcslen(target);
-                        if (len > 0) { target[len - 1] = L'\0'; needRedraw = true; }
-                    }
-                    else if (msg.ch != 0 && msg.ch != VK_RETURN && msg.ch != VK_ESCAPE) {
-                        if (wcslen(target) < maxLen) {
-                            target[wcslen(target)] = msg.ch;
-                            needRedraw = true;
-                        }
-                    }
+                    if (msg.ch == VK_BACK) { int len = wcslen(target); if (len > 0) { target[len - 1] = L'\0'; needRedraw = true; } }
+                    else if (msg.ch != 0 && msg.ch != VK_RETURN && msg.ch != VK_ESCAPE && wcslen(target) < maxLen) { target[wcslen(target)] = msg.ch; needRedraw = true; }
                 }
             }
             else if (msg.message == WM_KEYDOWN && msg.vkcode == VK_TAB) {
-                focusIndex = (focusIndex + 1) % 9;
-                needRedraw = true;
+                focusIndex = (focusIndex + 1) % 9; needRedraw = true;
             }
         }
         if (needRedraw) {
             cleardevice();
-            const wchar_t* title = L"学生注册";
-            settextcolor(RGB(30, 60, 120));
-            settextstyle(32, 0, L"微软雅黑");
-            outtextxy((WINDOW_WIDTH - textwidth(title)) / 2, 40, title);
-            settextstyle(22, 0, L"微软雅黑");
-            setbkmode(TRANSPARENT);
-            settextcolor(RGB(60, 60, 60));
-            outtextxy(col1LabelX, userInputY + 8, L"用户名：");
-            outtextxy(col1LabelX, pwdInputY + 8, L"密  码：");
-            outtextxy(col1LabelX, idInputY + 8, L"学  号：");
-            outtextxy(col1LabelX, nameInputY + 8, L"姓  名：");
-            outtextxy(col1LabelX, phoneInputY + 8, L"联系方式：");
-            outtextxy(col2LabelX, genderInputY + 8, L"性  别：");
-            outtextxy(col2LabelX, ageInputY + 8, L"年  龄：");
-            outtextxy(col2LabelX, clnameInputY + 8, L"班  级：");
+            settextcolor(RGB(30, 60, 120)); settextstyle(32, 0, L"微软雅黑");
+            outtextxy((WINDOW_WIDTH - textwidth(L"学生注册")) / 2, 40, L"学生注册");
+            settextstyle(22, 0, L"微软雅黑"); setbkmode(TRANSPARENT); settextcolor(RGB(60, 60, 60));
+            outtextxy(col1LabelX, userInputY + 8, L"用户名："); outtextxy(col1LabelX, pwdInputY + 8, L"密  码：");
+            outtextxy(col1LabelX, idInputY + 8, L"学  号："); outtextxy(col1LabelX, nameInputY + 8, L"姓  名：");
+            outtextxy(col1LabelX, phoneInputY + 8, L"联系方式："); outtextxy(col2LabelX, genderInputY + 8, L"性  别：");
+            outtextxy(col2LabelX, ageInputY + 8, L"年  龄："); outtextxy(col2LabelX, clnameInputY + 8, L"班  级：");
             outtextxy(col2LabelX, locationInputY + 8, L"位  置：");
             drawInputBox(col1InputX, userInputY, inputWidth, INPUT_HEIGHT, L"", username, focusIndex == 0);
             drawInputBox(col1InputX, pwdInputY, inputWidth, INPUT_HEIGHT, L"", password, focusIndex == 1);
@@ -447,48 +351,27 @@ PageType showRegisterPage() {
     }
 }
 
-void showStudentMainPage() {
-    runStudentMainPage(g_loggedStudentId);
-}
+void showStudentMainPage() { runStudentMainPage(g_loggedStudentId); }
+void showAdminMainPage() { runAdminMainPage(); }
 
-void showAdminMainPage() {
-    runAdminMainPage();
-}
-
-// ==================== 主函数 ====================
 int main() {
     initgraph(WINDOW_WIDTH, WINDOW_HEIGHT);
     setbkcolor(RGB(240, 245, 250));
     cleardevice();
-
     init_system();
 
     PageType currentPage = PAGE_WELCOME;
     Role currentRole = ROLE_STUDENT;
-
     while (true) {
         switch (currentPage) {
-        case PAGE_WELCOME:
-            currentRole = showWelcomePage();
-            currentPage = PAGE_LOGIN;
-            break;
-        case PAGE_LOGIN:
-            currentPage = showLoginPage(currentRole);
-            break;
-        case PAGE_REGISTER:
-            currentPage = showRegisterPage();
-            break;
-        case PAGE_STUDENT_MAIN:
-            showStudentMainPage();
-            currentPage = PAGE_LOGIN;
-            break;
-        case PAGE_ADMIN_MAIN:
-            showAdminMainPage();
-            currentPage = PAGE_LOGIN;
-            break;
+        case PAGE_WELCOME: currentRole = showWelcomePage(); currentPage = PAGE_LOGIN; break;
+        case PAGE_LOGIN: currentPage = showLoginPage(currentRole); break;
+        case PAGE_REGISTER: currentPage = showRegisterPage(); break;
+        case PAGE_STUDENT_MAIN: showStudentMainPage(); currentPage = PAGE_LOGIN; break;
+        case PAGE_ADMIN_MAIN: showAdminMainPage(); currentPage = PAGE_LOGIN; break;
         }
     }
-
     closegraph();
+    save_all_data();
     return 0;
 }
