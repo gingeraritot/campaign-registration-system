@@ -228,18 +228,29 @@ PageType showRegisterPage() {
     setbkcolor(RGB(240, 245, 250));
     cleardevice();
 
+    // 重新设计布局：第一列4个，第二列4个，不再有位置
     int labelX = 200, inputX = labelX + 80, inputWidth = 300, rowHeight = 48, startY = 100;
-    int col1LabelX = labelX, col1InputX = inputX, col2LabelX = labelX + 420, col2InputX = col2LabelX + 80;
-    int userInputY = startY, pwdInputY = startY + rowHeight, idInputY = startY + rowHeight * 2;
-    int nameInputY = startY + rowHeight * 3, phoneInputY = startY + rowHeight * 4;
-    int genderInputY = startY, ageInputY = startY + rowHeight, clnameInputY = startY + rowHeight * 2;
-    int locationInputY = startY + rowHeight * 3;
-    int btnY = startY + rowHeight * 5 + 20;
+    int col1LabelX = labelX, col1InputX = inputX;
+    int col2LabelX = labelX + 420, col2InputX = col2LabelX + 80;
+
+    // 第一列字段（4个）
+    int userInputY = startY;
+    int pwdInputY = startY + rowHeight;
+    int idInputY = startY + rowHeight * 2;
+    int nameInputY = startY + rowHeight * 3;
+
+    // 第二列字段（4个）
+    int phoneInputY = startY;
+    int genderInputY = startY + rowHeight;
+    int ageInputY = startY + rowHeight * 2;
+    int clnameInputY = startY + rowHeight * 3;
+
+    int btnY = startY + rowHeight * 4 + 20;  // 按钮Y坐标
     int registerBtnX = WINDOW_WIDTH / 2 - BTN_WIDTH - 20;
     int backBtnX = WINDOW_WIDTH / 2 + 20;
 
-    wchar_t username[50] = { 0 }, password[50] = { 0 }, studentId[20] = { 0 }, name[20] = { 0 }, phone[20] = { 0 };
-    wchar_t gender[10] = { 0 }, clname[30] = { 0 }, location[100] = { 0 }, ageStr[10] = { 0 };
+    wchar_t username[50] = { 0 }, password[50] = { 0 }, studentId[20] = { 0 }, name[20] = { 0 };
+    wchar_t phone[20] = { 0 }, gender[10] = { 0 }, clname[30] = { 0 }, ageStr[10] = { 0 };
     int age = 0, focusIndex = 0;
     ExMessage msg;
     int lastMx = -1, lastMy = -1;
@@ -259,23 +270,25 @@ PageType showRegisterPage() {
                     }
                 }
                 else if (msg.message == WM_LBUTTONDOWN) {
+                    // 第一列输入框
                     if (msg.x >= col1InputX && msg.x <= col1InputX + inputWidth) {
                         if (msg.y >= userInputY && msg.y <= userInputY + INPUT_HEIGHT) focusIndex = 0;
                         else if (msg.y >= pwdInputY && msg.y <= pwdInputY + INPUT_HEIGHT) focusIndex = 1;
                         else if (msg.y >= idInputY && msg.y <= idInputY + INPUT_HEIGHT) focusIndex = 2;
                         else if (msg.y >= nameInputY && msg.y <= nameInputY + INPUT_HEIGHT) focusIndex = 3;
-                        else if (msg.y >= phoneInputY && msg.y <= phoneInputY + INPUT_HEIGHT) focusIndex = 4;
                         needRedraw = true;
                     }
+                    // 第二列输入框
                     else if (msg.x >= col2InputX && msg.x <= col2InputX + inputWidth) {
-                        if (msg.y >= genderInputY && msg.y <= genderInputY + INPUT_HEIGHT) focusIndex = 5;
+                        if (msg.y >= phoneInputY && msg.y <= phoneInputY + INPUT_HEIGHT) focusIndex = 4;
+                        else if (msg.y >= genderInputY && msg.y <= genderInputY + INPUT_HEIGHT) focusIndex = 5;
                         else if (msg.y >= ageInputY && msg.y <= ageInputY + INPUT_HEIGHT) focusIndex = 6;
                         else if (msg.y >= clnameInputY && msg.y <= clnameInputY + INPUT_HEIGHT) focusIndex = 7;
-                        else if (msg.y >= locationInputY && msg.y <= locationInputY + INPUT_HEIGHT) focusIndex = 8;
                         needRedraw = true;
                     }
+                    // 注册按钮
                     if (msg.x >= registerBtnX && msg.x <= registerBtnX + BTN_WIDTH && msg.y >= btnY && msg.y <= btnY + BTN_HEIGHT) {
-                        char usernameA[50], passwordA[50], nameA[20], studentIdA[20], phoneA[20], genderA[10], clnameA[30], locationA[100];
+                        char usernameA[50], passwordA[50], nameA[20], studentIdA[20], phoneA[20], genderA[10], clnameA[30];
                         WideCharToMultiByte(CP_ACP, 0, username, -1, usernameA, 50, NULL, NULL);
                         WideCharToMultiByte(CP_ACP, 0, password, -1, passwordA, 50, NULL, NULL);
                         WideCharToMultiByte(CP_ACP, 0, name, -1, nameA, 20, NULL, NULL);
@@ -283,11 +296,11 @@ PageType showRegisterPage() {
                         WideCharToMultiByte(CP_ACP, 0, phone, -1, phoneA, 20, NULL, NULL);
                         WideCharToMultiByte(CP_ACP, 0, gender, -1, genderA, 10, NULL, NULL);
                         WideCharToMultiByte(CP_ACP, 0, clname, -1, clnameA, 30, NULL, NULL);
-                        WideCharToMultiByte(CP_ACP, 0, location, -1, locationA, 100, NULL, NULL);
                         if (strlen(usernameA) == 0 || strlen(passwordA) == 0 || strlen(studentIdA) == 0 || strlen(nameA) == 0)
                             MessageBoxW(GetHWnd(), L"请填写完整信息！", L"注册失败", MB_OK);
                         else {
-                            int regResult = register_student(usernameA, passwordA, nameA, studentIdA, phoneA, genderA, age, clnameA, locationA);
+                            // location 参数传空字符串
+                            int regResult = register_student(usernameA, passwordA, nameA, studentIdA, phoneA, genderA, age, clnameA, "");
                             if (regResult > 0) { MessageBoxW(GetHWnd(), L"注册成功！请登录", L"成功", MB_OK); return PAGE_LOGIN; }
                             else MessageBoxW(GetHWnd(), L"注册失败，用户名可能已存在！", L"错误", MB_OK);
                         }
@@ -312,7 +325,6 @@ PageType showRegisterPage() {
                     else if (msg.ch >= L'0' && msg.ch <= L'9' && wcslen(ageStr) < 9) { ageStr[wcslen(ageStr)] = msg.ch; age = _wtoi(ageStr); needRedraw = true; }
                     target = NULL; break;
                 case 7: target = clname; maxLen = 29; break;
-                case 8: target = location; maxLen = 99; break;
                 }
                 if (target) {
                     if (msg.ch == VK_BACK) { int len = wcslen(target); if (len > 0) { target[len - 1] = L'\0'; needRedraw = true; } }
@@ -320,7 +332,8 @@ PageType showRegisterPage() {
                 }
             }
             else if (msg.message == WM_KEYDOWN && msg.vkcode == VK_TAB) {
-                focusIndex = (focusIndex + 1) % 9; needRedraw = true;
+                focusIndex = (focusIndex + 1) % 8;  // 共8个输入框
+                needRedraw = true;
             }
         }
         if (needRedraw) {
@@ -328,20 +341,23 @@ PageType showRegisterPage() {
             settextcolor(RGB(30, 60, 120)); settextstyle(32, 0, L"微软雅黑");
             outtextxy((WINDOW_WIDTH - textwidth(L"学生注册")) / 2, 40, L"学生注册");
             settextstyle(22, 0, L"微软雅黑"); setbkmode(TRANSPARENT); settextcolor(RGB(60, 60, 60));
+            // 第一列标签
             outtextxy(col1LabelX, userInputY + 8, L"用户名："); outtextxy(col1LabelX, pwdInputY + 8, L"密  码：");
             outtextxy(col1LabelX, idInputY + 8, L"学  号："); outtextxy(col1LabelX, nameInputY + 8, L"姓  名：");
-            outtextxy(col1LabelX, phoneInputY + 8, L"联系方式："); outtextxy(col2LabelX, genderInputY + 8, L"性  别：");
+            // 第二列标签
+            outtextxy(col2LabelX, phoneInputY + 8, L"联系方式："); outtextxy(col2LabelX, genderInputY + 8, L"性  别：");
             outtextxy(col2LabelX, ageInputY + 8, L"年  龄："); outtextxy(col2LabelX, clnameInputY + 8, L"班  级：");
-            outtextxy(col2LabelX, locationInputY + 8, L"位  置：");
+
+            // 绘制输入框
             drawInputBox(col1InputX, userInputY, inputWidth, INPUT_HEIGHT, L"", username, focusIndex == 0);
             drawInputBox(col1InputX, pwdInputY, inputWidth, INPUT_HEIGHT, L"", password, focusIndex == 1);
             drawInputBox(col1InputX, idInputY, inputWidth, INPUT_HEIGHT, L"", studentId, focusIndex == 2);
             drawInputBox(col1InputX, nameInputY, inputWidth, INPUT_HEIGHT, L"", name, focusIndex == 3);
-            drawInputBox(col1InputX, phoneInputY, inputWidth, INPUT_HEIGHT, L"", phone, focusIndex == 4);
+            drawInputBox(col2InputX, phoneInputY, inputWidth, INPUT_HEIGHT, L"", phone, focusIndex == 4);
             drawInputBox(col2InputX, genderInputY, inputWidth, INPUT_HEIGHT, L"", gender, focusIndex == 5);
             drawInputBox(col2InputX, ageInputY, inputWidth, INPUT_HEIGHT, L"", ageStr, focusIndex == 6);
             drawInputBox(col2InputX, clnameInputY, inputWidth, INPUT_HEIGHT, L"", clname, focusIndex == 7);
-            drawInputBox(col2InputX, locationInputY, inputWidth, INPUT_HEIGHT, L"", location, focusIndex == 8);
+
             settextstyle(24, 0, L"微软雅黑");
             drawButton(registerBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"注册", registerHover);
             drawButton(backBtnX, btnY, BTN_WIDTH, BTN_HEIGHT, L"返回登录", backHover);
