@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <direct.h>   // for _getcwd
+#include <stdio.h>
 
 // 全局链表头
 Student* student_head = NULL;
@@ -154,14 +156,51 @@ int save_categories(const char* filename) {
 }
 
 // -------------------- 活动 --------------------
+int save_activities(const char* filename) {
+    // 输出当前工作目录（调试用）
+    char cwd[256];
+    if (_getcwd(cwd, sizeof(cwd))) {
+        printf("保存活动时，当前工作目录: %s\n", cwd);
+    }
+    FILE* fp = fopen(filename, "wb");
+    if (!fp) {
+        printf("保存活动失败：无法打开文件 %s\n", filename);
+        return -1;
+    }
+    Activity* p = activity_head;
+    int count = 0;
+    while (p) {
+        if (fwrite(p, sizeof(Activity), 1, fp) != 1) {
+            fclose(fp);
+            printf("写入活动失败（第 %d 个活动）\n", count + 1);
+            return -1;
+        }
+        p = p->next;
+        count++;
+    }
+    fclose(fp);
+    printf("已保存 %d 个活动到 %s\n", count, filename);
+    return 1;
+}
+
 int load_activities(const char* filename) {
+    char cwd[256];
+    if (_getcwd(cwd, sizeof(cwd))) {
+        printf("加载活动时，当前工作目录: %s\n", cwd);
+    }
     FILE* fp = fopen(filename, "rb");
-    if (!fp) return 0;
+    if (!fp) {
+        printf("活动文件 %s 不存在，将创建新文件\n", filename);
+        return 0;
+    }
+    // 释放原有链表
     Activity* p = activity_head;
     while (p) { Activity* tmp = p; p = p->next; free(tmp); }
     activity_head = NULL;
+
     Activity a;
     int max_id = 0;
+    int count = 0;
     while (fread(&a, sizeof(Activity), 1, fp) == 1) {
         Activity* new_node = (Activity*)malloc(sizeof(Activity));
         if (!new_node) { fclose(fp); return -1; }
@@ -174,45 +213,11 @@ int load_activities(const char* filename) {
             tail->next = new_node;
         }
         if (a.id > max_id) max_id = a.id;
+        count++;
     }
     fclose(fp);
     if (max_id >= next_activity_id) next_activity_id = max_id + 1;
-    return 1;
-}
-int save_activities(const char* filename) {
-    // 如果内存中没有活动，避免覆盖已有文件导致数据丢失
-    if (activity_head == NULL) return 1;
-
-    // 写入临时文件，写入成功后再替换原文件；同时保留备份以便恢复
-    char tmpname[MAX_FILENAME + 8];
-    char bakname[MAX_FILENAME + 8];
-    snprintf(tmpname, sizeof(tmpname), "%s.tmp", filename);
-    snprintf(bakname, sizeof(bakname), "%s.bak", filename);
-
-    FILE* fp = fopen(tmpname, "wb");
-    if (!fp) return -1;
-    Activity* p = activity_head;
-    while (p) {
-        if (fwrite(p, sizeof(Activity), 1, fp) != 1) { fclose(fp); remove(tmpname); return -1; }
-        p = p->next;
-    }
-    fclose(fp);
-
-    // 生成备份（覆盖旧备份）
-    remove(bakname);
-    FILE* orig = fopen(filename, "rb");
-    if (orig) {
-        fclose(orig);
-        rename(filename, bakname);
-    }
-
-    if (rename(tmpname, filename) != 0) {
-        // 恢复备份（如果存在）
-        remove(tmpname);
-        FILE* b = fopen(bakname, "rb");
-        if (b) { fclose(b); rename(bakname, filename); }
-        return -1;
-    }
+    printf("加载了 %d 个活动\n", count);
     return 1;
 }
 
@@ -246,17 +251,11 @@ int save_enrollments(const char* filename) {
     FILE* fp = fopen(filename, "wb");
     if (!fp) return -1;
     Enrollment* p = enrollment_head;
-    int count = 0;
     while (p) {
-        if (fwrite(p, sizeof(Enrollment), 1, fp) != 1) {
-            fclose(fp);
-            return -1;
-        }
-        count++;
+        if (fwrite(p, sizeof(Enrollment), 1, fp) != 1) { fclose(fp); return -1; }
         p = p->next;
     }
     fclose(fp);
-    printf("【调试】保存了 %d 条报名记录到 %s\n", count, filename);  // 控制台输出
     return 1;
 }
 

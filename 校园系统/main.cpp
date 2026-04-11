@@ -373,5 +373,7 @@ int main() {
     }
     closegraph();
     save_all_data();
+    save_activities(ACTIVITIES_FILE);
+    printf("程序退出，已保存所有数据\n");
     return 0;
 }

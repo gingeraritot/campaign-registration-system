@@ -1,14 +1,24 @@
 ﻿C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\VC\v180\Microsoft.CppBuild.targets(551,5): warning MSB8028: 中间目录(x64\Debug\)包含从另一个项目(campus_system.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
 cl : 命令行  warning D9025: 正在重写“/sdl”(用“/GS-”)
+  admin_main.cpp
   student_main.cpp
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(515,17): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(952,40): warning C4477: “swprintf”: 格式字符串“%s”需要类型“wchar_t *”的参数，但可变参数 1 拥有了类型“char *”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(952,40):
-      请考虑在格式字符串中使用“%hs”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(952,40):
-      请考虑在格式字符串中使用“%Ts”
-      C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(952,40):
-      Visual C++ 使用非标准语义时会出现此警告
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\student_main.cpp(144,50): warning C4244: “+=”: 从“time_t”转换到“long”，可能丢失数据
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\student_main.cpp(703,17): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\student_main.cpp(1375,17): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+  activity_admin.cpp
+  data.cpp
+  main.cpp
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\main.cpp(195,29): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\main.cpp(311,54): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\main.cpp(318,54): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+  student_ops.cpp
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\student_ops.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\student_ops.cpp(188,45): warning C4474: printf: 格式字符串中传递的参数太多
+      C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\student_ops.cpp(188,45):
+      占位符和其参数预计 0 可变参数，但提供的却是 1 参数
   
-C:\Users\pLeOn\source\repos\campaign-registration-system\校园系统\student_main.cpp(1067,17): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-  校园系统.vcxproj -> C:\Users\pLeOn\source\repos\campaign-registration-system\x64\Debug\校园系统.exe
+  system_service.cpp
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\system_service.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\system_service.cpp(158,50): warning C4244: “+=”: 从“time_t”转换到“long”，可能丢失数据
+  正在生成代码...
+  校园系统.vcxproj -> C:\Users\GingerariToT\Desktop\xiaoyuanxitong\x64\Debug\校园系统.exe
