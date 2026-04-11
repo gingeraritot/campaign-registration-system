@@ -23,7 +23,7 @@
 
 
 // 数据文件路径（直接指向你的 Debug 目录）
-#define DATA_DIR          "C:\\Users\\GingerariToT\\Desktop\\xiaoyuanxitong\\x64\\Debug\\"
+
 #define STUDENTS_FILE     DATA_DIR "students.dat"
 #define ADMINS_FILE       DATA_DIR "admins.dat"
 #define ACTIVITIES_FILE   DATA_DIR "activities.dat"

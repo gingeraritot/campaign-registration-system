@@ -1,10 +1,7 @@
 ﻿C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\VC\v180\Microsoft.CppBuild.targets(551,5): warning MSB8028: 中间目录(x64\Debug\)包含从另一个项目(campus_system.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
 cl : 命令行  warning D9025: 正在重写“/sdl”(用“/GS-”)
-  admin_main.cpp
-  main.cpp
-  正在生成代码...
-C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\main.cpp(195,29): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\main.cpp(324,54): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\main.cpp(330,54): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-  LINK : 没有找到 C:\Users\GingerariToT\Desktop\xiaoyuanxitong\x64\Debug\校园系统.exe 或上一个增量链接没有生成它；正在执行完全链接
+  student_main.cpp
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\student_main.cpp(144,50): warning C4244: “+=”: 从“time_t”转换到“long”，可能丢失数据
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\student_main.cpp(703,17): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\GingerariToT\Desktop\xiaoyuanxitong\校园系统\student_main.cpp(1375,17): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
   校园系统.vcxproj -> C:\Users\GingerariToT\Desktop\xiaoyuanxitong\x64\Debug\校园系统.exe
